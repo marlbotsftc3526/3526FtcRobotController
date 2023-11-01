@@ -89,12 +89,12 @@ public class Drivetrain {
         backLeftPower = (drive + turn + strafe) / denominator;
         backRightPower = (drive - turn - strafe) / denominator;
 
-        if (myOpMode.gamepad1.right_bumper) {
+        if (myOpMode.gamepad1.left_bumper) {
             frontLeft.setPower(frontLeftPower / 7);
             frontRight.setPower(frontRightPower / 7);
             backLeft.setPower(backLeftPower / 7);
             backRight.setPower(backRightPower / 7);
-        } else if (myOpMode.gamepad1.left_bumper) {
+        } else if (myOpMode.gamepad1.right_bumper) {
             frontLeft.setPower(2 * frontLeftPower);
             frontRight.setPower(2 * frontRightPower);
             backLeft.setPower(2 * backLeftPower);
