@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,19 +23,15 @@ public class AutoLeft extends LinearOpMode {
             "M"
     };
 
-    private static final String VUFORIA_KEY =
+   /* private static final String VUFORIA_KEY =
             "AfDxTOz/////AAABmZP0ZciU3EdTii04SAkq0dI8nEBh4mM/bXMf3H6bRJJbH/XCSdLIe5SDSavwPb0wJvUdnsmXcal43ZW2YJRG6j65bfewYJPCb+jGn7IW7kd5rKWs11G7CtFSMGEOhA5NU8gi39eHW0pmXC8NEXBn3CmK67TIENGm/YBN6f+xmkmDvBQjaJc2hJ93HPvhAnIiAbJT9/fWijwg9IovTok/xAcAcuIKz3XK/lnJXu6XdJ1MyRtoXO7yf1W4ReDHngWCtKI9B7bAnD6zPNhZoVLVzl34E8XKed/dGShIoCmIUTe0HoUniP0ye3AnwhFgxLhgPcysF8uVqKN0VKBpDH1zU7J7keZdjWHM6jvn29oLMK7W";
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-    p//rivate VuforiaLocalizer vuforia;
+    //private VuforiaLocalizer vuforia;
 
-    /**
-     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
-     * Detection engine.
-     */
-    private TFObjectDetector tfod;
+    //private TFObjectDetector tfod;
 
     RobotHardware robot = new RobotHardware(this);
     private ElapsedTime runtime = new ElapsedTime();
@@ -51,7 +47,7 @@ public class AutoLeft extends LinearOpMode {
          * Activate TensorFlow Object Detection before we wait for the start command.
          * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
          **/
-        if (tfod != null) {
+        /*if (tfod != null) {
             tfod.activate();
 
             // The TensorFlow software will scale the input images from the camera to a lower resolution.
@@ -61,10 +57,10 @@ public class AutoLeft extends LinearOpMode {
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
             tfod.setZoom(2, 4.0 / 3.0);
-        }
+        }*/
 
         runtime.reset();
-        while (!isStarted() && !isStopRequested()) {
+        /*while (!isStarted() && !isStopRequested()) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -89,7 +85,7 @@ public class AutoLeft extends LinearOpMode {
                     telemetry.update();
                 }
             }
-        }
+        }*/
 
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
@@ -107,7 +103,7 @@ public class AutoLeft extends LinearOpMode {
 
 
         runtime.reset();
-\
+
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
 
@@ -115,27 +111,27 @@ public class AutoLeft extends LinearOpMode {
 
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
-        if (position == "RIGHT") {
+       /* if (position == "RIGHT") {
             robot.drivetrain.driveSideProfiledPID(-2100);
         } else if (position == "MID") {
             robot.drivetrain.driveSideProfiledPID(-600);
         } else {
             robot.drivetrain.driveSideProfiledPID(800);
-        }
+        }*/
     }
 
     /*private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        //parameters.vuforiaLicenseKey = VUFORIA_KEY;
         //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-    }*/
+       // vuforia = ClassFactory.getInstance().createVuforia(parameters);
+    //}*/
 
     /**
      * Initialize the TensorFlow Object Detection engine.

@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.MotionProfile.motionProfile;
 import static org.firstinspires.ftc.teamcode.MotionProfile.motionProfileTime;
@@ -29,6 +28,9 @@ public class Drivetrain {
     public static final double DRIVE_MAX_ACC = 2000;
     public static final double DRIVE_MAX_VEL = 3500;
     public static final double DRIVE_MAX_OUT = 0.95;
+    public Drivetrain(LinearOpMode opmode) {
+        myOpMode = opmode;
+    }
 
     public void init(){
         flPID = new PIDController(DRIVE_KP, DRIVE_KI, DRIVE_KD);
@@ -71,7 +73,7 @@ public class Drivetrain {
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void teleOp{
+    public void teleOp(){
         //drive train
         double frontLeftPower;
         double frontRightPower;
@@ -114,6 +116,7 @@ public class Drivetrain {
 
         ElapsedTime time = new ElapsedTime();
         time.reset();
+
 
         while (myOpMode.opModeIsActive() &&
                 time.seconds() < 0.5 + motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds())) {
@@ -226,6 +229,4 @@ public class Drivetrain {
         backRight.setPower(power);
         backLeft.setPower(-power);
     }
-}
-
 }

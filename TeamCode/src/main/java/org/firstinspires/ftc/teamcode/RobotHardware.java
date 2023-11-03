@@ -12,7 +12,7 @@ public class RobotHardware {
     public Lift lift;
     public Drone drone;
 
-    public Robot(LinearOpMode opmode) {
+    public RobotHardware(LinearOpMode opmode) {
         myOpMode = opmode;
     }
 
