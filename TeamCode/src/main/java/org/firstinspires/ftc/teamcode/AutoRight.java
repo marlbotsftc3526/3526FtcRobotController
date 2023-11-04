@@ -6,17 +6,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 //import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-//import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-//import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 
 import java.util.List;
 
 
-@Autonomous(name = "AutoLeft", group = "Linear Opmode")
+@Autonomous(name = "AutoRight", group = "Linear Opmode")
 
-public class AutoLeft extends LinearOpMode {
-    //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Marlbots.tflite";
+public class AutoRight extends LinearOpMode {
+    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Marlbots.tflite";
 
     private static final String[] LABELS = {
             "Marlbots",
@@ -41,7 +41,7 @@ public class AutoLeft extends LinearOpMode {
     public void runOpMode() {
         robot.init();
 
-      //  initVuforia();
+        //  initVuforia();
         //initTfod();
         /**
          * Activate TensorFlow Object Detection before we wait for the start command.
@@ -124,13 +124,13 @@ public class AutoLeft extends LinearOpMode {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-        //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+    //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        //parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+    //parameters.vuforiaLicenseKey = VUFORIA_KEY;
+    //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
-        //  Instantiate the Vuforia engine
-       // vuforia = ClassFactory.getInstance().createVuforia(parameters);
+    //  Instantiate the Vuforia engine
+    // vuforia = ClassFactory.getInstance().createVuforia(parameters);
     //}*/
 
     /**
