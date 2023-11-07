@@ -13,9 +13,9 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import java.util.List;
 
 
-@Autonomous(name = "AutoRightBlue", group = "Linear Opmode")
+@Autonomous(name = "AutoRightRed", group = "Linear Opmode")
 
-public class AutoRight extends LinearOpMode {
+public class AutoRightRed extends LinearOpMode {
     private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Marlbots.tflite";
 
     private static final String[] LABELS = {
@@ -93,10 +93,10 @@ public class AutoRight extends LinearOpMode {
         waitForStart();
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
-        robot.drivetrain.driveSideProfiledPID(200);
+        robot.drivetrain.driveSideProfiledPID(-200);
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
-        robot.drivetrain.driveStraightProfiledPID(6500);
+        robot.drivetrain.driveStraightProfiledPID(2500);
 
        /* if (position == "RIGHT") {
             robot.drivetrain.driveSideProfiledPID(-2100);

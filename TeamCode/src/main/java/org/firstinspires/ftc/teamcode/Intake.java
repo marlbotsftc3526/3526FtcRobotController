@@ -7,13 +7,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 public class Intake {
     private LinearOpMode myOpMode = null;
+
+    public DcMotor intake = null;
     public Intake(LinearOpMode opmode) {
         myOpMode = opmode;
     }
     public void init(){
-
+        intake = myOpMode.hardwareMap.get(DcMotor.class, "intake");
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setDirection(DcMotor.Direction.FORWARD);
     }
     public void teleOp(){
+        int power = 0;
+        if(myOpMode.gamepad1.dpad_left){
+            intake.setPower(0.7);
+        }else if(myOpMode.gamepad1.dpad_right) {
+            intake.setPower(-0.7);
+        }else if(myOpMode.gamepad1.dpad_up){
+            intake.setPower(0);
+        }
 
     }
 }

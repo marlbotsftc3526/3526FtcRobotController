@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import java.util.List;
 
 
-@Autonomous(name = "AutoLeft", group = "Linear Opmode")
+@Autonomous(name = "AutoLeftBlue", group = "Linear Opmode")
 
 public class AutoLeft extends LinearOpMode {
     //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/Marlbots.tflite";
@@ -94,23 +94,11 @@ public class AutoLeft extends LinearOpMode {
 
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
-        robot.drivetrain.driveSideProfiledPID(3250);
+        robot.drivetrain.driveSideProfiledPID(200);
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
-        robot.drivetrain.driveStraightProfiledPID(-700);
-        robot.drivetrain.resetEncoders();
-        robot.drivetrain.useEncoders();
+        robot.drivetrain.driveStraightProfiledPID(2500);
 
-
-        runtime.reset();
-
-        robot.drivetrain.resetEncoders();
-        robot.drivetrain.useEncoders();
-
-        robot.drivetrain.encoderTurn(18f, 1);
-
-        robot.drivetrain.resetEncoders();
-        robot.drivetrain.useEncoders();
        /* if (position == "RIGHT") {
             robot.drivetrain.driveSideProfiledPID(-2100);
         } else if (position == "MID") {

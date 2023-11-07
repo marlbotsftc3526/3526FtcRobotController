@@ -86,10 +86,10 @@ public class Drivetrain {
 
         double denominator = Math.max(Math.abs(drive) + Math.abs(strafe) + Math.abs(turn), 2);
 
-        frontLeftPower = (drive + turn - strafe) / denominator;
-        frontRightPower = (drive - turn + strafe) / denominator;
-        backLeftPower = (drive + turn + strafe) / denominator;
-        backRightPower = (drive - turn - strafe) / denominator;
+        frontLeftPower = (drive - turn + strafe) / denominator;
+        frontRightPower = (drive + turn - strafe) / denominator;
+        backLeftPower = (drive - turn - strafe) / denominator;
+        backRightPower = (drive + turn + strafe) / denominator;
 
         if (myOpMode.gamepad1.left_bumper) {
             frontLeft.setPower(frontLeftPower / 7);
