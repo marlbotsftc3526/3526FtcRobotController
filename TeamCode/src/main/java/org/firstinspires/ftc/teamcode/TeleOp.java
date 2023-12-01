@@ -25,7 +25,23 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             robot.teleOp();
-
+            if(gamepad2.a){
+                robot.lift.liftMode = Lift.LiftMode.GROUND;
+                robot.lift.resetLiftPID();
+                robot.lift.box.setPosition(robot.lift.BOX_intake);
+            }else if(gamepad2.b){
+                robot.lift.liftMode = Lift.LiftMode.HIGH;
+                robot.lift.resetLiftPID();
+                robot.lift.box.setPosition(robot.lift.BOX_score);
+            }else if(gamepad2.x){
+                robot.lift.liftMode = Lift.LiftMode.MEDIUM;
+                robot.lift.resetLiftPID();
+                robot.lift.box.setPosition(robot.lift.BOX_score);
+            }else if(gamepad2.y){
+                robot.lift.liftMode = Lift.LiftMode.LOW;
+                robot.lift.resetLiftPID();
+                robot.lift.box.setPosition(robot.lift.BOX_score);
+            }
         }
     }
 }

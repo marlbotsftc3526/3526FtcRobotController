@@ -84,7 +84,7 @@ public class Drivetrain {
         double turn = myOpMode.gamepad1.right_stick_x;
         double strafe = -myOpMode.gamepad1.left_stick_x;
 
-        double denominator = Math.max(Math.abs(drive) + Math.abs(strafe) + Math.abs(turn), 2);
+        double denominator = Math.max(Math.abs(drive) + Math.abs(strafe) + Math.abs(turn), 1.5);
 
         frontLeftPower = (drive - turn + strafe) / denominator;
         frontRightPower = (drive + turn - strafe) / denominator;

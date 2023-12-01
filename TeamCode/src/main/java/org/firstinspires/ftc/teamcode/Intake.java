@@ -19,11 +19,11 @@ public class Intake {
     }
     public void teleOp(){
         int power = 0;
-        if(myOpMode.gamepad1.dpad_left){
+        if(myOpMode.gamepad2.dpad_left){
             intake.setPower(0.7);
-        }else if(myOpMode.gamepad1.dpad_right) {
+        }else if(myOpMode.gamepad2.dpad_right) {
             intake.setPower(-0.7);
-        }else if(myOpMode.gamepad1.dpad_up){
+        }else if(myOpMode.gamepad2.dpad_up){
             intake.setPower(0);
         }
 
