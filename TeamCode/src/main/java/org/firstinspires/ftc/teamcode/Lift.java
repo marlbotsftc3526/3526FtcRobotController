@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
+
 public class Lift {
     private LinearOpMode myOpMode = null;
 
@@ -38,7 +39,6 @@ public class Lift {
         LOW,
         GROUND
     }
-`
     public LiftMode liftMode = LiftMode.MANUAL;
     public Lift(LinearOpMode opmode) {
         myOpMode = opmode;
@@ -70,6 +70,9 @@ public class Lift {
         liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         myOpMode.telemetry.addData(">", "Lift Initialized");
+
+        resetLiftPID();
+
     }
     public void teleOp(){
 

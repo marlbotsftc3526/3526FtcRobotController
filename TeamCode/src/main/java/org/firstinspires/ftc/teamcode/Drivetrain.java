@@ -86,10 +86,10 @@ public class Drivetrain {
 
         double denominator = Math.max(Math.abs(drive) + Math.abs(strafe) + Math.abs(turn), 1.5);
 
-        frontLeftPower = (drive - turn + strafe) / denominator;
-        frontRightPower = (drive + turn - strafe) / denominator;
-        backLeftPower = (drive - turn - strafe) / denominator;
-        backRightPower = (drive + turn + strafe) / denominator;
+        frontLeftPower = (-drive - turn + strafe) / denominator;
+        frontRightPower = (-drive + turn - strafe) / denominator;
+        backLeftPower = (-drive - turn - strafe) / denominator;
+        backRightPower = (-drive + turn + strafe) / denominator;
 
         if (myOpMode.gamepad1.left_bumper) {
             frontLeft.setPower(frontLeftPower / 7);
@@ -109,9 +109,9 @@ public class Drivetrain {
         }
     }
     public void driveStraightProfiledPID(float distance) {
-        float direction = 1;
+        float direction = -1;
         if (distance < 0) {
-            direction = -1;
+            direction = 1;
         }
 
         ElapsedTime time = new ElapsedTime();

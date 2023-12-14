@@ -93,10 +93,30 @@ public class AutoRightRed extends LinearOpMode {
         waitForStart();
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
-        robot.drivetrain.driveSideProfiledPID(-1000);
+        robot.drivetrain.driveSideProfiledPID(-1430);
         robot.drivetrain.resetEncoders();
         robot.drivetrain.useEncoders();
-        robot.drivetrain.driveStraightProfiledPID(2250);
+        robot.drivetrain.driveStraightProfiledPID(1500);
+        robot.drivetrain.resetEncoders();
+        robot.drivetrain.useEncoders();
+        robot.drivetrain.driveSideProfiledPID(-1000);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+        robot.intake.setPowerPower(-0.7);
+
 
        /* if (position == "RIGHT") {
             robot.drivetrain.driveSideProfiledPID(-2100);

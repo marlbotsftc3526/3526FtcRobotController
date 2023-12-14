@@ -18,7 +18,6 @@ public class Intake {
         intake.setDirection(DcMotor.Direction.FORWARD);
     }
     public void teleOp(){
-        int power = 0;
         if(myOpMode.gamepad2.dpad_left){
             intake.setPower(0.7);
         }else if(myOpMode.gamepad2.dpad_right) {
@@ -28,4 +27,8 @@ public class Intake {
         }
 
     }
+    public void setPowerPower(double x){
+        intake.setPower(x);
+    }
+
 }
