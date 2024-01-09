@@ -12,6 +12,10 @@ public class RobotHardware {
     public Lift lift;
     public Drone drone;
 
+    public SimpleCamera camera;
+
+    public Localizer localizer;
+
     public RobotHardware(LinearOpMode opmode) {
         myOpMode = opmode;
     }
@@ -21,11 +25,15 @@ public class RobotHardware {
         intake = new Intake(myOpMode);
         lift = new Lift(myOpMode);
         drone = new Drone(myOpMode);
+        camera = new SimpleCamera(myOpMode);
+        localizer = new Localizer(myOpMode);
 
         drivetrain.init();
         intake.init();
         lift.init();
         drone.init();
+        camera.init();
+        localizer.init();
 
         myOpMode.telemetry.addData(">", "Hardware Initialized");
         myOpMode.telemetry.update();

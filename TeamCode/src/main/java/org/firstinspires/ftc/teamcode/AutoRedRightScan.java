@@ -1,28 +1,12 @@
-/*
- * Copyright (c) 2020 OpenFTC Team
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition.CENTER;
+import static org.firstinspires.ftc.teamcode.SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition.LEFT;
+import static org.firstinspires.ftc.teamcode.SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition.RIGHT;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -36,35 +20,28 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-/*
- * This sample demonstrates a basic (but battle-tested and essentially
- * 100% accurate) method of detecting the skystone when lined up with
- * the sample regions over the first 3 stones.
- */
-@TeleOp
-public class SkystoneDeterminationExample extends LinearOpMode
-{
+@Autonomous(name = "AutoRedRight Meet 2", group = "Linear Opmode")
+public class AutoRedRightScan extends LinearOpMode{
     OpenCvInternalCamera phoneCam;
-    SkystoneDeterminationPipeline pipeline;
+    SkystoneDeterminationExample.SkystoneDeterminationPipeline pipeline;
 
-    @Override
-    public void runOpMode()
-    {
-        /**
-         * NOTE: Many comments have been omitted from this sample for the
-         * sake of conciseness. If you're just starting out with EasyOpenCv,
-         * you should take a look at {@link InternalCamera1Example} or its
-         * webcam counterpart, {@link WebcamExample} first.
-         */
+    private static final String[] LABELS = {
+            "Marlbots",
 
+            "M"
+    };
+    RobotHardware robot = new RobotHardware(this);
+    private ElapsedTime runtime = new ElapsedTime();
+
+    private volatile SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition position = SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition.LEFT;
+
+
+    public void runOpMode() {
+        robot.init();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
+        pipeline = new SkystoneDeterminationExample.SkystoneDeterminationPipeline();
         phoneCam.setPipeline(pipeline);
-
-        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
-        // out when the RC activity is in portrait. We do our actual image processing assuming
-        // landscape orientation, though.
         phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
         phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -84,8 +61,67 @@ public class SkystoneDeterminationExample extends LinearOpMode
             }
         });
 
-        waitForStart();
 
+        runtime.reset();
+
+        robot.drivetrain.resetEncoders();
+        robot.drivetrain.useEncoders();
+
+        waitForStart();
+        if (pipeline.getAnalysis() == RIGHT) {
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveStraightProfiledPID(750);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveSideProfiledPID(500);
+
+            runtime.reset();
+            while(runtime.seconds()<2) {
+                robot.intake.setPowerPower(-0.3);
+            }
+            robot.intake.setPowerPower(0);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveStraightProfiledPID(-700);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveSideProfiledPID(-4250);
+        } else if (pipeline.getAnalysis() == CENTER) {
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveStraightProfiledPID(1300);
+            runtime.reset();
+            while(runtime.seconds()<2) {
+                robot.intake.setPowerPower(-0.4);
+            }
+            robot.intake.setPowerPower(0);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveStraightProfiledPID(-1000);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveSideProfiledPID(-5000);
+        } else {
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveStraightProfiledPID(1150);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveSideProfiledPID(-700);
+
+            runtime.reset();
+            while(runtime.seconds()<2) {
+                robot.intake.setPowerPower(-0.3);
+            }
+            robot.intake.setPowerPower(0);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveStraightProfiledPID(-700);
+            robot.drivetrain.resetEncoders();
+            robot.drivetrain.useEncoders();
+            robot.drivetrain.driveSideProfiledPID(3500);
+        }
         while (opModeIsActive())
         {
             telemetry.addData("Analysis", pipeline.getAnalysis());
@@ -94,8 +130,10 @@ public class SkystoneDeterminationExample extends LinearOpMode
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
         }
-    }
 
+
+
+    }
     public static class SkystoneDeterminationPipeline extends OpenCvPipeline
     {
         /*
@@ -120,7 +158,7 @@ public class SkystoneDeterminationExample extends LinearOpMode
         static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(40,40);
         static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(200,140);
         static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(550,180);
-        static final int REGION_WIDTH = 20;
+        static final int REGION_WIDTH = 60;
         static final int REGION_HEIGHT = 20;
 
         /*
@@ -168,7 +206,7 @@ public class SkystoneDeterminationExample extends LinearOpMode
         int avg1, avg2, avg3;
 
         // Volatile since accessed by OpMode thread w/o synchronization
-        private volatile SkystonePosition position = SkystonePosition.LEFT;
+        private volatile SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition position = LEFT;
 
         /*
          * This function takes the RGB frame, converts to YCrCb,
@@ -254,10 +292,11 @@ public class SkystoneDeterminationExample extends LinearOpMode
              * pixel value of the 3-channel image, and referenced the value
              * at index 2 here.
              */
-            avg1 = (int) Core.mean(region1_Cb).val[0];
+            avg1 = 200;
             avg2 = (int) Core.mean(region2_Cb).val[0];
             avg3 = (int) Core.mean(region3_Cb).val[0];
 
+            /*
             /*
              * Draw a rectangle showing sample region 1 on the screen.
              * Simply a visual aid. Serves no functional purpose.
@@ -304,7 +343,7 @@ public class SkystoneDeterminationExample extends LinearOpMode
              */
             if(max == avg1) // Was it from region 1?
             {
-                position = SkystonePosition.LEFT; // Record our analysis
+                position = LEFT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -316,10 +355,12 @@ public class SkystoneDeterminationExample extends LinearOpMode
                         region1_pointB, // Second point which defines the rectangle
                         GREEN, // The color the rectangle is drawn in
                         -1); // Negative thickness means solid fill
+
+
             }
             else if(max == avg2) // Was it from region 2?
             {
-                position = SkystonePosition.CENTER; // Record our analysis
+                position = CENTER; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -334,7 +375,7 @@ public class SkystoneDeterminationExample extends LinearOpMode
             }
             else if(max == avg3) // Was it from region 3?
             {
-                position = SkystonePosition.RIGHT; // Record our analysis
+                position = RIGHT; // Record our analysis
 
                 /*
                  * Draw a solid rectangle on top of the chosen region.
@@ -355,13 +396,9 @@ public class SkystoneDeterminationExample extends LinearOpMode
              */
             return input;
         }
-
-        /*
-         * Call this from the OpMode thread to obtain the latest analysis
-         */
-        public SkystonePosition getAnalysis()
+        public SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition getAnalysis()
         {
             return position;
         }
-    }
-}
+
+    }}

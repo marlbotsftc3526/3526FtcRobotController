@@ -27,12 +27,14 @@ public class AutoBlueRightScan extends LinearOpMode{
 
     private static final String[] LABELS = {
             "Marlbots",
+
             "M"
     };
     RobotHardware robot = new RobotHardware(this);
     private ElapsedTime runtime = new ElapsedTime();
 
     private volatile SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition position = SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition.LEFT;
+
 
     public void runOpMode() {
         robot.init();
@@ -66,17 +68,17 @@ public class AutoBlueRightScan extends LinearOpMode{
         robot.drivetrain.useEncoders();
 
         waitForStart();
-
         if (pipeline.getAnalysis() == RIGHT) {
             robot.drivetrain.resetEncoders();
             robot.drivetrain.useEncoders();
-            robot.drivetrain.driveSideProfiledPID(600);
+            robot.drivetrain.driveStraightProfiledPID(750);
             robot.drivetrain.resetEncoders();
             robot.drivetrain.useEncoders();
-            robot.drivetrain.driveStraightProfiledPID(800);
+            robot.drivetrain.driveSideProfiledPID(500);
+
             runtime.reset();
             while(runtime.seconds()<2) {
-                robot.intake.setPowerPower(-0.4);
+                robot.intake.setPowerPower(-0.3);
             }
             robot.intake.setPowerPower(0);
             robot.drivetrain.resetEncoders();
@@ -103,13 +105,14 @@ public class AutoBlueRightScan extends LinearOpMode{
         } else {
             robot.drivetrain.resetEncoders();
             robot.drivetrain.useEncoders();
-            robot.drivetrain.driveSideProfiledPID(-600);
+            robot.drivetrain.driveStraightProfiledPID(1150);
             robot.drivetrain.resetEncoders();
             robot.drivetrain.useEncoders();
-            robot.drivetrain.driveStraightProfiledPID(800);
+            robot.drivetrain.driveSideProfiledPID(-700);
+
             runtime.reset();
             while(runtime.seconds()<2) {
-                robot.intake.setPowerPower(-0.4);
+                robot.intake.setPowerPower(-0.3);
             }
             robot.intake.setPowerPower(0);
             robot.drivetrain.resetEncoders();
@@ -155,7 +158,7 @@ public class AutoBlueRightScan extends LinearOpMode{
         static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(40,40);
         static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(200,140);
         static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(550,180);
-        static final int REGION_WIDTH = 20;
+        static final int REGION_WIDTH = 60;
         static final int REGION_HEIGHT = 20;
 
         /*
@@ -289,8 +292,7 @@ public class AutoBlueRightScan extends LinearOpMode{
              * pixel value of the 3-channel image, and referenced the value
              * at index 2 here.
              */
-            avg1 = (int) Core.mean(region1_Cb).val[0];
-            System.out.println(Core.mean(region3_Cb).val[0]);
+            avg1 = 200;
             avg2 = (int) Core.mean(region2_Cb).val[0];
             avg3 = (int) Core.mean(region3_Cb).val[0];
 

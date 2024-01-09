@@ -13,13 +13,16 @@ public class Drone {
     public Servo drone = null;
     public double dronePosition;
 
-    public static final double DRONE_shoot = -0.8;
+    public static final double DRONE_hold = 1.4;
+    public static final double DRONE_shoot = 0.3;
+
 
     public Drone(LinearOpMode opmode) {
         myOpMode = opmode;
     }
     public void init(){
         drone = myOpMode.hardwareMap.get(Servo.class, "drone");
+        drone.setPosition(DRONE_hold);
     }
     public void teleOp(){
         if(myOpMode.gamepad2.right_bumper){

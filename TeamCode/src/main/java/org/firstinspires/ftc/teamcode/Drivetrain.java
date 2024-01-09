@@ -177,14 +177,14 @@ public class Drivetrain {
             backLeft.setPower(blPower);
             backRight.setPower(brPower);
 
-            myOpMode.telemetry.addData("flPower", flPower);
+            /*myOpMode.telemetry.addData("flPower", flPower);
             myOpMode.telemetry.addData("instantTarget", motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()));
             myOpMode.telemetry.addData("profileTime", motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()));
             myOpMode.telemetry.addData("frontLeft", frontLeft.getCurrentPosition());
             myOpMode.telemetry.addData("frontRight", frontRight.getCurrentPosition());
             myOpMode.telemetry.addData("backLeft", backLeft.getCurrentPosition());
             myOpMode.telemetry.addData("backRight", backRight.getCurrentPosition());
-            myOpMode.telemetry.update();
+            myOpMode.telemetry.update();*/
         }
 
         frontLeft.setPower(0);
