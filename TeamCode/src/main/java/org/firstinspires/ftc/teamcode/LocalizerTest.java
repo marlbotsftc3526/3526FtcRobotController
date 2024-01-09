@@ -28,6 +28,8 @@ public class LocalizerTest extends LinearOpMode {
 
             robot.localizer.drawRobot(packet.fieldOverlay());
             dashboard.sendTelemetryPacket(packet);
+
+            telemetry.update();
         }
     }
 }
