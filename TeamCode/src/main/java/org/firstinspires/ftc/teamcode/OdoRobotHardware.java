@@ -2,24 +2,24 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class RobotHardware {
+public class OdoRobotHardware {
     private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
     ElapsedTime runtime = new ElapsedTime();
 
-    public Drivetrain drivetrain;
+    public OdoDrivetrain drivetrain;
     public Intake intake;
     public Lift lift;
     public Drone drone;
 
     public SimpleCamera camera;
 
-    public RobotHardware(LinearOpMode opmode) {
+    public OdoRobotHardware(LinearOpMode opmode) {
         myOpMode = opmode;
     }
 
     public void init() {
-        drivetrain = new Drivetrain(myOpMode);
+        drivetrain = new OdoDrivetrain(myOpMode);
         intake = new Intake(myOpMode);
         lift = new Lift(myOpMode);
         drone = new Drone(myOpMode);

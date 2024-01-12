@@ -10,26 +10,66 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Config
 @Autonomous (name="LocalizerTest", group = "Concept")
 public class LocalizerTest extends LinearOpMode {
-    private RobotHardware robot;
+    private OdoRobotHardware robot;
+
+    public static double tX, tY, tHeading;
+    public double oX,oY,oHeading;
+    boolean following = false;
+
+    public State state = State.MANUAL;
+
+    enum State{
+        TARGET,
+        ORIGIN,
+        MANUAL
+    }
 
     @Override public void runOpMode() {
-        robot = new RobotHardware(this);
+        robot = new OdoRobotHardware(this);
         robot.init();
+        tX = 24;
+        tY = 0;
+        tHeading = 0;
+
+        oX = 0;
+        oY = 0;
+        oHeading = 0;
+
+        robot.drivetrain.localizer.setCoordinates(-60,36,0);
+
         waitForStart();
+
         while (opModeIsActive())
         {
+            robot.drivetrain.localizer.telemetry();
 
-            robot.localizer.telemetry();
-
-            robot.localizer.update();
+            robot.drivetrain.localizer.update();
 
             TelemetryPacket packet = new TelemetryPacket();
             FtcDashboard dashboard = FtcDashboard.getInstance();
 
-            robot.localizer.drawRobot(packet.fieldOverlay());
+            robot.drivetrain.localizer.drawRobot(packet.fieldOverlay());
             dashboard.sendTelemetryPacket(packet);
 
             telemetry.update();
+
+            robot.drivetrain.updateDriveConstants();
+
+            if(gamepad1.a){
+                state = State.TARGET;
+            }else if(gamepad1.x){
+                state = State.ORIGIN;
+            }else if(gamepad1.b){
+                state = State.MANUAL;
+            }
+
+            if(state == State.TARGET) {
+                robot.drivetrain.driveToPose(tX, tY, tHeading);
+            }else if(state == State.ORIGIN) {
+                robot.drivetrain.driveToPose(oX,oY,oHeading);
+            }else if(state == State.MANUAL){
+                robot.drivetrain.teleOp();
+            }
         }
     }
 }

@@ -13,13 +13,13 @@ public class Localizer {
 
     //Declare Constants
     //ticks per inch
-    public static final double COUNTS_PER_INCH = 272.5;
+    public static double COUNTS_PER_INCH = 230;
 
     //track width - distance between odometry wheels
-    public static final double TRACK_WIDTH = 12.5;
+    public static double TRACK_WIDTH = 8;
 
     //center wheel offset - distance from left and right wheel; '-' is behind, '+' is in front
-    public static double CENTER_OFFSET = 8;
+    public static double CENTER_OFFSET = 2;
 
     //Declare pose variables
     double x = 0;

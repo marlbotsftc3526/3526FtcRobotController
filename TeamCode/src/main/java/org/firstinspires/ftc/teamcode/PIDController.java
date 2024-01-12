@@ -62,6 +62,36 @@ public class PIDController {
         return out;
     }
 
+    double calculate(double error){
+
+        // rate of change of the error
+        double errorChange = (error - lastError);
+
+        //Low pass filter, reduces noise in signal
+        currentFilterEstimate = (a*previousFilterEstimate)+(1-a)*errorChange;
+        previousFilterEstimate = currentFilterEstimate;
+
+        double derivative = currentFilterEstimate;
+
+        // sum of all error over time
+        integralSum = integralSum + (error);
+
+        //anti-windup caps integralSum
+        if(integralSum*Ki > integralCap){
+            integralSum = integralCap/Ki;
+        }else if(integralSum*Ki < -integralCap){
+            integralSum = -integralCap/Ki;
+        }
+
+        double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+
+        out = Range.clip(out, -maxOut, maxOut);
+
+        lastError = error;
+
+        return out;
+    }
+
     boolean targetReached(double reference, double currentPosition){
         double error = reference-currentPosition;
         if(Math.abs(error) > errorMargin){

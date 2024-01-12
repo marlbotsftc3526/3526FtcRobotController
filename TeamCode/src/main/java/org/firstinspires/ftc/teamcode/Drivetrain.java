@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Drivetrain {
     private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
+    Localizer localizer;
     ElapsedTime time = new ElapsedTime();
 
     //drivetrain
@@ -33,6 +34,9 @@ public class Drivetrain {
     }
 
     public void init(){
+        localizer = new Localizer(myOpMode);
+        localizer.init();
+
         flPID = new PIDController(DRIVE_KP, DRIVE_KI, DRIVE_KD);
         frPID = new PIDController(DRIVE_KP, DRIVE_KI, DRIVE_KD);
         blPID = new PIDController(DRIVE_KP, DRIVE_KI, DRIVE_KD);
@@ -57,6 +61,11 @@ public class Drivetrain {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         myOpMode.telemetry.addData(">", "Drivetrain Initialized");
     }
