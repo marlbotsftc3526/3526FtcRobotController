@@ -39,7 +39,6 @@ public class RobotHardware {
         lift.teleOp();
         intake.teleOp();
         drone.teleOp();
-        myOpMode.telemetry.update();
     }
 
 }

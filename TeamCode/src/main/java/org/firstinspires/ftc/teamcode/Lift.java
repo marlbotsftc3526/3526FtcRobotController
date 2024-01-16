@@ -37,7 +37,7 @@ public class Lift {
     public static double DIFF2 = 0.93;
 
     public static final double GATE_down = 0;
-    public static final double GATE_up = 0.6;
+    public static final double GATE_up = 0.3;
 
     public double boxPosition;
 
@@ -81,6 +81,9 @@ public class Lift {
         liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        gateLeft.setPosition(GATE_down);
+        gateRight.setPosition(GATE_up);
 
         myOpMode.telemetry.addData(">", "Lift Initialized");
 
