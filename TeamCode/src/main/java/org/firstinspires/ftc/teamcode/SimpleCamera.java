@@ -1,24 +1,30 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.List;
 
 public class SimpleCamera {
     private LinearOpMode myOpMode = null;
 
-    private SimpleVisionProcessor visionProcessor;
-    private VisionPortal colorVisionPortal;
-    private VisionPortal aprilTagVisionPortal;
+    public WebcamName webcam1, webcam2;
+    public VisionPortal visionPortal;
+    private SimpleVisionProcessor colorVisionProcessor;
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
+    public AprilTagProcessor aprilTagProcessor;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound;
 
@@ -27,54 +33,50 @@ public class SimpleCamera {
     }
 
     public void init(){
-        visionProcessor = new SimpleVisionProcessor();
-        colorVisionPortal = VisionPortal.easyCreateWithDefaults(
-                myOpMode.hardwareMap.get(WebcamName.class, "Webcam 1"),
-                visionProcessor);
-        //initAprilTag();
-        targetFound     = false;    // Set to true when an AprilTag target is detected
-    }
+        webcam1 = myOpMode.hardwareMap.get(WebcamName.class, "Webcam 1");
+        webcam2 = myOpMode.hardwareMap.get(WebcamName.class, "Webcam 2");
+        CameraName switchableCamera = ClassFactory.getInstance()
+                .getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
 
-    public SimpleVisionProcessor.Selected returnSelection(){
-        return visionProcessor.getSelection();
-    }
+        colorVisionProcessor = new SimpleVisionProcessor();
+        aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
 
-    public void stopColorStreaming(){
-        colorVisionPortal.stopStreaming();
-    }
-
-    private void initAprilTag() {
-        // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder().build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // eg: Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTag.setDecimation(2);
+        //set decimation of AprilTag processor?
 
         // Create the vision portal by using a builder.
-        if (USE_WEBCAM) {
-            aprilTagVisionPortal = new VisionPortal.Builder()
-                    .setCamera(myOpMode.hardwareMap.get(WebcamName.class, "Webcam 2"))
-                    .addProcessor(aprilTag)
-                    .build();
-        } else {
-            aprilTagVisionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTag)
-                    .build();
-        }
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(switchableCamera)
+                .setCameraResolution(new Size(640, 480))
+                //.setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .addProcessors(aprilTagProcessor, colorVisionProcessor)
+                .build();
+
+        targetFound     = false;    // Set to true when an AprilTag target is detected
+        //setActiveCamera(webcam1);
     }
+    
+
+    public SimpleVisionProcessor.Selected returnSelection(){
+        return colorVisionProcessor.getSelection();
+    }
+
+    public void stopStreaming(){
+        visionPortal.stopStreaming();
+    }
+
+    public void stopColorProcessor(){visionPortal.setProcessorEnabled(colorVisionProcessor, false);}
+
+    public void setActiveCamera(WebcamName webCam){
+        visionPortal.setActiveCamera(webCam);
+    }
+
     void scanAprilTag() {
         targetFound = false;
         desiredTag = null;
 
-        // Step through the list of detected tags and look for a matching tag
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        // Step through the list of detected tags
+        // and look for a matching tag
+        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
         for (AprilTagDetection detection : currentDetections) {
             // Look to see if we have size info on this tag.
             if (detection.metadata != null) {

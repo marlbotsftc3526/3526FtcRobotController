@@ -49,7 +49,7 @@ public class AutoLeftBlueNew extends LinearOpMode {
         elapsedTime = new ElapsedTime();
         waitForStart();
 
-        robot.camera.stopColorStreaming();
+        robot.camera.stopStreaming();
 
         if (opModeIsActive()) {
 

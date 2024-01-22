@@ -19,7 +19,7 @@ public class SimpleVisionTest extends LinearOpMode {
         }
         waitForStart();
 
-        robot.camera.stopColorStreaming();
+        robot.camera.stopStreaming();
 
         if (opModeIsActive()) {
 
