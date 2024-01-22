@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.SkystoneDeterminationExample.Skysto
 import static org.firstinspires.ftc.teamcode.SkystoneDeterminationExample.SkystoneDeterminationPipeline.SkystonePosition.RIGHT;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -20,6 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Disabled
 @Autonomous(name = "AutoRedRight Meet 2", group = "Linear Opmode")
 public class AutoRedRightScan extends LinearOpMode{
     OpenCvInternalCamera phoneCam;

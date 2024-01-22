@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -16,7 +17,8 @@ public class LocalizerTest extends LinearOpMode {
     public double oX,oY,oHeading;
     boolean following = false;
 
-    public State state = State.MANUAL;
+    State state;
+
 
     enum State{
         TARGET,
@@ -35,7 +37,7 @@ public class LocalizerTest extends LinearOpMode {
         oY = 0;
         oHeading = 0;
 
-        robot.drivetrain.localizer.setCoordinates(-60,36,0);
+        robot.drivetrain.localizer.setCoordinates(0,0,0);
 
         waitForStart();
 

@@ -70,13 +70,13 @@ public class Intake {
         myOpMode.telemetry.addData("Distance Left (cm)", "%.3f", ((DistanceSensor) colorLeft).getDistance(DistanceUnit.CM));
         myOpMode.telemetry.addData("Distance Right (cm)", "%.3f", ((DistanceSensor) colorRight).getDistance(DistanceUnit.CM));
 
-        if(((DistanceSensor) colorLeft).getDistance(DistanceUnit.CM) <= 8){
+        if(((DistanceSensor) colorLeft).getDistance(DistanceUnit.CM) <= 5.7){
             LeftPixel = true;
         }else{
             LeftPixel = false;
 
         }
-        if(((DistanceSensor) colorRight).getDistance(DistanceUnit.CM) <= 8){
+        if(((DistanceSensor) colorRight).getDistance(DistanceUnit.CM) <= 5.7){
             RightPixel = true;
         }else{
             RightPixel = false;

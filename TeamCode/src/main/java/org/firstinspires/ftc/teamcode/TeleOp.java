@@ -20,6 +20,7 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() {
 
         robot.init();
+        robot.drone.setPos(robot.drone.DRONE_hold);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -35,28 +36,37 @@ public class TeleOp extends LinearOpMode {
                 robot.lift.resetLiftPID();
                 robot.lift.boxLeft.setPosition(robot.lift.BOX_intake);
                 robot.lift.boxRight.setPosition(robot.lift.DIFF1-robot.lift.BOX_intake);
-            }else if(gamepad2.b){
+                robot.lift.gateLeft.setPosition(robot.lift.GATE_down);
+                robot.lift.gateRight.setPosition(robot.lift.GATE_up);
+            }else if(gamepad2.x){
+                robot.lift.delay.reset();
                 robot.lift.liftMode = Lift.LiftMode.HIGH;
                 robot.lift.resetLiftPID();
                 robot.lift.boxLeft.setPosition(robot.lift.BOX_score);
                 robot.lift.boxRight.setPosition(robot.lift.DIFF2-robot.lift.BOX_score);
-            }else if(gamepad2.x){
+            }else if(gamepad2.b){
+                robot.lift.delay.reset();
                 robot.lift.liftMode = Lift.LiftMode.MEDIUM;
                 robot.lift.resetLiftPID();
                 robot.lift.boxLeft.setPosition(robot.lift.BOX_score);
                 robot.lift.boxRight.setPosition(robot.lift.DIFF2-robot.lift.BOX_score);
             }else if(gamepad2.y){
+                robot.lift.delay.reset();
                 robot.lift.liftMode = Lift.LiftMode.LOW;
                 robot.lift.resetLiftPID();
                 robot.lift.boxLeft.setPosition(robot.lift.BOX_score);
-                robot.lift.boxRight.setPosition(robot.lift.DIFF2-robot.lift.BOX_score);
+                robot.lift.boxRight.setPosition(robot.lift.DIFF1-robot.lift.BOX_score);
             }
             //if(robot.lift.touch.isPressed()){
-            if(robot.intake.LeftPixel){
+            if(robot.intake.LeftPixel && !gamepad2.right_bumper){
                 robot.lift.gateLeft.setPosition(robot.lift.GATE_up);
+            }else if(gamepad2.right_bumper){
+                robot.lift.gateLeft.setPosition(robot.lift.GATE_down);
             }
-            if(robot.intake.RightPixel){
+            if(robot.intake.RightPixel && !gamepad2.left_bumper){
                 robot.lift.gateRight.setPosition(robot.lift.GATE_down);
+            }else if(gamepad2.left_bumper){
+                robot.lift.gateRight.setPosition(robot.lift.GATE_up);
             }
 
             //}

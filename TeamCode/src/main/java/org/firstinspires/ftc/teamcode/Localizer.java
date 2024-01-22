@@ -16,7 +16,7 @@ public class Localizer {
     public static double COUNTS_PER_INCH = 230;
 
     //track width - distance between odometry wheels
-    public static double TRACK_WIDTH = 8;
+    public static double TRACK_WIDTH = 6.7;
 
     //center wheel offset - distance from left and right wheel; '-' is behind, '+' is in front
     public static double CENTER_OFFSET = 2;

@@ -13,6 +13,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Lift {
     private LinearOpMode myOpMode = null;
 
+    public ElapsedTime delay = null;
+    public double delayTime = 0.5;
+
     public DcMotor liftRight = null;
     public DcMotor liftLeft = null;
 
@@ -31,7 +34,7 @@ public class Lift {
     public static final double LIFT_KI = 0;
     public static final double LIFT_KD = 0;
     public static final double MAX_OUT = 0.5;
-    public static double BOX_intake = 0.065;
+    public static double BOX_intake = 0.058;
     public static double BOX_score = 0.7;
     public static double DIFF1 = 0.93;
     public static double DIFF2 = 0.93;
@@ -54,6 +57,8 @@ public class Lift {
         myOpMode = opmode;
     }
     public void init(){
+        delay = new ElapsedTime();
+
         liftLeftPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD);
         liftRightPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD);
 
@@ -68,11 +73,14 @@ public class Lift {
         liftRightPID.maxOut = 0.95;
 
         boxPosition = BOX_intake;
+        boxLeft.setPosition(BOX_intake);
+        boxRight.setPosition(DIFF1-
+                BOX_intake);
 
         liftRight = myOpMode.hardwareMap.get(DcMotor.class, "liftRight");
         liftLeft = myOpMode.hardwareMap.get(DcMotor.class, "liftLeft");
-        liftLeft.setDirection(DcMotor.Direction.FORWARD);
-        liftRight.setDirection(DcMotor.Direction.REVERSE);
+        liftLeft.setDirection(DcMotor.Direction.REVERSE);
+        liftRight.setDirection(DcMotor.Direction.FORWARD);
 
         // brake and encoders
         liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -91,7 +99,8 @@ public class Lift {
 
     }
     public void teleOp(){
-
+        myOpMode.telemetry.addData("LiftLeftPos: ", liftLeft.getCurrentPosition());
+        myOpMode.telemetry.addData("LiftRightPos: ", liftRight.getCurrentPosition());
         if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.3) {
             liftMode = LiftMode.MANUAL;
         }
@@ -124,12 +133,12 @@ public class Lift {
                 liftLeft.setPower(0);
                 liftRight.setPower(0);
             }
-        } else if (liftMode == LiftMode.HIGH) {
-            liftToPositionPIDClass(3000);
-        } else if (liftMode == LiftMode.MEDIUM) {
+        } else if (liftMode == LiftMode.HIGH && delay.seconds()>delayTime) {
             liftToPositionPIDClass(2000);
-        } else if (liftMode == LiftMode.LOW) {
+        } else if (liftMode == LiftMode.MEDIUM && delay.seconds()>delayTime) {
             liftToPositionPIDClass(1000);
+        } else if (liftMode == LiftMode.LOW && delay.seconds()>delayTime) {
+            liftToPositionPIDClass(700);
         } else if (liftMode == LiftMode.GROUND) {
             resetLift(-0.8);
         }
@@ -147,8 +156,7 @@ public class Lift {
             liftLeft.setPower(Math.max(-MAX_OUT, outLeft));
             liftRight.setPower(Math.max(-MAX_OUT, outRight));
         }
-        myOpMode.telemetry.addData("LiftLeftPower: ", outLeft);
-        myOpMode.telemetry.addData("LiftRightPower: ", outRight);
+
     }
 
     public void resetLift(double speed) {
@@ -164,8 +172,10 @@ public class Lift {
 
     }
 
+
     public void resetLiftPID() {
         liftLeftPID.reset();
         liftRightPID.reset();
     }
+
 }

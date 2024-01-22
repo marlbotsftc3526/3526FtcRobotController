@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "simplevisiontest", group = "Linear Opmode")
 public class SimpleVisionTest extends LinearOpMode {
 
-    RobotHardware robot = new RobotHardware(this);
+    OdoRobotHardware robot = new OdoRobotHardware(this);
 
     public void runOpMode() {
         robot.init();
