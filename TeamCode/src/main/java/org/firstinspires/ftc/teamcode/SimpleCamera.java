@@ -25,7 +25,7 @@ public class SimpleCamera {
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     public AprilTagProcessor aprilTagProcessor;              // Used for managing the AprilTag detection process.
-    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
+    public AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound;
 
     public SimpleCamera(LinearOpMode opmode){
@@ -54,7 +54,7 @@ public class SimpleCamera {
         targetFound     = false;    // Set to true when an AprilTag target is detected
         //setActiveCamera(webcam1);
     }
-    
+
 
     public SimpleVisionProcessor.Selected returnSelection(){
         return colorVisionProcessor.getSelection();

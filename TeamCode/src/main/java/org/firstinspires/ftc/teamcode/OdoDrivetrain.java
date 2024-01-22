@@ -144,14 +144,11 @@ public class OdoDrivetrain {
             backRight.setPower(-xPower_rotated + yPower_rotated - tPower);
 
             localizer.update();
-            TelemetryPacket packet = new TelemetryPacket();
-            FtcDashboard dashboard = FtcDashboard.getInstance();
-
-            localizer.drawRobot(packet.fieldOverlay());
-            dashboard.sendTelemetryPacket(packet);
+            localizer.updateDashboard();
             localizer.telemetry();
             myOpMode.telemetry.update();
         }
+        stopMotors();
     }
 
     // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
@@ -198,4 +195,54 @@ public class OdoDrivetrain {
         yPID.maxOut = DRIVE_MAX_OUT;
         headingPID.maxOut = DRIVE_MAX_OUT;
     }
+
+    public void driveStraightProfiledPID(float distance) {
+        double leftInitial = localizer.leftEncoder.getCurrentPosition();
+        double rightInitial = localizer.rightEncoder.getCurrentPosition();
+        float direction = -1;
+        if (distance < 0) {
+            direction = 1;
+        }
+
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
+
+        while (myOpMode.opModeIsActive() &&
+                time.seconds() < 0.5 + motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds())) {
+            double flPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.leftEncoder.getCurrentPosition()-leftInitial);
+            double frPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.rightEncoder.getCurrentPosition()-rightInitial);
+            double blPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.leftEncoder.getCurrentPosition()-leftInitial);
+            double brPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.rightEncoder.getCurrentPosition()-rightInitial);
+
+            frontLeft.setPower(flPower);
+            frontRight.setPower(frPower);
+            backLeft.setPower(blPower);
+            backRight.setPower(brPower);
+
+            myOpMode.telemetry.addData("flPower", flPower);
+            myOpMode.telemetry.addData("instantTarget", motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()));
+            myOpMode.telemetry.addData("profileTime", motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()));
+            myOpMode.telemetry.addData("left", localizer.leftEncoder.getCurrentPosition());
+            myOpMode.telemetry.addData("right", localizer.rightEncoder.getCurrentPosition());
+            myOpMode.telemetry.update();
+            localizer.update();
+            localizer.updateDashboard();
+        }
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
 }
