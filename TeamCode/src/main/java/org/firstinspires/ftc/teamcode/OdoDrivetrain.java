@@ -33,8 +33,8 @@ public class OdoDrivetrain {
     public static double DRIVE_KP = 0.07;
     public static double DRIVE_KI = 0.0;
     public static double DRIVE_KD = 0;//0.0003;g
-    public static double DRIVE_MAX_ACC = 2000;
-    public static double DRIVE_MAX_VEL = 3500;
+    public static double DRIVE_MAX_ACC = 100;
+    public static double DRIVE_MAX_VEL = 200;
     public static double DRIVE_MAX_OUT = 0.8;
     public OdoDrivetrain(LinearOpMode opmode) {
         myOpMode = opmode;
@@ -197,6 +197,7 @@ public class OdoDrivetrain {
     }
 
     public void driveStraightProfiledPID(float distance) {
+        double targetCounts = distance * localizer.COUNTS_PER_INCH;
         double leftInitial = localizer.leftEncoder.getCurrentPosition();
         double rightInitial = localizer.rightEncoder.getCurrentPosition();
         float direction = -1;
@@ -208,20 +209,80 @@ public class OdoDrivetrain {
         time.reset();
 
         while (myOpMode.opModeIsActive() &&
-                time.seconds() < 0.5 + motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds())) {
-            double flPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.leftEncoder.getCurrentPosition()-leftInitial);
-            double frPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.rightEncoder.getCurrentPosition()-rightInitial);
-            double blPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.leftEncoder.getCurrentPosition()-leftInitial);
-            double brPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()), localizer.rightEncoder.getCurrentPosition()-rightInitial);
+                time.seconds() < 0.5 + motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, targetCounts, time.seconds())) {
+            double flPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, targetCounts, time.seconds()), localizer.leftEncoder.getCurrentPosition()-leftInitial);
+            double frPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, targetCounts, time.seconds()), localizer.rightEncoder.getCurrentPosition()-rightInitial);
+            double blPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, targetCounts, time.seconds()), localizer.leftEncoder.getCurrentPosition()-leftInitial);
+            double brPower = xPID.calculate(direction * motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, targetCounts, time.seconds()), localizer.rightEncoder.getCurrentPosition()-rightInitial);
+
+            frontLeft.setPower(-flPower);
+            frontRight.setPower(-frPower);
+            backLeft.setPower(-blPower);
+            backRight.setPower(-brPower);
+
+            myOpMode.telemetry.addData("flPower", flPower);
+            myOpMode.telemetry.addData("instantTarget", motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, targetCounts, time.seconds()));
+            myOpMode.telemetry.addData("profileTime", motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, targetCounts, time.seconds()));
+            myOpMode.telemetry.addData("left", localizer.leftEncoder.getCurrentPosition());
+            myOpMode.telemetry.addData("right", localizer.rightEncoder.getCurrentPosition());
+            myOpMode.telemetry.update();
+            localizer.update();
+            localizer.updateDashboard();
+        }
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void driveStraightPID(float distance) {
+        double targetCounts = distance * localizer.COUNTS_PER_INCH;
+        double leftInitial = localizer.leftEncoder.getCurrentPosition();
+        double rightInitial = localizer.rightEncoder.getCurrentPosition();
+
+        double leftError = targetCounts - (localizer.leftEncoder.getCurrentPosition()-leftInitial);
+        double rightError = targetCounts - (localizer.leftEncoder.getCurrentPosition()-rightInitial);
+
+        float direction = -1;
+        if (distance < 0) {
+            direction = 1;
+        }
+
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
+
+        while (myOpMode.opModeIsActive() && leftError > 10 && rightError > 10) {
+
+            leftError = targetCounts - (localizer.leftEncoder.getCurrentPosition()-leftInitial);
+            rightError = targetCounts - (localizer.leftEncoder.getCurrentPosition()-leftInitial);
+
+            double flPower = xPID.calculate(targetCounts, localizer.leftEncoder.getCurrentPosition()-leftInitial);
+            double frPower = xPID.calculate(targetCounts, localizer.rightEncoder.getCurrentPosition()-leftInitial);
+            double blPower = xPID.calculate(targetCounts, localizer.leftEncoder.getCurrentPosition()-leftInitial);
+            double brPower = xPID.calculate(targetCounts, localizer.rightEncoder.getCurrentPosition()-leftInitial);
 
             frontLeft.setPower(flPower);
             frontRight.setPower(frPower);
             backLeft.setPower(blPower);
             backRight.setPower(brPower);
 
+
+
             myOpMode.telemetry.addData("flPower", flPower);
-            myOpMode.telemetry.addData("instantTarget", motionProfile(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()));
-            myOpMode.telemetry.addData("profileTime", motionProfileTime(DRIVE_MAX_ACC, DRIVE_MAX_VEL, distance, time.seconds()));
+            myOpMode.telemetry.addData("targetCounts", targetCounts);
+            myOpMode.telemetry.addData("leftError", leftError);
+            myOpMode.telemetry.addData("left-initial", localizer.leftEncoder.getCurrentPosition()-leftInitial);
             myOpMode.telemetry.addData("left", localizer.leftEncoder.getCurrentPosition());
             myOpMode.telemetry.addData("right", localizer.rightEncoder.getCurrentPosition());
             myOpMode.telemetry.update();
