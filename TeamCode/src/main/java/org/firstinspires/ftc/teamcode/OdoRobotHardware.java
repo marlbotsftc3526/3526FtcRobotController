@@ -13,12 +13,12 @@ public class OdoRobotHardware {
     public Lift lift;
     public Drone drone;
 
-    public SimpleCamera camera;
+    public DualPortalCamera camera;
 
     //Variables for AprilTag Motion --> eventually reconcile these with drive constants in Drivetrain class
-    final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    final double SPEED_GAIN  =  0.03  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    final double STRAFE_GAIN =  0.02 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    final double TURN_GAIN   =  0.02  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
     final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
@@ -33,7 +33,7 @@ public class OdoRobotHardware {
         intake = new Intake(myOpMode);
         lift = new Lift(myOpMode);
         drone = new Drone(myOpMode);
-        camera = new SimpleCamera(myOpMode);
+        camera = new DualPortalCamera(myOpMode);
 
         drivetrain.init();
         intake.init();
@@ -58,8 +58,8 @@ public class OdoRobotHardware {
         double turn = 0;
         double strafe = 0;
 
-        while (rangeError > 1) {
-            camera.scanAprilTag();
+        while (rangeError > 1 && myOpMode.opModeIsActive()) {
+            camera.scanAprilTag(targetTag);
             if (camera.targetFound) {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 rangeError = (camera.desiredTag.ftcPose.range - targetDistance);
@@ -68,8 +68,8 @@ public class OdoRobotHardware {
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
                 drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+                turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) *-1;
+                strafe = Range.clip(yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE)*-1;
 
                 // Calculate wheel powers.
                 double leftFrontPower = drive - strafe - turn;
@@ -94,6 +94,8 @@ public class OdoRobotHardware {
                 drivetrain.frontRight.setPower(rightFrontPower);
                 drivetrain.backLeft.setPower(leftBackPower);
                 drivetrain.backRight.setPower(rightBackPower);
+            }else{
+                drivetrain.stopMotors();
             }
             drivetrain.localizer.update();
             drivetrain.localizer.updateDashboard();

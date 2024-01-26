@@ -13,8 +13,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class DriveFunctionTest extends LinearOpMode {
     private OdoRobotHardware robot;
 
-
-
     enum State{
         TARGET,
         ORIGIN,
@@ -25,18 +23,21 @@ public class DriveFunctionTest extends LinearOpMode {
         robot = new OdoRobotHardware(this);
         robot.init();
 
+
+
         robot.drivetrain.localizer.setCoordinates(0, 0, 0);
 
         while (!isStarted()) {
+            robot.camera.scanAprilTag(3);
             telemetry.addData("Position: ", robot.camera.returnSelection());
             telemetry.update();
         }
 
-        robot.camera.stopColorProcessor();
+       // robot.camera.stopColorProcessor();
 
         waitForStart();
 
-        robot.drivetrain.driveStraightProfiledPID(24);
+        robot.driveToAprilTag(3,8);
         //try drive to pose
         //try drive to april tag
     }

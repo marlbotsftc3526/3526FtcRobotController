@@ -19,11 +19,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class SimpleCamera {
+public class DualPortalCamera {
     private LinearOpMode myOpMode = null;
 
     public WebcamName webcam1, webcam2;
     public VisionPortal visionPortal;
+
+    public VisionPortal visionPortalFront;
     private SimpleVisionProcessor colorVisionProcessor;
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
     private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
@@ -31,15 +33,13 @@ public class SimpleCamera {
     public AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     boolean targetFound;
 
-    public SimpleCamera(LinearOpMode opmode){
+    public DualPortalCamera(LinearOpMode opmode){
         myOpMode = opmode;
     }
 
     public void init(){
-        webcam1 = myOpMode.hardwareMap.get(WebcamName.class, "Webcam 1");
-        webcam2 = myOpMode.hardwareMap.get(WebcamName.class, "Webcam 2");
-        CameraName switchableCamera = ClassFactory.getInstance()
-                .getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
+        webcam1 = myOpMode.hardwareMap.get(WebcamName.class, "arducam");
+        webcam2 = myOpMode.hardwareMap.get(WebcamName.class, "logitech");
 
         colorVisionProcessor = new SimpleVisionProcessor();
         aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
@@ -54,14 +54,31 @@ public class SimpleCamera {
         // Note: Decimation can be changed on-the-fly to adapt during a match.
         aprilTagProcessor.setDecimation(2);
 
+        int[] portalList = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.HORIZONTAL);
+        int portalOneID = portalList[0];
+        int portalTwoID = portalList[1];
+
         // Create the vision portal by using a builder.
         visionPortal = new VisionPortal.Builder()
-                .setCamera(switchableCamera)
+                .setCamera(webcam1)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .setCameraResolution(new Size(640, 480))
-                //.setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .addProcessors(aprilTagProcessor, colorVisionProcessor)
+                .addProcessor(aprilTagProcessor)
+                .setLiveViewContainerId(portalOneID)
                 .build();
 
+        // Create the vision portal by using a builder.
+        visionPortalFront = new VisionPortal.Builder()
+                .setCamera(webcam2)
+                //.setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .setCameraResolution(new Size(640, 480))
+                .addProcessor(colorVisionProcessor)
+                .setLiveViewContainerId(portalTwoID)
+                .build();
+
+
+
+        setManualExposure(4,255);
         targetFound     = false;    // Set to true when an AprilTag target is detected
         //setActiveCamera(webcam1);
     }
@@ -75,11 +92,7 @@ public class SimpleCamera {
         visionPortal.stopStreaming();
     }
 
-    public void stopColorProcessor(){visionPortal.setProcessorEnabled(colorVisionProcessor, false);}
-
-    public void setActiveCamera(WebcamName webCam){
-        visionPortal.setActiveCamera(webCam);
-    }
+    //public void stopColorProcessor(){visionPortal.setProcessorEnabled(colorVisionProcessor, false);}
 
     void scanAprilTag(int targetTag) {
         targetFound = false;
