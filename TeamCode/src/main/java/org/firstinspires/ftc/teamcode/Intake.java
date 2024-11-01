@@ -56,7 +56,7 @@ public class Intake {
     }
     public void teleOp(){
         if(myOpMode.gamepad2.dpad_left){
-            intake.setPower(0.5);
+            intake.setPower(0.8);
         }else if(myOpMode.gamepad2.dpad_right) {
             intake.setPower(-0.5);
         }else if(myOpMode.gamepad2.dpad_up){
@@ -70,13 +70,13 @@ public class Intake {
         myOpMode.telemetry.addData("Distance Left (cm)", "%.3f", ((DistanceSensor) colorLeft).getDistance(DistanceUnit.CM));
         myOpMode.telemetry.addData("Distance Right (cm)", "%.3f", ((DistanceSensor) colorRight).getDistance(DistanceUnit.CM));
 
-        if(((DistanceSensor) colorLeft).getDistance(DistanceUnit.CM) <= 5.7){
+        if(((DistanceSensor) colorLeft).getDistance(DistanceUnit.CM) <= 5.5){
             LeftPixel = true;
         }else{
             LeftPixel = false;
 
         }
-        if(((DistanceSensor) colorRight).getDistance(DistanceUnit.CM) <= 5.7){
+        if(((DistanceSensor) colorRight).getDistance(DistanceUnit.CM) <= 5.5){
             RightPixel = true;
         }else{
             RightPixel = false;

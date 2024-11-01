@@ -34,9 +34,9 @@ public class Lift {
     public static final double LIFT_KI = 0;
     public static final double LIFT_KD = 0;
     public static final double MAX_OUT = 0.5;
-    public static double BOX_intake = 0.058;
+    public static double BOX_intake = 0.075;
     public static double BOX_score = 0.7;
-    public static double DIFF1 = 0.93;
+    public static double DIFF1 = 0.95;
     public static double DIFF2 = 0.93;
 
     public static final double GATE_down = 0;
@@ -90,8 +90,8 @@ public class Lift {
         liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        gateLeft.setPosition(GATE_down);
-        gateRight.setPosition(GATE_up);
+        /*gateLeft.setPosition(GATE_down);
+        gateRight.setPosition(GATE_up);*/
 
         myOpMode.telemetry.addData(">", "Lift Initialized");
 
@@ -140,7 +140,7 @@ public class Lift {
         } else if (liftMode == LiftMode.LOW && delay.seconds()>delayTime) {
             liftToPositionPIDClass(700);
         } else if (liftMode == LiftMode.GROUND) {
-            resetLift(-0.8);
+            liftToPositionPIDClass(0);
         }
 
     }
@@ -162,7 +162,7 @@ public class Lift {
     public void resetLift(double speed) {
         liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if (touch.isPressed() == false) {
+        if (liftLeft.getCurrentPosition() >= 5) {
             liftLeft.setPower(speed);
             liftRight.setPower(speed);
         } else {

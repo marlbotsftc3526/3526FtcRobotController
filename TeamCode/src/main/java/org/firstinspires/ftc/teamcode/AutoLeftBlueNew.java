@@ -45,11 +45,12 @@ public class AutoLeftBlueNew extends LinearOpMode {
             telemetry.update();
         }
 
+        robot.camera.visionPortalFront.stopStreaming();
         robot.drivetrain.localizer.setCoordinates(initx, inity, initheading);
         elapsedTime = new ElapsedTime();
         waitForStart();
 
-        robot.camera.stopStreaming();
+        //robot.camera.stopStreaming();
 
         if (opModeIsActive()) {
 
@@ -71,45 +72,34 @@ public class AutoLeftBlueNew extends LinearOpMode {
             if(robot.camera.returnSelection() == SimpleVisionProcessor.Selected.LEFT){
                 robot.lift.gateLeft.setPosition(robot.lift.GATE_up);
                 robot.lift.gateRight.setPosition(robot.lift.GATE_down);
-                tX = 34;
-                tY = 28;
+                tX = 35;
+                tY = 30;
                 tHeading = Math.PI;
-                robot.drivetrain.driveToPose(tX, tY, tHeading);
+                robot.drivetrain.driveToPose(tX, tY, tHeading, 3);
                 robot.drivetrain.stopMotors();
                 elapsedTime.reset();
 
-                while(elapsedTime.seconds() < 3) {
+                while(elapsedTime.seconds() < 2) {
                     robot.intake.setPowerPower(-0.3);
                 }
                 robot.intake.setPowerPower(0);
-                tX = 57 ;
-                tY = 35;
-                tHeading = Math.PI;
-                robot.drivetrain.driveToPose(tX, tY, tHeading);
+                elapsedTime.reset();
+                tX = 36;
+                tY = 33.5;
+                tHeading = Math.PI+Math.PI/13;
+                robot.drivetrain.driveToPose(tX, tY, tHeading, 2);
+                robot.driveToAprilTag(1, 0.1);
                 robot.drivetrain.stopMotors();
                 robot.lift.delay.reset();
-                robot.lift.boxLeft.setPosition(robot.lift.BOX_score);
-                robot.lift.boxRight.setPosition(robot.lift.DIFF1-robot.lift.BOX_score);
-                elapsedTime.reset();
 
-                while(elapsedTime.seconds() < 1.5) {
-                    robot.lift.liftLeft.setPower(0.3);
-                    robot.lift.liftRight.setPower(0.3);
-                }
-                robot.lift.liftLeft.setPower(0);
-                robot.lift.liftRight.setPower(0);
-                sleep(1000);
-                robot.lift.gateLeft.setPosition(robot.lift.GATE_down);
-                robot.lift.gateRight.setPosition(robot.lift.GATE_up);
-                sleep(2000);
             }else if(robot.camera.returnSelection() == SimpleVisionProcessor.Selected.RIGHT){
 
                 robot.lift.gateLeft.setPosition(robot.lift.GATE_up);
                 robot.lift.gateRight.setPosition(robot.lift.GATE_down);
-                tX = 10;
-                tY = 26;
+                tX = 9.5;
+                tY = 30;
                 tHeading = Math.PI;
-                robot.drivetrain.driveToPose(tX, tY, tHeading);
+                robot.drivetrain.driveToPose(tX, tY, tHeading, 3);
                 robot.drivetrain.stopMotors();
                 elapsedTime.reset();
 
@@ -117,33 +107,21 @@ public class AutoLeftBlueNew extends LinearOpMode {
                     robot.intake.setPowerPower(-0.3);
                 }
                 robot.intake.setPowerPower(0);
-                tX = 57;
-                tY = 20;
-                tHeading = Math.PI;
-                robot.drivetrain.driveToPose(tX, tY, tHeading);
+                tX = 30;
+                tY = 28;
+                tHeading = Math.PI-Math.PI/13;
+                robot.drivetrain.driveToPose(tX, tY, tHeading, 2);
+                elapsedTime.reset();
+                robot.driveToAprilTag(3, 0.1);
                 robot.drivetrain.stopMotors();
                 robot.lift.delay.reset();
-                robot.lift.boxLeft.setPosition(robot.lift.BOX_score);
-                robot.lift.boxRight.setPosition(robot.lift.DIFF1-robot.lift.BOX_score);
-                elapsedTime.reset();
-
-                while(elapsedTime.seconds() < 1.5) {
-                    robot.lift.liftLeft.setPower(0.3);
-                    robot.lift.liftRight.setPower(0.3);
-                }
-                robot.lift.liftLeft.setPower(0);
-                robot.lift.liftRight.setPower(0);
-                sleep(1000);
-                robot.lift.gateLeft.setPosition(robot.lift.GATE_down);
-                robot.lift.gateRight.setPosition(robot.lift.GATE_up);
-                sleep(2000);
             }else{
                 robot.lift.gateLeft.setPosition(robot.lift.GATE_up);
                 robot.lift.gateRight.setPosition(robot.lift.GATE_down);
                 tX = 10;
-                tY = 42;
+                tY = 39;
                 tHeading = 3*Math.PI/2;
-                robot.drivetrain.driveToPose(tX, tY, tHeading);
+                robot.drivetrain.driveToPose(tX, tY, tHeading, 3);
                 robot.drivetrain.stopMotors();
                 elapsedTime.reset();
 
@@ -151,31 +129,57 @@ public class AutoLeftBlueNew extends LinearOpMode {
                     robot.intake.setPowerPower(-0.3);
                 }
                 robot.intake.setPowerPower(0);
-                tX = 57;
+                tX = 30;
                 tY = 28;
-                tHeading = Math.PI;
-                robot.drivetrain.driveToPose(tX, tY, tHeading);
+                tHeading = Math.PI+Math.PI/17;
+                robot.drivetrain.driveToPose(tX, tY, tHeading, 2);
+                robot.driveToAprilTag(2, 0.1);
                 robot.drivetrain.stopMotors();
                 robot.lift.delay.reset();
-                robot.lift.boxLeft.setPosition(robot.lift.BOX_score);
-                robot.lift.boxRight.setPosition(robot.lift.DIFF1-robot.lift.BOX_score);
-                elapsedTime.reset();
-
-                while(elapsedTime.seconds() < 1.5) {
-                    robot.lift.liftLeft.setPower(0.3);
-                    robot.lift.liftRight.setPower(0.3);
-                }
-                robot.lift.liftLeft.setPower(0);
-                robot.lift.liftRight.setPower(0);
-                sleep(1000);
-                robot.lift.gateLeft.setPosition(robot.lift.GATE_down);
-                robot.lift.gateRight.setPosition(robot.lift.GATE_up);
-                sleep(2000);
 
             }
-            if(gamepad1.b){
-                robot.drivetrain.driveToPose(oX, oY, oHeading);
+            robot.lift.boxLeft.setPosition(robot.lift.BOX_score);
+            robot.lift.boxRight.setPosition(robot.lift.DIFF1-robot.lift.BOX_score);
+            elapsedTime.reset();
+
+            while(elapsedTime.seconds() < 0.8) {
+                robot.lift.liftLeft.setPower(0.3);
+                robot.lift.liftRight.setPower(0.3);
             }
+            elapsedTime.reset();
+            while(elapsedTime.seconds() < 1.5){
+                robot.drivetrain.frontLeft.setPower(0.2);
+                robot.drivetrain.frontRight.setPower(0.2);
+                robot.drivetrain.backLeft.setPower(0.2);
+                robot.drivetrain.backRight.setPower(0.2);
+            }
+            robot.lift.liftLeft.setPower(0);
+            robot.lift.liftRight.setPower(0);
+            sleep(1000);
+            robot.lift.gateLeft.setPosition(robot.lift.GATE_down);
+            robot.lift.gateRight.setPosition(robot.lift.GATE_up);
+            sleep(1000);
+            robot.lift.boxLeft.setPosition(robot.lift.BOX_intake);
+            robot.lift.boxRight.setPosition(robot.lift.DIFF1-robot.lift.BOX_intake);
+            sleep(2000);
+            elapsedTime.reset();
+            while(elapsedTime.seconds() < 0.2 && opModeIsActive()){
+                robot.drivetrain.frontLeft.setPower(-0.5);
+                robot.drivetrain.frontRight.setPower(-0.5);
+                robot.drivetrain.backLeft.setPower(-0.5);
+                robot.drivetrain.backRight.setPower(-0.5);
+            }
+
+            elapsedTime.reset();
+            while(elapsedTime.seconds() < 0.9 && opModeIsActive()){
+                robot.drivetrain.frontLeft.setPower(-0.7);
+                robot.drivetrain.frontRight.setPower(0.7);
+                robot.drivetrain.backLeft.setPower(0.7);
+                robot.drivetrain.backRight.setPower(-0.7);
+            }
+            robot.drivetrain.stopMotors();
+            sleep(2000);
+
             /*if(state == State.TARGET) {
                 robot.drivetrain.driveToPose(tX, tY, tHeading);
             }else if(state == State.MANUAL){

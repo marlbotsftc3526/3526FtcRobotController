@@ -101,10 +101,10 @@ public class Drivetrain {
         backRightPower = (-drive + turn + strafe) / denominator;
 
         if (myOpMode.gamepad1.left_bumper) {
-            frontLeft.setPower(frontLeftPower / 7);
-            frontRight.setPower(frontRightPower / 7);
-            backLeft.setPower(backLeftPower / 7);
-            backRight.setPower(backRightPower / 7);
+            frontLeft.setPower(frontLeftPower / 4);
+            frontRight.setPower(frontRightPower / 4);
+            backLeft.setPower(backLeftPower / 4);
+            backRight.setPower(backRightPower / 4);
         } else if (myOpMode.gamepad1.right_bumper) {
             frontLeft.setPower(2 * frontLeftPower);
             frontRight.setPower(2 * frontRightPower);
@@ -117,6 +117,53 @@ public class Drivetrain {
             backRight.setPower(backRightPower);
         }
     }
+
+    public void fieldTeleOp(){
+        if(Math.abs(myOpMode.gamepad1.left_stick_y) > 0.2||
+                Math.abs(myOpMode.gamepad1.right_stick_x) > 0.2 ||
+                Math.abs(myOpMode.gamepad1.left_stick_x) > 0.2||
+                Math.abs(myOpMode.gamepad1.right_stick_y) > 0.2) {
+            //state = DriveMode.MANUAL;
+        }else if(myOpMode.gamepad1.dpad_left){
+           // state = DriveMode.APRILTAGS;
+            //AprilTagTarget = 1;
+        }else if(myOpMode.gamepad1.dpad_up){
+           // state = DriveMode.APRILTAGS;
+            //AprilTagTarget = 2;
+        } else if(myOpMode.gamepad1.dpad_right){
+            //state = DriveMode.APRILTAGS;
+            //AprilTagTarget = 3;
+        }
+
+
+        //if(state == DriveMode.MANUAL) {
+            double frontLeftPower;
+            double frontRightPower;
+            double backLeftPower;
+            double backRightPower;
+
+            double drive = -myOpMode.gamepad1.left_stick_y;
+            double turn = myOpMode.gamepad1.right_stick_x;
+            double strafe = -myOpMode.gamepad1.left_stick_x;
+
+
+            double x_rotated = drive * Math.cos(localizer.heading) - strafe * Math.sin(localizer.heading);
+            double y_rotated = drive * Math.sin(localizer.heading) + strafe * Math.cos(localizer.heading);
+
+            frontLeftPower = x_rotated + turn - y_rotated;
+            frontRightPower = x_rotated - turn + y_rotated;
+            backLeftPower = x_rotated + turn + y_rotated;
+            backRightPower = x_rotated - turn - y_rotated;
+
+            frontLeft.setPower(frontLeftPower);
+            frontRight.setPower(frontRightPower);
+            backLeft.setPower(backLeftPower);
+            backRight.setPower(backRightPower);
+       /* } else if(state == DriveMode.APRILTAGS){
+
+        }*/
+    }
+
     public void driveStraightProfiledPID(float distance) {
         float direction = -1;
         if (distance < 0) {

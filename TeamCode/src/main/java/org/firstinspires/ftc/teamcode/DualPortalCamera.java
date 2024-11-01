@@ -61,7 +61,7 @@ public class DualPortalCamera {
         // Create the vision portal by using a builder.
         visionPortal = new VisionPortal.Builder()
                 .setCamera(webcam1)
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                /*.setStreamFormat(VisionPortal.StreamFormat.MJPEG)*/
                 .setCameraResolution(new Size(640, 480))
                 .addProcessor(aprilTagProcessor)
                 .setLiveViewContainerId(portalOneID)
@@ -78,7 +78,7 @@ public class DualPortalCamera {
 
 
 
-        setManualExposure(4,255);
+        setManualExposure(6,255);
         targetFound     = false;    // Set to true when an AprilTag target is detected
         //setActiveCamera(webcam1);
     }
@@ -105,7 +105,7 @@ public class DualPortalCamera {
             // Look to see if we have size info on this tag.
             if (detection.metadata != null) {
                 //  Check to see if we want to track towards this tag.
-                if (detection.id == targetTag) {
+                if (detection.id == targetTag || detection.id == targetTag+3) {
                     // Yes, we want to use this tag.
                     targetFound = true;
                     desiredTag = detection;

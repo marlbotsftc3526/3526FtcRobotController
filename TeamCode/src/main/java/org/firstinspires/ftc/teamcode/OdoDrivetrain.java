@@ -123,8 +123,11 @@ public class OdoDrivetrain {
         }
     }
 
-    public void driveToPose(double xTarget, double yTarget, double thetaTarget){
-        while(myOpMode.opModeIsActive() && ((Math.abs(localizer.x - xTarget) > 1 || Math.abs(localizer.y - yTarget) > 1||
+    public void driveToPose(double xTarget, double yTarget, double thetaTarget, double timeout){
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
+
+        while(time.seconds() < timeout && myOpMode.opModeIsActive() && ((Math.abs(localizer.x - xTarget) > 1 || Math.abs(localizer.y - yTarget) > 1||
                 Math.abs(angleWrap(localizer.heading - thetaTarget)) > Math.PI/8))){
             //Use PIDs to calculate motor powers based on error to targets
             double xPower = xPID.calculate(xTarget, localizer.x);
