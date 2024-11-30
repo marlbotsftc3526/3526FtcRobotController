@@ -7,25 +7,32 @@ public class Claw {
     private LinearOpMode myOpMode = null;
     public Servo clawOpen = null;
     public Servo clawPivot = null;
+
+    public Servo clawSpin = null;
     public Claw(LinearOpMode opmode) {
         myOpMode = opmode;
     }
     public void init() {
         clawOpen = myOpMode.hardwareMap.get(Servo.class, "clawOpen");
         clawPivot = myOpMode.hardwareMap.get(Servo.class, "clawPivot");
+        clawSpin = myOpMode.hardwareMap.get(Servo.class, "clawSpin");
     }
     public void teleOp(){
-        if(myOpMode.gamepad1.x){
-            clawOpen.setPosition(0.3);
+        clawSpin.setPosition(0);
+        if(myOpMode.gamepad2.left_bumper){
+            clawOpen.setPosition(0);
         }
-        if(myOpMode.gamepad1.b){
-            clawOpen.setPosition(0.6);
+        if(myOpMode.gamepad2.right_bumper){
+            clawOpen.setPosition(0.45);
         }
-        if(myOpMode.gamepad1.dpad_right){
-            clawPivot.setPosition(0.05);
+        if(myOpMode.gamepad2.x){
+            clawPivot.setPosition(0.22);
         }
-        if (myOpMode.gamepad1.dpad_left) {
-            clawPivot.setPosition(0.5);
+        if(myOpMode.gamepad2.y){
+            clawPivot.setPosition(0.7);
+        }
+        if (myOpMode.gamepad2.b) {
+            clawPivot.setPosition(1);
         }
     }
 

@@ -10,6 +10,7 @@ public class RobotHardware {
     public Drivetrain drivetrain;
     public Claw claw;
     public Lift lift;
+    public Extension extension;
 
     //public DualPortalCamera camera;
 
@@ -21,11 +22,13 @@ public class RobotHardware {
         drivetrain = new Drivetrain(myOpMode);
         claw = new Claw(myOpMode);
         lift = new Lift(myOpMode);
+        extension = new Extension(myOpMode);
         //camera = new DualPortalCamera(myOpMode);
 
         drivetrain.init();
         claw.init();
         lift.init();
+        extension.init();
         //camera.init();
 
         myOpMode.telemetry.addData(">", "Hardware Initialized");
@@ -35,6 +38,7 @@ public class RobotHardware {
         drivetrain.teleOp();
         claw.teleOp();
         lift.teleOp();
+        extension.teleOp();
     }
 
 }
