@@ -30,6 +30,7 @@ public class TeleOp extends LinearOpMode {
 
             robot.teleOp();
             telemetry.update();
+
         }
     }
 }

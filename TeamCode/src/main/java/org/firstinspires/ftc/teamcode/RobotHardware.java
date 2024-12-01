@@ -41,4 +41,9 @@ public class RobotHardware {
         extension.teleOp();
     }
 
-}
+    public void stop(){
+        drivetrain.stop();
+    }
+
+
+  }

@@ -117,12 +117,12 @@ public class Drivetrain {
             myOpMode.telemetry.addData("POSITION", frontRight.getCurrentPosition());
             myOpMode.telemetry.update();
         }
-        stopMotors();
+        stop();
 
         return;
     }
 
-    public void stopMotors() {
+    public void stop() {
         frontRight.setPower(0);
         frontLeft.setPower(0);
         backRight.setPower(0);

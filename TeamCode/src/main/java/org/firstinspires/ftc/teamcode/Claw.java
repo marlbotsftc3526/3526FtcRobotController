@@ -19,7 +19,7 @@ public class Claw {
     }
     public void teleOp(){
         clawSpin.setPosition(0);
-        if(myOpMode.gamepad2.left_bumper){
+        /*if(myOpMode.gamepad2.left_bumper){
             clawOpen.setPosition(0);
         }
         if(myOpMode.gamepad2.right_bumper){
@@ -33,7 +33,7 @@ public class Claw {
         }
         if (myOpMode.gamepad2.b) {
             clawPivot.setPosition(1);
-        }
+        }*/
     }
 
 

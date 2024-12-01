@@ -20,9 +20,10 @@ public class Lift {
 
     public enum LiftMode {
         MANUAL,
-        HIGH,
-        MEDIUM,
-        LOW,
+        HIGH_CHAMBER,
+        LOW_CHAMBER,
+        HIGH_BUCKET,
+        LOW_BUCKET,
         GROUND
     }
     public LiftMode liftMode = LiftMode.MANUAL;
@@ -34,10 +35,8 @@ public class Lift {
         liftRight  = myOpMode.hardwareMap.get(DcMotor.class, "liftRight");
         liftLeft.setDirection(DcMotor.Direction.REVERSE);
         liftRight.setDirection(DcMotor.Direction.FORWARD);
-        liftLeftPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD);
-        liftRightPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD);
-        liftLeftPID.maxOut = 0.95;
-        liftRightPID.maxOut = 0.95;
+        liftLeftPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD, MAX_OUT);
+        liftRightPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD, MAX_OUT);
     }
     public void teleOp(){
         if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.3) {
@@ -54,16 +53,17 @@ public class Lift {
                 liftLeft.setPower(0);
                 liftRight.setPower(0);
             }
-        } else if (liftMode == LiftMode.HIGH && delay.seconds()>delayTime) {
+        } else if (liftMode == LiftMode.HIGH_CHAMBER && delay.seconds()>delayTime) {
+            liftToPositionPIDClass(1700);
+        } else if (liftMode == LiftMode.LOW_CHAMBER && delay.seconds()>delayTime) {
+            liftToPositionPIDClass(200);
+        } else if (liftMode == LiftMode.HIGH_BUCKET && delay.seconds()>delayTime) {
             liftToPositionPIDClass(2000);
-        } else if (liftMode == LiftMode.MEDIUM && delay.seconds()>delayTime) {
+        } else if (liftMode == LiftMode.LOW_BUCKET) {
             liftToPositionPIDClass(1000);
-        } else if (liftMode == LiftMode.LOW && delay.seconds()>delayTime) {
-            liftToPositionPIDClass(700);
-        } else if (liftMode == LiftMode.GROUND) {
+        }else if (liftMode == LiftMode.GROUND) {
             liftToPositionPIDClass(0);
         }
-
 
     }
     public void liftToPositionPIDClass(double targetPosition) {

@@ -1,5 +1,6 @@
+
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -16,53 +17,29 @@ public class PIDController {
     double lastError = 0;
     double integralSum = 0;
     double integralCap = 0.25;
-    double maxOut = 0.4;
+    public double maxOut = 0.4;
+    public double minOut = 0.1;
     double errorMargin = 1;
     double previousFilterEstimate = 0;
     double currentFilterEstimate = 0;
     double a = 0.5;
+    public boolean targetReached;
 
 
-    PIDController(double kpIn, double kiIn, double kdIn){
+    public PIDController(double kpIn, double kiIn, double kdIn, double maxOutIn){
         Kp = kpIn;
         Ki = kiIn;
         Kd = kdIn;
+        maxOut = maxOutIn;
     }
 
-    double calculate(double reference, double currentPosition){
+    public double calculate(double reference, double currentPosition){
 
         // calculate the error
         double error = reference - currentPosition;
 
-        // rate of change of the error
-        double errorChange = (error - lastError);
-
-        //Low pass filter, reduces noise in signal
-        currentFilterEstimate = (a*previousFilterEstimate)+(1-a)*errorChange;
-        previousFilterEstimate = currentFilterEstimate;
-
-        double derivative = currentFilterEstimate;
-
-        // sum of all error over time
-        integralSum = integralSum + (error);
-
-        //anti-windup caps integralSum
-        if(integralSum*Ki > integralCap){
-            integralSum = integralCap/Ki;
-        }else if(integralSum*Ki < -integralCap){
-            integralSum = -integralCap/Ki;
-        }
-
-        double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-
-        out = Range.clip(out, -maxOut, maxOut);
-
-        lastError = error;
-
-        return out;
-    }
-
-    double calculate(double error){
+        //check if target is reached
+        targetReached = Math.abs(error) < errorMargin;
 
         // rate of change of the error
         double errorChange = (error - lastError);
@@ -92,7 +69,40 @@ public class PIDController {
         return out;
     }
 
-    boolean targetReached(double reference, double currentPosition){
+    public double calculate(double error){
+
+        //check if target is reached
+        targetReached = Math.abs(error) < errorMargin;
+
+        // rate of change of the error
+        double errorChange = (error - lastError);
+
+        //Low pass filter, reduces noise in signal
+        currentFilterEstimate = (a*previousFilterEstimate)+(1-a)*errorChange;
+        previousFilterEstimate = currentFilterEstimate;
+
+        double derivative = currentFilterEstimate;
+
+        // sum of all error over time
+        integralSum = integralSum + (error);
+
+        //anti-windup caps integralSum
+        if(integralSum*Ki > integralCap){
+            integralSum = integralCap/Ki;
+        }else if(integralSum*Ki < -integralCap){
+            integralSum = -integralCap/Ki;
+        }
+
+        double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+
+        out = Range.clip(out, -maxOut, maxOut);
+
+        lastError = error;
+
+        return out;
+    }
+
+    public boolean targetReached(double reference, double currentPosition){
         double error = reference-currentPosition;
         if(Math.abs(error) > errorMargin){
             return false;
