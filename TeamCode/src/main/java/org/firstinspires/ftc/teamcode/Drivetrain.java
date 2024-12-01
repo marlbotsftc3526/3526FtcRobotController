@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 public class Drivetrain {
     private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
@@ -17,6 +20,8 @@ public class Drivetrain {
     public DcMotor frontLeft = null;
     public DcMotor backRight = null;
     public DcMotor backLeft = null;
+
+    public SparkfunLocalizer localizer;
 
     public static double HEADING_KP = 0.015;
     public static double HEADING_KI = 0.0;
@@ -31,6 +36,9 @@ public class Drivetrain {
     PIDController xController;
     PIDController yController;
     PIDController headingController;
+
+    public boolean targetReached = false;
+    Pose2D targetPose;
     public Drivetrain(LinearOpMode opmode) {
         myOpMode = opmode;
     }
@@ -46,6 +54,14 @@ public class Drivetrain {
         xController = new PIDController(DRIVE_KP,DRIVE_KI,DRIVE_KD, DRIVE_MAX_OUT);
         yController = new PIDController(DRIVE_KP,DRIVE_KI,DRIVE_KD,DRIVE_MAX_OUT);
         headingController = new PIDController(HEADING_KP,HEADING_KI,HEADING_KD,DRIVE_MAX_OUT);
+
+        localizer = new SparkfunLocalizer(myOpMode);
+
+        localizer.init();
+
+        //TODO Set the offset of the localizer sensor
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(5, 0, 0);
+        localizer.myOtos.setOffset(offset);
 
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -79,6 +95,7 @@ public class Drivetrain {
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void teleOp(){
+        localizer.update();
         //drive train
         double frontLeftPower;
         double frontRightPower;
@@ -137,6 +154,71 @@ public class Drivetrain {
         return;
     }
 
+    public void update(){
+
+        //Use PIDs to calculate motor powers based on error to targets
+        double xPower = xController.calculate(targetPose.getX(DistanceUnit.INCH), localizer.getX());
+        double yPower = yController.calculate(targetPose.getY(DistanceUnit.INCH), localizer.getY());
+
+        double wrappedAngleError = angleWrap(targetPose.getHeading(AngleUnit.DEGREES) - localizer.getHeading());
+        double tPower = headingController.calculate(wrappedAngleError);
+
+        double radianHeading = Math.toRadians(localizer.getHeading());
+
+        //rotate the motor powers based on robot heading
+        double xPower_rotated = xPower * Math.cos(-radianHeading) - yPower * Math.sin(-radianHeading);
+        double yPower_rotated = xPower * Math.sin(-radianHeading) + yPower * Math.cos(-radianHeading);
+
+        // x, y, theta input mixing to deliver motor powers
+        frontLeft.setPower(xPower_rotated - yPower_rotated - tPower);
+        backLeft.setPower(xPower_rotated + yPower_rotated - tPower);
+        frontRight.setPower(xPower_rotated + yPower_rotated + tPower);
+        backRight.setPower(xPower_rotated - yPower_rotated + tPower);
+
+        //check if drivetrain is still working towards target
+        targetReached = (xController.targetReached && yController.targetReached && headingController.targetReached);
+        String data = String.format(Locale.US, "{tX: %.3f, tY: %.3f, tH: %.3f}", targetPose.getX(DistanceUnit.INCH), targetPose.getY(DistanceUnit.INCH), targetPose.getHeading(AngleUnit.DEGREES));
+
+        myOpMode.telemetry.addData("Target Position", data);
+        myOpMode.telemetry.addData("XReached", xController.targetReached);
+        myOpMode.telemetry.addData("YReached", yController.targetReached);
+        myOpMode.telemetry.addData("HReached", headingController.targetReached);
+        myOpMode.telemetry.addData("targetReached", targetReached);
+        myOpMode.telemetry.addData("xPower", xPower);
+        myOpMode.telemetry.addData("xPowerRotated", xPower_rotated);
+        localizer.update();
+    }
+
+    public void setTargetPose(Pose2D newTarget){
+        targetPose = newTarget;
+        targetReached = false;
+    }
+
+    public void driveToPose(double xTarget, double yTarget, double degreeTarget) {
+        //check if drivetrain is still working towards target
+        targetReached = xController.targetReached && yController.targetReached && headingController.targetReached;
+        //double thetaTarget = Math.toRadians(degreeTarget);
+        //Use PIDs to calculate motor powers based on error to targets
+        double xPower = xController.calculate(xTarget, localizer.getX());
+        double yPower = yController.calculate(yTarget, localizer.getY());
+
+        double wrappedAngleError = angleWrap(degreeTarget - localizer.getHeading());
+        double tPower = headingController.calculate(wrappedAngleError);
+
+        double radianHeading = Math.toRadians(localizer.getHeading());
+
+        //rotate the motor powers based on robot heading
+        double xPower_rotated = xPower * Math.cos(-radianHeading) - yPower * Math.sin(-radianHeading);
+        double yPower_rotated = xPower * Math.sin(-radianHeading) + yPower * Math.cos(-radianHeading);
+
+        // x, y, theta input mixing to deliver motor powers
+        frontLeft.setPower(xPower_rotated - yPower_rotated - tPower);
+        backLeft.setPower(xPower_rotated + yPower_rotated - tPower);
+        frontRight.setPower(xPower_rotated + yPower_rotated + tPower);
+        backRight.setPower(xPower_rotated - yPower_rotated + tPower);
+    }
+
+
 
 
     public void stop() {
@@ -150,5 +232,17 @@ public class Drivetrain {
         frontLeft.setPower(-power);
         backRight.setPower(power);
         backLeft.setPower(-power);
+    }
+    public double angleWrap(double degrees) {
+
+        while (degrees > 180) {
+            degrees -= 360;
+        }
+        while (degrees < -180) {
+            degrees += 360;
+        }
+
+        // keep in mind that the result is in degrees
+        return degrees;
     }
 }

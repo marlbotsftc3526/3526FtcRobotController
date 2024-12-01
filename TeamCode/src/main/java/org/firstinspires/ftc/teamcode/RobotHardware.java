@@ -34,6 +34,9 @@ public class RobotHardware {
         myOpMode.telemetry.addData(">", "Hardware Initialized");
         myOpMode.telemetry.update();
     }
+    public void update(){
+        drivetrain.update();
+    }
     public void teleOp() {
         drivetrain.teleOp();
         claw.teleOp();
