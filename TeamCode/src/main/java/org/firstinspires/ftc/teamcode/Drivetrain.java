@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Drivetrain {
     private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
@@ -15,12 +18,19 @@ public class Drivetrain {
     public DcMotor backRight = null;
     public DcMotor backLeft = null;
 
-    public static final double DRIVE_KP = 0.01;
-    public static final double DRIVE_KI = 0.0;
-    public static final double DRIVE_KD = 0;//0.0003;
-    public static final double DRIVE_MAX_ACC = 2000;
-    public static final double DRIVE_MAX_VEL = 3500;
-    public static final double DRIVE_MAX_OUT = 0.95;
+    public static double HEADING_KP = 0.015;
+    public static double HEADING_KI = 0.0;
+    public static double HEADING_KD = 0.0;
+    public static double DRIVE_KP = 0.05;
+    public static double DRIVE_KI = 0.0;
+    public static double DRIVE_KD = 0.01;//0.0003;
+    public static double DRIVE_MAX_ACC = 2000;
+    public static double DRIVE_MAX_VEL = 3500;
+    public static double DRIVE_MAX_OUT = 0.7;
+
+    PIDController xController;
+    PIDController yController;
+    PIDController headingController;
     public Drivetrain(LinearOpMode opmode) {
         myOpMode = opmode;
     }
@@ -32,6 +42,11 @@ public class Drivetrain {
         frontRight = myOpMode.hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = myOpMode.hardwareMap.get(DcMotor.class, "backLeft");
         backRight = myOpMode.hardwareMap.get(DcMotor.class, "backRight");
+
+        xController = new PIDController(DRIVE_KP,DRIVE_KI,DRIVE_KD, DRIVE_MAX_OUT);
+        yController = new PIDController(DRIVE_KP,DRIVE_KI,DRIVE_KD,DRIVE_MAX_OUT);
+        headingController = new PIDController(HEADING_KP,HEADING_KI,HEADING_KD,DRIVE_MAX_OUT);
+
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -71,9 +86,9 @@ public class Drivetrain {
         double backRightPower;
         double max;
 
-        double drive = -myOpMode.gamepad1.left_stick_y;
-        double turn = myOpMode.gamepad1.right_stick_x;
-        double strafe = -myOpMode.gamepad1.left_stick_x;
+        double drive = -myOpMode.gamepad2.left_stick_y;
+        double turn = myOpMode.gamepad2.right_stick_x;
+        double strafe = -myOpMode.gamepad2.left_stick_x;
 
         frontLeftPower = (drive + turn - strafe);
         frontRightPower = (drive - turn + strafe);
@@ -90,12 +105,12 @@ public class Drivetrain {
             backRightPower  /= max;
         }
 
-        if (myOpMode.gamepad1.left_bumper) {
+        /*if (myOpMode.gamepad2.left_bumper) {
             frontLeft.setPower(frontLeftPower / 4);
             frontRight.setPower(frontRightPower / 4);
             backLeft.setPower(backLeftPower / 4);
             backRight.setPower(backRightPower / 4);
-        } else if (myOpMode.gamepad1.right_bumper) {
+        } else if (myOpMode.gamepad2.right_bumper) {
             frontLeft.setPower(2 * frontLeftPower);
             frontRight.setPower(2 * frontRightPower);
             backLeft.setPower(2 * backLeftPower);
@@ -105,7 +120,7 @@ public class Drivetrain {
             frontRight.setPower(frontRightPower);
             backLeft.setPower(backLeftPower);
             backRight.setPower(backRightPower);
-        }
+        }*/
     }
     public void encoderTurn(float inches, double power) {
         final double WHEEL_DIAMETER = 4;
@@ -121,6 +136,8 @@ public class Drivetrain {
 
         return;
     }
+
+
 
     public void stop() {
         frontRight.setPower(0);

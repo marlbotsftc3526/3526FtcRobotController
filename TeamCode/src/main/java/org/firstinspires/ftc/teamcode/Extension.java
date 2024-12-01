@@ -30,12 +30,12 @@ public class Extension {
         extensionPID = new PIDController(EXT_KP, EXT_KI, EXT_KD, MAX_OUT);
     }
     public void teleOp(){
-        if(Math.abs(myOpMode.gamepad2.right_stick_x) > 0.3){
+        if(Math.abs(myOpMode.gamepad2.right_stick_x) > 0.3 && myOpMode.gamepad2.left_bumper){
             extMode = extMode.MANUAL;
         }
         if (extMode == Extension.ExtMode.MANUAL) {
             extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (Math.abs(myOpMode.gamepad2.right_stick_x) > 0.1) {
+            if (Math.abs(myOpMode.gamepad2.right_stick_x) > 0.1&& myOpMode.gamepad2.left_bumper) {
                 extension.setPower(-myOpMode.gamepad2.right_stick_x);
             } else {
                 extension.setPower(0);

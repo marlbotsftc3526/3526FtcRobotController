@@ -22,6 +22,8 @@ public class Lift {
         MANUAL,
         HIGH_CHAMBER,
         LOW_CHAMBER,
+        HIGH_CHAMBER_SCORE,
+        LOW_CHAMBER_SCORE,
         HIGH_BUCKET,
         LOW_BUCKET,
         GROUND
@@ -39,14 +41,14 @@ public class Lift {
         liftRightPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD, MAX_OUT);
     }
     public void teleOp(){
-        if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.3) {
+        if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.3 && myOpMode.gamepad2.left_bumper) {
             liftMode = LiftMode.MANUAL;
         }
 
         if (liftMode == LiftMode.MANUAL) {
             liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1) {
+            if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1 && myOpMode.gamepad2.left_bumper) {
                     liftLeft.setPower(-myOpMode.gamepad2.right_stick_y);
                     liftRight.setPower(-myOpMode.gamepad2.right_stick_y);
             } else {
@@ -55,8 +57,12 @@ public class Lift {
             }
         } else if (liftMode == LiftMode.HIGH_CHAMBER && delay.seconds()>delayTime) {
             liftToPositionPIDClass(1700);
+        }else if (liftMode == LiftMode.HIGH_CHAMBER && delay.seconds()>delayTime) {
+            liftToPositionPIDClass(1600);
         } else if (liftMode == LiftMode.LOW_CHAMBER && delay.seconds()>delayTime) {
             liftToPositionPIDClass(200);
+        }else if (liftMode == LiftMode.LOW_CHAMBER && delay.seconds()>delayTime) {
+            liftToPositionPIDClass(50);
         } else if (liftMode == LiftMode.HIGH_BUCKET && delay.seconds()>delayTime) {
             liftToPositionPIDClass(2000);
         } else if (liftMode == LiftMode.LOW_BUCKET) {

@@ -9,6 +9,16 @@ public class Claw {
     public Servo clawPivot = null;
 
     public Servo clawSpin = null;
+    public static final double openOPEN = 0;
+    public static final double openCLOSE = 0.45;
+
+    public static final double pivotDOWN = 1;
+    public static final double pivotSCORE = 0.7;
+
+    public static final double pivotBACK = 1;
+
+    public static final double spinA = 0;
+    public static final double spinB = 0.7;
     public Claw(LinearOpMode opmode) {
         myOpMode = opmode;
     }
@@ -18,7 +28,13 @@ public class Claw {
         clawSpin = myOpMode.hardwareMap.get(Servo.class, "clawSpin");
     }
     public void teleOp(){
-        clawSpin.setPosition(0);
+        clawSpin.setPosition(spinA);
+        if(myOpMode.gamepad2.right_trigger > 0.1 && myOpMode.gamepad2.left_trigger > 0.1){
+            clawOpen.setPosition(openOPEN);
+        }
+        if(myOpMode.gamepad2.right_trigger > 0.1 ^ myOpMode.gamepad2.left_trigger > 0.1){
+            clawOpen.setPosition(openCLOSE);
+        }
         /*if(myOpMode.gamepad2.left_bumper){
             clawOpen.setPosition(0);
         }
