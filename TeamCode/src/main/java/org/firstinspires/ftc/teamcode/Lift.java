@@ -41,6 +41,9 @@ public class Lift {
         liftRightPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD, MAX_OUT);
     }
     public void teleOp(){
+        myOpMode.telemetry.addData("liftLeft: ", liftLeft.getCurrentPosition());
+        myOpMode.telemetry.addData("liftRight: ", liftRight.getCurrentPosition());
+        myOpMode.telemetry.addData("lift mode", liftMode);
         if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.3 && myOpMode.gamepad2.left_bumper) {
             liftMode = LiftMode.MANUAL;
         }
@@ -55,13 +58,13 @@ public class Lift {
                 liftLeft.setPower(0);
                 liftRight.setPower(0);
             }
-        } else if (liftMode == LiftMode.HIGH_CHAMBER && delay.seconds()>delayTime) {
+        } else if (liftMode == LiftMode.HIGH_CHAMBER) {
             liftToPositionPIDClass(1700);
-        }else if (liftMode == LiftMode.HIGH_CHAMBER && delay.seconds()>delayTime) {
+        }else if (liftMode == LiftMode.HIGH_CHAMBER) {
             liftToPositionPIDClass(1600);
-        } else if (liftMode == LiftMode.LOW_CHAMBER && delay.seconds()>delayTime) {
+        } else if (liftMode == LiftMode.LOW_CHAMBER) {
             liftToPositionPIDClass(200);
-        }else if (liftMode == LiftMode.LOW_CHAMBER && delay.seconds()>delayTime) {
+        }else if (liftMode == LiftMode.LOW_CHAMBER) {
             liftToPositionPIDClass(50);
         } else if (liftMode == LiftMode.HIGH_BUCKET && delay.seconds()>delayTime) {
             liftToPositionPIDClass(2000);

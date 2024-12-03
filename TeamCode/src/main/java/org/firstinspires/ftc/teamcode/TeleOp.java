@@ -30,14 +30,16 @@ public class TeleOp extends LinearOpMode {
 
             robot.teleOp();
             telemetry.update();
-            if(gamepad2.cross){
+            robot.lift.liftLeft.setPower(0.2);
+            robot.lift.liftRight.setPower(0.2);
+            if(gamepad2.a){
                 robot.lift.liftMode = Lift.LiftMode.GROUND;
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
                 robot.extension.extMode = Extension.ExtMode.INTAKE;
                 robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
             }
-            if(gamepad2.circle){
+            if(gamepad2.b){
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
                 robot.claw.clawSpin.setPosition(robot.claw.spinB);
@@ -53,8 +55,10 @@ public class TeleOp extends LinearOpMode {
                         }
                     }
                 }
+                robot.lift.liftLeft.setPower(0.2);
+                robot.lift.liftRight.setPower(0.2);
             }
-            if(gamepad2.triangle){
+            if(gamepad2.y){
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
                 robot.extension.extMode = Extension.ExtMode.NEAR;
@@ -70,14 +74,14 @@ public class TeleOp extends LinearOpMode {
                         }
                     }
                 }
-
-
             }
-            if(gamepad2.dpad_down && gamepad2.cross){
+            if(gamepad2.dpad_down && gamepad2.a){
+                robot.lift.liftMode = Lift.LiftMode.GROUND;
+                robot.extension.extMode = Extension.ExtMode.NEAR;
                 robot.claw.clawPivot.setPosition(robot.claw.pivotDOWN);
                 robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
             }
-            if(gamepad2.dpad_left && gamepad2.circle){
+            if(gamepad2.dpad_left && gamepad2.b){
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
                 robot.extension.extMode = Extension.ExtMode.INTAKE;
@@ -89,7 +93,7 @@ public class TeleOp extends LinearOpMode {
                     }
                 }
             }
-            if(gamepad2.dpad_up && gamepad2.triangle){
+            if(gamepad2.dpad_up && gamepad2.y){
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
                 robot.extension.extMode = Extension.ExtMode.INTAKE;

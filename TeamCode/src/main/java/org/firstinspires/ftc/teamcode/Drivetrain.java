@@ -121,7 +121,10 @@ public class Drivetrain {
             backLeftPower   /= max;
             backRightPower  /= max;
         }
-
+        frontLeft.setPower(frontLeftPower);
+        frontRight.setPower(frontRightPower);
+        backLeft.setPower(backLeftPower);
+        backRight.setPower(backRightPower);
         /*if (myOpMode.gamepad2.left_bumper) {
             frontLeft.setPower(frontLeftPower / 4);
             frontRight.setPower(frontRightPower / 4);
