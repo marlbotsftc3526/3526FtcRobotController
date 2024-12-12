@@ -36,6 +36,8 @@ public class RobotHardware {
     }
     public void update(){
         drivetrain.update();
+        lift.update();
+        extension.update();
     }
     public void teleOp() {
         drivetrain.teleOp();

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 
 import java.util.List;
-
+@Disabled
 @Autonomous(name = "AutoMeetZeroBlueLeft", group = "Linear Opmode")
 
 public class AutoMeetZeroBlueLeft extends LinearOpMode {

@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
+@Config
 public class Drivetrain {
     private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
@@ -23,15 +24,14 @@ public class Drivetrain {
 
     public SparkfunLocalizer localizer;
 
-    public static double HEADING_KP = 0.015;
+    public static double HEADING_KP = 0.015;//0.01
     public static double HEADING_KI = 0.0;
     public static double HEADING_KD = 0.0;
-    public static double DRIVE_KP = 0.05;
+    public static double DRIVE_KP = 0.04; //0.02
     public static double DRIVE_KI = 0.0;
-    public static double DRIVE_KD = 0.01;//0.0003;
-    public static double DRIVE_MAX_ACC = 2000;
-    public static double DRIVE_MAX_VEL = 3500;
-    public static double DRIVE_MAX_OUT = 0.7;
+    public static double DRIVE_KD = 0.01;//0.03;
+    public static double DRIVE_MAX_OUT = 0.5;
+    public static double S_CNT = 3;//4
 
     PIDController xController;
     PIDController yController;
@@ -60,9 +60,8 @@ public class Drivetrain {
         localizer.init();
 
         //TODO Set the offset of the localizer sensor
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(5, 0, 0);
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(7, 0, 0);
         localizer.myOtos.setOffset(offset);
-
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,10 +73,13 @@ public class Drivetrain {
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
+        resetEncoders();
+
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         myOpMode.telemetry.addData(">", "Drivetrain Initialized");
     }
@@ -96,18 +98,27 @@ public class Drivetrain {
     }
     public void teleOp(){
         localizer.update();
+        useEncoders();
         //drive train
         double frontLeftPower;
         double frontRightPower;
         double backLeftPower;
         double backRightPower;
         double max;
-
-        double drive = -myOpMode.gamepad2.left_stick_y;
-        double turn = myOpMode.gamepad2.right_stick_x;
-        double strafe = -myOpMode.gamepad2.left_stick_x;
-
+        double drive;
+        double turn;
+        double strafe;
+        if(!myOpMode.gamepad2.left_bumper) {
+            drive = -myOpMode.gamepad2.left_stick_y;
+            turn = myOpMode.gamepad2.right_stick_x;
+            strafe = -myOpMode.gamepad2.left_stick_x;
+        }else{
+            drive = 0;
+            turn = 0;
+            strafe = 0;
+        }
         frontLeftPower = (drive + turn - strafe);
+
         frontRightPower = (drive - turn + strafe);
         backLeftPower = (drive + turn + strafe) ;
         backRightPower = (drive - turn - strafe);
@@ -125,6 +136,9 @@ public class Drivetrain {
         frontRight.setPower(frontRightPower);
         backLeft.setPower(backLeftPower);
         backRight.setPower(backRightPower);
+
+        myOpMode.telemetry.addData("frontLeftPower", frontLeftPower);
+
         /*if (myOpMode.gamepad2.left_bumper) {
             frontLeft.setPower(frontLeftPower / 4);
             frontRight.setPower(frontRightPower / 4);
@@ -173,10 +187,10 @@ public class Drivetrain {
         double yPower_rotated = xPower * Math.sin(-radianHeading) + yPower * Math.cos(-radianHeading);
 
         // x, y, theta input mixing to deliver motor powers
-        frontLeft.setPower(xPower_rotated - yPower_rotated - tPower);
-        backLeft.setPower(xPower_rotated + yPower_rotated - tPower);
-        frontRight.setPower(xPower_rotated + yPower_rotated + tPower);
-        backRight.setPower(xPower_rotated - yPower_rotated + tPower);
+        frontLeft.setPower(xPower_rotated - S_CNT*yPower_rotated - tPower);
+        backLeft.setPower(xPower_rotated + S_CNT*yPower_rotated - tPower);
+        frontRight.setPower(xPower_rotated + S_CNT*yPower_rotated + tPower);
+        backRight.setPower(xPower_rotated - S_CNT*yPower_rotated + tPower);
 
         //check if drivetrain is still working towards target
         targetReached = (xController.targetReached && yController.targetReached && headingController.targetReached);

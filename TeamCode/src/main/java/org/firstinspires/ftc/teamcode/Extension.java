@@ -19,6 +19,7 @@ public class Extension {
         NEAR,
         MID,
         FAR,
+        HANG
     }
     public Extension.ExtMode extMode = Extension.ExtMode.MANUAL;
 
@@ -28,6 +29,9 @@ public class Extension {
     public void init() {
         extension  = myOpMode.hardwareMap.get(DcMotor.class, "extension");
         extensionPID = new PIDController(EXT_KP, EXT_KI, EXT_KD, MAX_OUT);
+        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extensionPID.reset();
     }
     public void teleOp(){
         myOpMode.telemetry.addData("extension: ", extension.getCurrentPosition());
@@ -43,13 +47,15 @@ public class Extension {
                 extension.setPower(0);
             }
         }else if (extMode == Extension.ExtMode.FAR ) {
-            extToPositionPIDClass(1700);
+            extToPositionPIDClass(4800);
         }else if (extMode == Extension.ExtMode.MID ) {
-            extToPositionPIDClass(1200);
+            extToPositionPIDClass(2600);
         } else if (extMode == Extension.ExtMode.NEAR) {
-            extToPositionPIDClass(500);
+            extToPositionPIDClass(1350);
         } else if (extMode == Extension.ExtMode.INTAKE) {
             extToPositionPIDClass(0);
+        } else if (extMode == Extension.ExtMode.HANG) {
+            extToPositionPIDClass(600);
         }
         /*if(myOpMode.gamepad2.dpad_right){
             extension.setPower(0.5);
@@ -59,6 +65,17 @@ public class Extension {
             extension.setPower(0);
         }*/
 
+    }
+    public void update(){
+        if (extMode == Extension.ExtMode.FAR ) {
+            extToPositionPIDClass(4800);
+        }else if (extMode == Extension.ExtMode.MID ) {
+            extToPositionPIDClass(2600);
+        } else if (extMode == Extension.ExtMode.NEAR) {
+            extToPositionPIDClass(1350);
+        } else if (extMode == Extension.ExtMode.INTAKE) {
+            extToPositionPIDClass(0);
+        }
     }
     public void extToPositionPIDClass(double targetPosition) {
         double outLeft = extensionPID.calculate(targetPosition, extension.getCurrentPosition());
