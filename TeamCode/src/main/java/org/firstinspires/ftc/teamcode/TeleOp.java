@@ -33,8 +33,8 @@ public class TeleOp extends LinearOpMode {
 
             robot.teleOp();
             telemetry.update();
-                runtime.reset();
-                if(gamestate == "LOWCHAM"){
+            runtime.reset();
+            if(gamestate == "LOWCHAM"){
                     if (gamepad2.right_bumper & !gamepad2.left_bumper) {
                         robot.lift.liftMode = Lift.LiftMode.LOW_CHAMBER;
                     }
@@ -46,7 +46,7 @@ public class TeleOp extends LinearOpMode {
                         robot.lift.liftMode = Lift.LiftMode.LOW_CHAMBER_SCORE;
                     }
                 }
-                if(gamestate == "HIGHCHAM") {
+            if(gamestate == "HIGHCHAM") {
                     if(robot.extension.extension.getCurrentPosition() > 1300 &&
 
                             robot.lift.liftLeft.getCurrentPosition() < 300){
@@ -68,7 +68,7 @@ public class TeleOp extends LinearOpMode {
                     }
 
                 }
-                if(gamestate == "LOWBUCK"){
+            if(gamestate == "LOWBUCK"){
                     if (gamepad2.right_bumper) {
                         robot.lift.liftMode = Lift.LiftMode.LOW_BUCKET;
                     }
@@ -77,7 +77,7 @@ public class TeleOp extends LinearOpMode {
                     }
 
                 }
-                if(gamestate == "HIGHBUCK"){
+            if(gamestate == "HIGHBUCK"){
                     if (gamepad2.right_bumper && !gamepad2.left_bumper) {
                         robot.lift.liftMode = Lift.LiftMode.HIGH_BUCKET;
                     }
@@ -85,54 +85,63 @@ public class TeleOp extends LinearOpMode {
                         robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
                     }
 
-                }
-                if(gamestate == "SUBMERSIBLE"){
+            }
+            if(gamestate == "SUBMERSIBLE"){
                     if(gamepad2.right_bumper){
                         robot.claw.clawPivot.setPosition(robot.claw.pivotDOWN);
                     }
                 }
-                if(gamestate == "HANG"){
+            if(gamestate == "ASCEND"){
                     robot.extension.extMode = Extension.ExtMode.HANG;
                     if(runtime.seconds() > 2){
                         robot.lift.liftMode = Lift.LiftMode.GROUND;
                     }
                 }
-            if(gamepad2.a && !gamepad2.dpad_down){
+            if(gamestate == "HIGHCHAMTEST"){
+                    if (gamepad2.right_bumper && !gamepad2.left_bumper) {
+                        robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER_TEST;
+                    }
+                }
+            if(gamestate == "CHAMBERINTAKE"){
+                    if(robot.extension.extension.getCurrentPosition() < 575){
+                        robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
+                    }
+                }
+            if(gamepad2.a){
+                gamestate = "CHAMBERINTAKE";
                 robot.lift.liftMode = Lift.LiftMode.GROUND;
-                robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
-                robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
                 robot.extension.extMode = Extension.ExtMode.INTAKE;
                 robot.claw.clawOpen.setPosition(robot.claw.openMID);
                 robot.claw.clawSpin.setPosition(robot.claw.spinB);
+                runtime.reset();
             }
-            if(gamepad2.b && !gamepad2.dpad_left){
+            if(gamepad2.b){
                 gamestate = "LOWCHAM";
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.extension.extMode = Extension.ExtMode.NEAR;
-                robot.claw.clawSpin.setPosition(robot.claw.spinA);
             }
-            if(gamepad2.y && !gamepad2.dpad_up){
+            if(gamepad2.y){
                 gamestate = "HIGHCHAM";
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.extension.extMode = Extension.ExtMode.NEAR;
             }
-            if(gamepad2.dpad_down && gamepad2.a){
+            if(gamepad2.dpad_down){
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.lift.liftMode = Lift.LiftMode.GROUND;
                 gamestate = "SUBMERSIBLE";
                 runtime.reset();
             }
-            if(gamepad2.dpad_left && gamepad2.b){
+            if(gamepad2.dpad_left){
                 gamestate = "LOWBUCK";
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
-                robot.extension.extMode = Extension.ExtMode.INTAKE;
+                robot.extension.extMode = Extension.ExtMode.FARBACK;
             }
-            if(gamepad2.dpad_up && gamepad2.y){
+            if(gamepad2.dpad_up){
                 gamestate = "HIGHBUCK";
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
-                robot.extension.extMode = Extension.ExtMode.INTAKE;
+                robot.extension.extMode = Extension.ExtMode.FARBACK;
             }
             if(gamepad2.dpad_right && gamepad2.x){
                 robot.lift.liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

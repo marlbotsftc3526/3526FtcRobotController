@@ -26,7 +26,8 @@ public class Lift {
         LOW_CHAMBER_SCORE,
         HIGH_BUCKET,
         LOW_BUCKET,
-        GROUND
+        GROUND,
+        HIGH_CHAMBER_TEST
     }
     public LiftMode liftMode = LiftMode.MANUAL;
     public Lift(LinearOpMode opmode) {
@@ -74,7 +75,7 @@ public class Lift {
         } else if (liftMode == LiftMode.HIGH_CHAMBER) {
             liftToPositionPIDClass(1600);
         }else if (liftMode == LiftMode.HIGH_CHAMBER_SCORE) {
-            liftToPositionPIDClass(1300);
+            liftToPositionPIDClass(1000);
         } else if (liftMode == LiftMode.LOW_CHAMBER) {
             liftToPositionPIDClass(600);
         }else if (liftMode == LiftMode.LOW_CHAMBER_SCORE) {
@@ -85,6 +86,8 @@ public class Lift {
             liftToPositionPIDClass(1600);
         }else if (liftMode == LiftMode.GROUND) {
             liftToPositionPIDClass(30);
+        }else if(liftMode == LiftMode.HIGH_CHAMBER_TEST){
+            liftToPositionPIDClass(480);
         }
 
     }

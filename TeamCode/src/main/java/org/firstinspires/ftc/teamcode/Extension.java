@@ -19,7 +19,8 @@ public class Extension {
         NEAR,
         MID,
         FAR,
-        HANG
+        HANG,
+        FARBACK
     }
     public Extension.ExtMode extMode = Extension.ExtMode.MANUAL;
 
@@ -52,10 +53,12 @@ public class Extension {
             extToPositionPIDClass(2600);
         } else if (extMode == Extension.ExtMode.NEAR) {
             extToPositionPIDClass(1350);
-        } else if (extMode == Extension.ExtMode.INTAKE) {
+        } else if (extMode == Extension.ExtMode.FARBACK) {
             extToPositionPIDClass(0);
         } else if (extMode == Extension.ExtMode.HANG) {
-            extToPositionPIDClass(600);
+            extToPositionPIDClass(530);
+        } else if(extMode == Extension.ExtMode.INTAKE){
+            extToPositionPIDClass(550);
         }
         /*if(myOpMode.gamepad2.dpad_right){
             extension.setPower(0.5);

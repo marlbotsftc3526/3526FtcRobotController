@@ -9,9 +9,9 @@ public class Claw {
     public Servo clawPivot = null;
 
     public Servo clawSpin = null;
-    public static final double openOPEN = 0.8;
+    public static final double openOPEN = 0;
 
-    public static final double openMID = 0.6;
+    public static final double openMID = 0.3;
     public static final double openCLOSE = 0.4;
 
     public static final double pivotDOWN = 1;
@@ -19,10 +19,12 @@ public class Claw {
 
     public static final double pivotUP = 0.45;
 
+    public static final double pivotSCOREPOS = 0.55;
+
     public static final double pivotBACK = 0.2;
 
-    public static final double spinA = 0;
-    public static final double spinB = 0.7;
+    public static final double spinA = 0.7;
+    public static final double spinB = 0;
     public Claw(LinearOpMode opmode) {
         myOpMode = opmode;
     }
