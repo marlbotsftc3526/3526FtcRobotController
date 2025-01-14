@@ -15,16 +15,17 @@ public class Claw {
     public static final double openCLOSE = 0.4;
 
     public static final double pivotDOWN = 1;
-    public static final double pivotSCORE = 0.74;
+    public static final double pivotSCORE = 0.67;
 
     public static final double pivotUP = 0.45;
 
     public static final double pivotSCOREPOS = 0.55;
 
-    public static final double pivotBACK = 0.2;
+    public static final double pivotBACK = 0;
 
-    public static final double spinA = 0.7;
-    public static final double spinB = 0;
+    public static final double spinA = 0;
+    public static final double spinB = 0.7;
+    public static final double newSpinB = 1.4;
     public Claw(LinearOpMode opmode) {
         myOpMode = opmode;
     }

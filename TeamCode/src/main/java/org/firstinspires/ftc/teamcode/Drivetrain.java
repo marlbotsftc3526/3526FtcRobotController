@@ -30,7 +30,7 @@ public class Drivetrain {
     public static double DRIVE_KP = 0.04; //0.02
     public static double DRIVE_KI = 0.0;
     public static double DRIVE_KD = 0.01;//0.03;
-    public static double DRIVE_MAX_OUT = 0.5;
+    public static double DRIVE_MAX_OUT = 0.7;
     public static double S_CNT = 3;//4
 
     PIDController xController;

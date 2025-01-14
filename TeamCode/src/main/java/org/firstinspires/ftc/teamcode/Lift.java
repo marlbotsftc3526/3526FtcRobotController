@@ -12,7 +12,7 @@ public class Lift {
     public static final double LIFT_KP = 0.01;
     public static final double LIFT_KI = 0;
     public static final double LIFT_KD = 0;
-    public static final double MAX_OUT = 0.5;
+    public static final double MAX_OUT = 0.7;
 
     public ElapsedTime delay = null;
     public double delayTime = 0.5;

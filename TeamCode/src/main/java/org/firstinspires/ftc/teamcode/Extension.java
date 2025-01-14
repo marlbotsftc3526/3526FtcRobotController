@@ -9,7 +9,7 @@ public class Extension {
     public static final double EXT_KP = 0.01;
     public static final double EXT_KI = 0;
     public static final double EXT_KD = 0;
-    public static final double MAX_OUT = 0.5;
+    public static final double MAX_OUT = 0.8;
     public ElapsedTime delay = null;
     public double delayTime = 0.5;
 

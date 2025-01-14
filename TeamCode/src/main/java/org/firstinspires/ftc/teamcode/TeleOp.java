@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+//import com.qualcomm.robotcore.util.
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -111,8 +112,9 @@ public class TeleOp extends LinearOpMode {
                 gamestate = "CHAMBERINTAKE";
                 robot.lift.liftMode = Lift.LiftMode.GROUND;
                 robot.extension.extMode = Extension.ExtMode.INTAKE;
-                robot.claw.clawOpen.setPosition(robot.claw.openMID);
-                robot.claw.clawSpin.setPosition(robot.claw.spinB);
+                    robot.claw.clawOpen.setPosition(robot.claw.openMID);
+
+               // robot.claw.clawSpin.setPosition(robot.claw.spinB);
                 runtime.reset();
             }
             if(gamepad2.b){
@@ -124,6 +126,7 @@ public class TeleOp extends LinearOpMode {
                 gamestate = "HIGHCHAM";
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.extension.extMode = Extension.ExtMode.NEAR;
+                robot.claw.clawSpin.setPosition(robot.claw.newSpinB);
             }
             if(gamepad2.dpad_down){
                 robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
