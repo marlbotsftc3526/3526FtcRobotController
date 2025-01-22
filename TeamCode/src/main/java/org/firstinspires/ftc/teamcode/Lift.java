@@ -12,7 +12,7 @@ public class Lift {
     public static final double LIFT_KP = 0.01;
     public static final double LIFT_KI = 0;
     public static final double LIFT_KD = 0;
-    public static final double MAX_OUT = 0.7;
+    public static final double MAX_OUT = 1;
 
     public ElapsedTime delay = null;
     public double delayTime = 0.5;
@@ -21,13 +21,9 @@ public class Lift {
     public enum LiftMode {
         MANUAL,
         HIGH_CHAMBER,
-        LOW_CHAMBER,
         HIGH_CHAMBER_SCORE,
-        LOW_CHAMBER_SCORE,
         HIGH_BUCKET,
-        LOW_BUCKET,
         GROUND,
-        HIGH_CHAMBER_TEST
     }
     public LiftMode liftMode = LiftMode.MANUAL;
     public Lift(LinearOpMode opmode) {
@@ -52,7 +48,7 @@ public class Lift {
         myOpMode.telemetry.addData("liftLeft: ", liftLeft.getCurrentPosition());
         myOpMode.telemetry.addData("liftRight: ", liftRight.getCurrentPosition());
         myOpMode.telemetry.addData("lift mode", liftMode);
-        if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.3 && myOpMode.gamepad2.left_bumper) {
+        if (Math.abs(myOpMode.gamepad1.right_stick_y) > 0.3) {
             liftMode = LiftMode.MANUAL;
         }
 
@@ -60,9 +56,9 @@ public class Lift {
         if (liftMode == LiftMode.MANUAL) {
             liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1 && myOpMode.gamepad2.left_bumper) {
-                    liftLeft.setPower(-myOpMode.gamepad2.right_stick_y);
-                    liftRight.setPower(-myOpMode.gamepad2.right_stick_y);
+            if (Math.abs(myOpMode.gamepad1.right_stick_y) > 0.1) {
+                    liftLeft.setPower(-myOpMode.gamepad1.right_stick_y);
+                    liftRight.setPower(-myOpMode.gamepad1.right_stick_y);
             } else {
                 if(liftLeft.getCurrentPosition() < 30 && liftRight.getCurrentPosition() < 30){
                     liftLeft.setPower(0);
@@ -73,21 +69,13 @@ public class Lift {
                 }
             }
         } else if (liftMode == LiftMode.HIGH_CHAMBER) {
-            liftToPositionPIDClass(1600);
+            liftToPositionPIDClass(970);
         }else if (liftMode == LiftMode.HIGH_CHAMBER_SCORE) {
-            liftToPositionPIDClass(1000);
-        } else if (liftMode == LiftMode.LOW_CHAMBER) {
-            liftToPositionPIDClass(600);
-        }else if (liftMode == LiftMode.LOW_CHAMBER_SCORE) {
-            liftToPositionPIDClass(200);
-        } else if (liftMode == LiftMode.HIGH_BUCKET) {
+            liftToPositionPIDClass(2150);
+        }else if (liftMode == LiftMode.HIGH_BUCKET) {
             liftToPositionPIDClass(2950);
-        } else if (liftMode == LiftMode.LOW_BUCKET) {
-            liftToPositionPIDClass(1600);
         }else if (liftMode == LiftMode.GROUND) {
             liftToPositionPIDClass(30);
-        }else if(liftMode == LiftMode.HIGH_CHAMBER_TEST){
-            liftToPositionPIDClass(480);
         }
 
     }
@@ -96,14 +84,8 @@ public class Lift {
             liftToPositionPIDClass(1400);
         }else if (liftMode == LiftMode.HIGH_CHAMBER_SCORE) {
             liftToPositionPIDClass(1000);
-        } else if (liftMode == LiftMode.LOW_CHAMBER) {
-            liftToPositionPIDClass(600);
-        }else if (liftMode == LiftMode.LOW_CHAMBER_SCORE) {
-            liftToPositionPIDClass(100);
         } else if (liftMode == LiftMode.HIGH_BUCKET) {
             liftToPositionPIDClass(2950);
-        } else if (liftMode == LiftMode.LOW_BUCKET) {
-            liftToPositionPIDClass(1600);
         }else if (liftMode == LiftMode.GROUND) {
             liftToPositionPIDClass(30);
         }

@@ -2,17 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Disabled
-@Autonomous(name="AutoMeetThreeBlueRight", group="Linear OpMode")
+@Autonomous(name="SpecimenAuto", group="Linear OpMode")
 @Config
-public class AutoMeetTwoBlueRight extends LinearOpMode {
+public class SpecimenAuto extends LinearOpMode {
 
     RobotHardware robot;
 
@@ -83,7 +81,7 @@ public class AutoMeetTwoBlueRight extends LinearOpMode {
                         }
                     }
                     if ((robot.drivetrain.targetReached && timer.seconds() > 0.3)|| timer.seconds() > 3) {
-                        currentState = AutoMeetTwoBlueRight.State.SCORING;
+                        currentState = SpecimenAuto.State.SCORING;
                         timer.reset();
                     }
 
@@ -99,7 +97,7 @@ public class AutoMeetTwoBlueRight extends LinearOpMode {
                             if(timer.seconds() > 3.5) {
                                 robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
                                 if (timer.seconds() > 4) {
-                                    currentState = AutoMeetTwoBlueRight.State.DRIVE_TO_INTAKE_ONE;
+                                    currentState = SpecimenAuto.State.DRIVE_TO_INTAKE_ONE;
                                     robot.drivetrain.setTargetPose(intakePoseOne);
                                     timer.reset();
                                 }
@@ -117,7 +115,7 @@ public class AutoMeetTwoBlueRight extends LinearOpMode {
                     robot.claw.clawOpen.setPosition(robot.claw.openMID);
                     if (robot.drivetrain.targetReached|| timer.seconds() > 5) {
                         robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
-                        currentState = AutoMeetTwoBlueRight.State.DRIVE_TO_INTAKE_TWO;
+                        currentState = SpecimenAuto.State.DRIVE_TO_INTAKE_TWO;
                         robot.drivetrain.setTargetPose(intakePoseTwo);
                         timer.reset();
                     }
@@ -127,7 +125,7 @@ public class AutoMeetTwoBlueRight extends LinearOpMode {
                         if(timer.seconds() > 0.3) {
                             cycle += 3;
                             robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
-                            currentState = AutoMeetTwoBlueRight.State.INTAKING;
+                            currentState = SpecimenAuto.State.INTAKING;
                             timer.reset();
 
                         }
@@ -140,7 +138,7 @@ public class AutoMeetTwoBlueRight extends LinearOpMode {
                         stop();
                     }else {
                         if(timer.seconds() > 0.3) {
-                            currentState = AutoMeetTwoBlueRight.State.DRIVE_TO_SCORE;
+                            currentState = SpecimenAuto.State.DRIVE_TO_SCORE;
                             robot.drivetrain.setTargetPose(scorePose);
                             timer.reset();
                         }

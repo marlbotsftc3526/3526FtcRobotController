@@ -37,14 +37,16 @@ public class Extension {
     public void teleOp(){
         myOpMode.telemetry.addData("extension: ", extension.getCurrentPosition());
         myOpMode.telemetry.addData("ext mode", extMode);
-        if(Math.abs(myOpMode.gamepad2.right_stick_x) > 0.3 && myOpMode.gamepad2.left_bumper){
+        if(Math.abs(myOpMode.gamepad1.right_stick_x) > 0.2 || (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1&& myOpMode.gamepad2.left_bumper)){
             extMode = extMode.MANUAL;
         }
         if (extMode == Extension.ExtMode.MANUAL) {
             extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (Math.abs(myOpMode.gamepad2.right_stick_x) > 0.1&& myOpMode.gamepad2.left_bumper) {
-                extension.setPower(myOpMode.gamepad2.right_stick_x);
-            } else {
+            if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1&& myOpMode.gamepad2.left_bumper) {
+                extension.setPower(-myOpMode.gamepad2.right_stick_y);
+            }else if(Math.abs(myOpMode.gamepad1.right_stick_x) > 0.1 && !myOpMode.gamepad1.left_bumper){
+                extension.setPower(myOpMode.gamepad1.right_stick_x);
+            }else {
                 extension.setPower(0);
             }
         }else if (extMode == Extension.ExtMode.FAR ) {
@@ -52,11 +54,11 @@ public class Extension {
         }else if (extMode == Extension.ExtMode.MID ) {
             extToPositionPIDClass(2600);
         } else if (extMode == Extension.ExtMode.NEAR) {
-            extToPositionPIDClass(1350);
+            extToPositionPIDClass(1700);
         } else if (extMode == Extension.ExtMode.FARBACK) {
             extToPositionPIDClass(0);
         } else if (extMode == Extension.ExtMode.HANG) {
-            extToPositionPIDClass(530);
+            extToPositionPIDClass(650);
         } else if(extMode == Extension.ExtMode.INTAKE){
             extToPositionPIDClass(550);
         }

@@ -11,11 +11,11 @@ public class Claw {
     public Servo clawSpin = null;
     public static final double openOPEN = 0;
 
-    public static final double openMID = 0.3;
-    public static final double openCLOSE = 0.4;
+    public static final double openMID = 0.45;
+    public static final double openCLOSE = 0.7;
 
     public static final double pivotDOWN = 1;
-    public static final double pivotSCORE = 0.67;
+    public static final double pivotSCORE = 0.75;
 
     public static final double pivotUP = 0.45;
 
@@ -24,8 +24,7 @@ public class Claw {
     public static final double pivotBACK = 0;
 
     public static final double spinA = 0;
-    public static final double spinB = 0.7;
-    public static final double newSpinB = 1.4;
+    public static final double spinB = 0.6;
     public Claw(LinearOpMode opmode) {
         myOpMode = opmode;
     }
@@ -45,21 +44,6 @@ public class Claw {
         }
         if(myOpMode.gamepad2.right_trigger > 0.1 ^ myOpMode.gamepad2.left_trigger > 0.1){
             clawOpen.setPosition(openCLOSE);
-        }
-        if(myOpMode.gamepad1.left_bumper){
-            clawOpen.setPosition(0);
-        }
-        if(myOpMode.gamepad1.right_bumper){
-            clawOpen.setPosition(0.45);
-        }
-        if(myOpMode.gamepad1.x){
-            clawPivot.setPosition(0.22);
-        }
-        if(myOpMode.gamepad1.y){
-            clawPivot.setPosition(0.7);
-        }
-        if (myOpMode.gamepad1.b) {
-            clawPivot.setPosition(1);
         }
     }
 

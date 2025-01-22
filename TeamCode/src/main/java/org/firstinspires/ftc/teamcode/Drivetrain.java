@@ -24,14 +24,14 @@ public class Drivetrain {
 
     public SparkfunLocalizer localizer;
 
-    public static double HEADING_KP = 0.015;//0.01
+    public static double HEADING_KP = 0.012;//0.01
     public static double HEADING_KI = 0.0;
     public static double HEADING_KD = 0.0;
-    public static double DRIVE_KP = 0.04; //0.02
+    public static double DRIVE_KP = 0.02; //0.02
     public static double DRIVE_KI = 0.0;
-    public static double DRIVE_KD = 0.01;//0.03;
-    public static double DRIVE_MAX_OUT = 0.7;
-    public static double S_CNT = 3;//4
+    public static double DRIVE_KD = 0;//0.03;
+    public static double DRIVE_MAX_OUT = 0.5;
+    public static double S_CNT = 3.5;//4
 
     PIDController xController;
     PIDController yController;
@@ -96,7 +96,7 @@ public class Drivetrain {
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void teleOp(){
+    public void teleOp() {
         localizer.update();
         useEncoders();
         //drive train
@@ -108,14 +108,19 @@ public class Drivetrain {
         double drive;
         double turn;
         double strafe;
-        if(!myOpMode.gamepad2.left_bumper) {
-            drive = -myOpMode.gamepad2.left_stick_y;
+
+        if(!myOpMode.gamepad2.left_bumper){
             turn = myOpMode.gamepad2.right_stick_x;
-            strafe = -myOpMode.gamepad2.left_stick_x;
         }else{
-            drive = 0;
-            turn = 0;
+            turn = myOpMode.gamepad2.right_stick_x/5;
+        }
+
+        if(!myOpMode.gamepad2.left_bumper) {
+            strafe = -myOpMode.gamepad2.left_stick_x;
+            drive = -myOpMode.gamepad2.left_stick_y;
+        }else{
             strafe = 0;
+            drive = 0;
         }
         frontLeftPower = (drive + turn - strafe);
 
