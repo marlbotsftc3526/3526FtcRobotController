@@ -9,6 +9,7 @@ public class RobotHardware {
 
     public Drivetrain drivetrain;
     public Claw claw;
+    public ActiveClaw aClaw;
     public Lift lift;
     public Extension extension;
 
@@ -21,12 +22,14 @@ public class RobotHardware {
     public void init() {
         drivetrain = new Drivetrain(myOpMode);
         claw = new Claw(myOpMode);
+        aClaw = new ActiveClaw(myOpMode);
         lift = new Lift(myOpMode);
         extension = new Extension(myOpMode);
         //camera = new DualPortalCamera(myOpMode);
 
         drivetrain.init();
         claw.init();
+        aClaw.init();
         lift.init();
         extension.init();
         //camera.init();
@@ -42,6 +45,13 @@ public class RobotHardware {
     public void teleOp() {
         drivetrain.teleOp();
         claw.teleOp();
+        lift.teleOp();
+        extension.teleOp();
+    }
+
+    public void teleOpA() {
+        drivetrain.teleOp();
+        aClaw.teleOp();
         lift.teleOp();
         extension.teleOp();
     }

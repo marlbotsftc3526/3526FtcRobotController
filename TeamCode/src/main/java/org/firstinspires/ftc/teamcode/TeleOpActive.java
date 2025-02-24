@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "teleop", group = "Linear Opmode")
-public class TeleOp extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "teleopActive", group = "Linear Opmode")
+public class TeleOpActive extends LinearOpMode {
 
     RobotHardware robot = new RobotHardware(this);
     private ElapsedTime runtime = new ElapsedTime();
@@ -33,30 +33,30 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            robot.teleOp();
+            robot.teleOpA();
             telemetry.update();
             runtime.reset();
             if(gamestate == "HIGHCHAM") {
-                    if (gamepad2.right_bumper) {
-                        robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER_SCORE;
-                    }
-                    if(robot.lift.liftLeft.getCurrentPosition() > 500){
+                if (gamepad2.right_bumper) {
+                    robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER_SCORE;
+                }
+                if(robot.lift.liftLeft.getCurrentPosition() > 500){
 
-                        robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
+                    robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
 
-                    }
+                }
 
             }
             if(gamestate == "HIGHBUCK"){
-                    if (gamepad2.right_bumper && !gamepad2.left_bumper) {
-                        robot.lift.liftMode = Lift.LiftMode.HIGH_BUCKET;
-                    }
-                    if(robot.lift.liftLeft.getCurrentPosition() > robot.lift.highbucketpos - 40){
-                        robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
-                    }
-                    if(robot.extension.extension.getCurrentPosition()<= 2000 && robot.lift.liftLeft.getCurrentPosition() <= 350){
-                        robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
-                    }
+                if (gamepad2.right_bumper && !gamepad2.left_bumper) {
+                    robot.lift.liftMode = Lift.LiftMode.HIGH_BUCKET;
+                }
+                if(robot.lift.liftLeft.getCurrentPosition() > robot.lift.highbucketpos - 40){
+                    robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
+                }
+                if(robot.extension.extension.getCurrentPosition()<= 2000 && robot.lift.liftLeft.getCurrentPosition() <= 350){
+                    robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
+                }
 
             }
             if(gamestate == "SUBMERSIBLE"){
@@ -64,52 +64,54 @@ public class TeleOp extends LinearOpMode {
                     robot.claw.clawPivot.setPosition(robot.claw.pivotDOWN);
 
                 }
-                    if(gamepad2.left_bumper){
+                if(gamepad2.left_bumper){
 
-                        if(gamepad2.left_stick_x>0.1 && clawspinpos < 1) {
-                            clawspinpos += 0.01;
-                        }else if(gamepad2.left_stick_x < -0.1 && 0 < clawspinpos){
-                            clawspinpos -= 0.01;
-                        }
-                        if(gamepad2.left_stick_button){
-                            clawspinpos = robot.claw.spinA;
-                        }
-                        robot.claw.clawSpin.setPosition(clawspinpos);
-                        telemetry.addData("spin", clawspinpos);
+                    if(gamepad2.left_stick_x>0.1 && clawspinpos < 1) {
+                        clawspinpos += 0.01;
+                    }else if(gamepad2.left_stick_x < -0.1 && 0 < clawspinpos){
+                        clawspinpos -= 0.01;
                     }
-                    if(gamepad2.right_bumper){
-                        robot.lift.liftMode = Lift.LiftMode.GROUND;
+                    if(gamepad2.left_stick_button){
+                        clawspinpos = robot.claw.spinA;
                     }
+                    robot.claw.clawSpin.setPosition(clawspinpos);
+                    telemetry.addData("spin", clawspinpos);
+                }
+                if(gamepad2.right_bumper){
+                    robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
+                    gamestate = "NEUTRAL";
+                }
             }
             if(gamestate == "CHAMBERINTAKE"){
-                    if(robot.extension.extension.getCurrentPosition() < 575){
-                        robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
-                    }
+                if(robot.extension.extension.getCurrentPosition() < 575){
+                    robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
+                }
             }
             if(gamepad2.a){
                 gamestate = "CHAMBERINTAKE";
                 robot.lift.liftMode = Lift.LiftMode.GROUND;
                 robot.extension.extMode = Extension.ExtMode.FARBACK;
-                    robot.claw.clawOpen.setPosition(robot.claw.openMID);
+                //robot.claw.clawOpen.setPosition(robot.claw.openMID);
+                // robot.aClaw.clawActive.setPosition(robot.aClaw.activeIn);
 
+                // robot.claw.clawSpin.setPosition(robot.claw.spinB);
                 runtime.reset();
             }
             if(gamepad2.y){
                 gamestate = "HIGHCHAM";
-                robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
+                //robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.extension.extMode = Extension.ExtMode.NEAR;
                 robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER;
             }
             if(gamepad2.dpad_down){
                 gamestate = "SUBMERSIBLE";
-                robot.lift.liftMode = Lift.LiftMode.SUBMERSIBLE;
+                robot.lift.liftMode = Lift.LiftMode.GROUND;
                 robot.extension.extMode = Extension.ExtMode.NEAR;
-                robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
                 runtime.reset();
             }
             if(gamepad2.dpad_up){
                 gamestate = "HIGHBUCK";
-                robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
+                //robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                 robot.extension.extMode = Extension.ExtMode.FARBACK;
             }
             if(gamepad2.dpad_right && gamepad2.x){
@@ -152,4 +154,4 @@ public class TeleOp extends LinearOpMode {
 
         }
     }
-    }
+}

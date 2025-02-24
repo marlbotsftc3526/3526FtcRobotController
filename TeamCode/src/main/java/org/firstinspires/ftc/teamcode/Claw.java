@@ -9,10 +9,10 @@ public class Claw {
     public Servo clawPivot = null;
 
     public Servo clawSpin = null;
-    public static final double openOPEN = 0;
+    public static final double openOPEN = 0.4; //0
 
-    public static final double openMID = 0.45;
-    public static final double openCLOSE = 0.7;
+    public static final double openMID = 0.7;
+    public static final double openCLOSE = 1;
 
     public static final double pivotDOWN = 1;
     public static final double pivotSCORE = 0.75;
@@ -23,8 +23,8 @@ public class Claw {
 
     public static final double pivotBACK = 0;
 
-    public static final double spinA = 0;
-    public static final double spinB = 0.6;
+    public static final double spinA = 0.5;
+    public static final double spinB = 0;
     public Claw(LinearOpMode opmode) {
         myOpMode = opmode;
     }
@@ -34,15 +34,18 @@ public class Claw {
         clawPivot = myOpMode.hardwareMap.get(Servo.class, "clawPivot");
         clawSpin = myOpMode.hardwareMap.get(Servo.class, "clawSpin");
         clawSpin.setPosition(spinA);
-        clawOpen.setPosition(openCLOSE);
+        clawOpen.setPosition(openOPEN);
     }
     public void teleOp(){
 
 
-        if(myOpMode.gamepad2.right_trigger > 0.1 && myOpMode.gamepad2.left_trigger > 0.1){
+        if((myOpMode.gamepad2.right_trigger > 0.1 && myOpMode.gamepad2.left_trigger > 0.1) && !myOpMode.gamepad2.left_bumper){
             clawOpen.setPosition(openOPEN);
         }
-        if(myOpMode.gamepad2.right_trigger > 0.1 ^ myOpMode.gamepad2.left_trigger > 0.1){
+        if((myOpMode.gamepad2.right_trigger > 0.1 && myOpMode.gamepad2.left_trigger > 0.1) && myOpMode.gamepad2.left_bumper){
+            clawOpen.setPosition(openMID);
+        }
+        if((myOpMode.gamepad2.right_trigger > 0.1 ^ myOpMode.gamepad2.left_trigger > 0.1) && !myOpMode.gamepad2.left_bumper){
             clawOpen.setPosition(openCLOSE);
         }
     }

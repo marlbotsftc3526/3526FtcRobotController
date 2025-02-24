@@ -23,7 +23,8 @@ public class SampleAuto extends LinearOpMode {
         DRIVE_TO_SCORE,
         SCORING,
         DRIVE_TO_INTAKE,
-        INTAKING
+        INTAKING,
+        PARK,
     }
 
     // We define the current state we're on
@@ -34,20 +35,26 @@ public class SampleAuto extends LinearOpMode {
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0, AngleUnit.DEGREES,0);
 
     // Define our target
-    public static double scoreX = 10;
-    public static double scoreY = 12;
+    public static double scoreX = 7;//10
+    public static double scoreY = 14;//12
     public static double scoreT = -45;
     Pose2D scorePose = new Pose2D(DistanceUnit.INCH, scoreX, scoreY, AngleUnit.DEGREES, scoreT);
 
-    public static double intakeX = 30;
-    public static double intakeY = 5;
+    public static double intakeX = 25; // origionally 30
+    public static double intakeY = 8; // orig 5,8
     public static double intakeT = 0;
+
+    public static double parkX = 48; // origionally 30
+    public static double parkY = -17; // orig 5
+    public static double parkT = -90;
+    Pose2D parkPose = new Pose2D(DistanceUnit.INCH, parkX, parkY, AngleUnit.DEGREES, parkT);
 
     public static int counter = 0;
     Pose2D intakePose = new Pose2D(DistanceUnit.INCH, intakeX,intakeY, AngleUnit.DEGREES, intakeT);
 
     @Override
     public void runOpMode() {
+        counter = 0;
         //calling constructor
         robot = new RobotHardware(this);
 
@@ -66,6 +73,7 @@ public class SampleAuto extends LinearOpMode {
         telemetry.update();
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("counter", counter);
             switch (currentState) {
                 case DRIVE_TO_SCORE:
                     //put condition for switch at the beginning, condition can be based on time or completion of a task
@@ -80,45 +88,74 @@ public class SampleAuto extends LinearOpMode {
                 case SCORING:
                     robot.drivetrain.stop();
                     robot.lift.liftMode = Lift.LiftMode.HIGH_BUCKET;
-                    if(robot.lift.liftLeft.getCurrentPosition() > 2850){
+                    //Original lift pos 2850
+                    if(robot.lift.liftLeft.getCurrentPosition() > robot.lift.highbucketpos - 40){
                         robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
-                        if(timer.seconds() > 3){
-                            robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
-                            currentState = SampleAuto.State.DRIVE_TO_INTAKE;
-                            robot.drivetrain.setTargetPose(intakePose);
-                            timer.reset();
+                        if(timer.seconds() > 2){
+                            robot.claw.clawOpen.setPosition(robot.claw.openMID);
+                            if(timer.seconds() > 3) {
+                                if (counter<2) {
+                                    currentState = SampleAuto.State.DRIVE_TO_INTAKE;
+                                    intakePose = new Pose2D(DistanceUnit.INCH, intakeX+2*counter, intakeY + 8 * counter, AngleUnit.DEGREES, intakeT);
+                                    robot.drivetrain.setTargetPose(intakePose);
+                                    timer.reset();
+                                }
+                                else {
+                                    currentState = SampleAuto.State.PARK;
+                                    timer.reset();
+
+                                }
+                            }
                         }
                     }
                     break;
                 case DRIVE_TO_INTAKE:
-                    intakePose = new Pose2D(DistanceUnit.INCH, intakeX,intakeY+10*counter, AngleUnit.DEGREES, intakeT);
                     if(timer.seconds() < 1){
-                        robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                         robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
                     }
-                    if(timer.seconds() > 1) {
+                    if(timer.seconds() > 0.3) {
                         robot.lift.liftMode = Lift.LiftMode.GROUND;
                         robot.extension.extMode = Extension.ExtMode.NEAR;
-                        robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
-                        if (robot.extension.extension.getCurrentPosition() > 1600) {
-                            robot.claw.clawPivot.setPosition(robot.claw.pivotDOWN);
-                        }
-                        if (robot.drivetrain.targetReached || timer.seconds() > 3) {
-                            currentState = SampleAuto.State.INTAKING;
-                            timer.reset();
+                        robot.claw.clawOpen.setPosition(robot.claw.openMID);
+                        if(timer.seconds() > 1) {
+                            if (robot.extension.extension.getCurrentPosition() > robot.extension.nearpos - 100) {
+                                robot.claw.clawPivot.setPosition(robot.claw.pivotDOWN);
+                                robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
+                                if (robot.drivetrain.targetReached || timer.seconds() > 3) {
+                                    currentState = SampleAuto.State.INTAKING;
+                                    timer.reset();
+                                }
+                            }
                         }
                     }
                     break;
                 case INTAKING:
-                    robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
-                    if(timer.seconds() > 1.5){
-                        robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
-                        robot.extension.extMode = Extension.ExtMode.FARBACK;
-                        currentState = SampleAuto.State.DRIVE_TO_SCORE;
-                        robot.drivetrain.setTargetPose(scorePose);
-                        timer.reset();
+
+                    if(timer.seconds() > 0.5) {
+                        robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
+                        if (timer.seconds() > 1) {
+                            robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
+                            robot.extension.extMode = Extension.ExtMode.FARBACK;
+                            if (timer.seconds() > 1.4) {
+                                currentState = SampleAuto.State.DRIVE_TO_SCORE;
+                                robot.drivetrain.setTargetPose(scorePose);
+                                counter++;
+                                timer.reset();
+                            }
+                        }
                     }
                     break;
+            case PARK:
+                if(timer.seconds() < 0.5){
+                    robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
+                    }
+                    if(timer.seconds() > 0.3) {
+                        robot.drivetrain.setTargetPose(parkPose);
+                        robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER;
+                        robot.extension.extMode = Extension.ExtMode.NEAR;
+                        robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
+                    }
+            break;
             }
             // Anything outside of the switch statement will run independent of the currentState
             // We update robot continuously in the background, regardless of state

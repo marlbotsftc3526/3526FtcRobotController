@@ -111,7 +111,7 @@ public class SpecimenAuto extends LinearOpMode {
                         robot.claw.clawSpin.setPosition(robot.claw.spinB);
                     }
                     robot.lift.liftMode = Lift.LiftMode.GROUND;
-                    robot.extension.extMode = Extension.ExtMode.INTAKE;
+                    robot.extension.extMode = Extension.ExtMode.FARBACK;
                     robot.claw.clawOpen.setPosition(robot.claw.openMID);
                     if (robot.drivetrain.targetReached|| timer.seconds() > 5) {
                         robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
