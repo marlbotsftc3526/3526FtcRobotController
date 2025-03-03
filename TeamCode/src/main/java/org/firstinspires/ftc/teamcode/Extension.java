@@ -11,15 +11,16 @@ public class Extension {
     public static final double EXT_KP = 0.01;
     public static final double EXT_KI = 0;
     public static final double EXT_KD = 0;
-    public static final double MAX_OUT = 0.8;
+    public static final double MAX_OUT = 1;
     public ElapsedTime delay = null;
     public double delayTime = 0.5;
 
     public static final double farpos = 2600;
     public static final double midpos = 2000;
     public static final double nearpos = 1650;
-    public static final double hangpos = 50;
+    public static final double hangpos = 400;
     public static final double farbackpos= 0;
+    public static final double autopos=1143;
 
     public enum ExtMode {
         MANUAL,
@@ -28,7 +29,8 @@ public class Extension {
         MID,
         FAR,
         HANG,
-        FARBACK
+        FARBACK,
+        AUTO,
     }
     public Extension.ExtMode extMode = Extension.ExtMode.MANUAL;
 
@@ -43,17 +45,22 @@ public class Extension {
         extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extensionPID.reset();
     }
+    public void initTeleOp() {
+        extension  = myOpMode.hardwareMap.get(DcMotor.class, "extension");
+        extensionTouchSensor = myOpMode.hardwareMap.get(TouchSensor.class, "extensionLimitSwitch");
+        extensionPID = new PIDController(EXT_KP, EXT_KI, EXT_KD, MAX_OUT);
+    }
     public void teleOp(){
         myOpMode.telemetry.addData("extension: ", extension.getCurrentPosition());
         myOpMode.telemetry.addData("ext mode", extMode);
-        if(extensionTouchSensor.isPressed()){
-            extension.setPower(0);
-            extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-        if(Math.abs(myOpMode.gamepad1.right_stick_x) > 0.2 || (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1&& myOpMode.gamepad2.left_bumper)){
+        if((Math.abs(myOpMode.gamepad1.right_stick_x) > 0.2 && !myOpMode.gamepad1.left_bumper)|| (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1&& myOpMode.gamepad2.left_bumper)){
             extMode = extMode.MANUAL;
         }
         if (extMode == Extension.ExtMode.MANUAL) {
+            if(extensionTouchSensor.isPressed()){
+                extension.setPower(0);
+                extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
             extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (Math.abs(myOpMode.gamepad2.right_stick_y) > 0.1&& myOpMode.gamepad2.left_bumper) {
                 if((myOpMode.gamepad2.right_stick_y >0.1 && extensionTouchSensor.isPressed()) ||
@@ -61,7 +68,7 @@ public class Extension {
                     extension.setPower(0);
                 }
                 else{
-                    extension.setPower(-myOpMode.gamepad2.right_stick_y);
+                    extension.setPower(-myOpMode.gamepad2.right_stick_y*0.5);
                 }
             }else if(Math.abs(myOpMode.gamepad1.right_stick_x) > 0.1 && !myOpMode.gamepad1.left_bumper){
                 if((myOpMode.gamepad1.right_stick_x > 0.1 && extensionTouchSensor.isPressed()) ||
@@ -69,7 +76,7 @@ public class Extension {
                     extension.setPower(0);
                 }
                 else{
-                    extension.setPower(-myOpMode.gamepad1.right_stick_x);
+                    extension.setPower(myOpMode.gamepad1.right_stick_x);
                 }
             }else {
                 extension.setPower(0);
@@ -105,6 +112,8 @@ public class Extension {
             extToPositionPIDClass(hangpos);
         } else if (extMode == Extension.ExtMode.FARBACK) {
             extToPositionPIDClass(farbackpos);
+        }else if (extMode == Extension.ExtMode.AUTO) {
+            extToPositionPIDClass(autopos);
         }
     }
     public void extToPositionPIDClass(double targetPosition) {

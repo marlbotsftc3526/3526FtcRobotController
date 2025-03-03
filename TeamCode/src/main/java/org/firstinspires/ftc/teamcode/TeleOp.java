@@ -19,11 +19,12 @@ public class TeleOp extends LinearOpMode {
 
     String gamestate = "";
     double clawspinpos = robot.claw.spinA;
+    boolean subonetime = false;
 
     @Override
     public void runOpMode() {
 
-        robot.init();
+        robot.initTeleOp();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -32,6 +33,7 @@ public class TeleOp extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
+            telemetry.addData("spin", clawspinpos);
 
             robot.teleOp();
             telemetry.update();
@@ -60,26 +62,39 @@ public class TeleOp extends LinearOpMode {
 
             }
             if(gamestate == "SUBMERSIBLE"){
-                if(robot.extension.extension.getCurrentPosition() > robot.extension.nearpos - 100){
+                if(robot.extension.extension.getCurrentPosition() > robot.extension.nearpos - 150){
                     robot.claw.clawPivot.setPosition(robot.claw.pivotDOWN);
 
                 }
-                    if(gamepad2.left_bumper){
+                if(robot.claw.clawruntime.seconds() > 0.3 && robot.claw.clawruntime.seconds() < 0.8){
+                    robot.extension.extMode = Extension.ExtMode.NEAR;
+                }
+                if(robot.extension.extension.getCurrentPosition() > 150 && subonetime){
+                    robot.lift.liftMode = Lift.LiftMode.SUBMERSIBLE;
+                    robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
+                    subonetime = false;
+                }
+                if(gamepad2.left_bumper){
 
-                        if(gamepad2.left_stick_x>0.1 && clawspinpos < 1) {
-                            clawspinpos += 0.01;
-                        }else if(gamepad2.left_stick_x < -0.1 && 0 < clawspinpos){
-                            clawspinpos -= 0.01;
-                        }
-                        if(gamepad2.left_stick_button){
-                            clawspinpos = robot.claw.spinA;
-                        }
-                        robot.claw.clawSpin.setPosition(clawspinpos);
-                        telemetry.addData("spin", clawspinpos);
+                    if(gamepad2.left_stick_x>0.1 && clawspinpos < 1) {
+                        clawspinpos += 0.02;
+                    }else if(gamepad2.left_stick_x < -0.1 && 0 < clawspinpos){
+                        clawspinpos -= 0.02;
                     }
+                    if(gamepad2.left_stick_button){
+                        clawspinpos = robot.claw.spinA;
+                    }
+                    robot.claw.clawSpin.setPosition(clawspinpos);
+                    telemetry.addData("spin", clawspinpos);
+
                     if(gamepad2.right_bumper){
-                        robot.lift.liftMode = Lift.LiftMode.GROUND;
+                        robot.lift.liftMode = Lift.LiftMode.SUBMERSIBLE;
                     }
+                }
+
+                if(gamepad2.right_bumper && !gamepad2.left_bumper){
+                    robot.lift.liftMode = Lift.LiftMode.GROUND;
+                }
             }
             if(gamestate == "CHAMBERINTAKE"){
                     if(robot.extension.extension.getCurrentPosition() < 575){
@@ -90,7 +105,7 @@ public class TeleOp extends LinearOpMode {
                 gamestate = "CHAMBERINTAKE";
                 robot.lift.liftMode = Lift.LiftMode.GROUND;
                 robot.extension.extMode = Extension.ExtMode.FARBACK;
-                    robot.claw.clawOpen.setPosition(robot.claw.openMID);
+                    robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
 
                 runtime.reset();
             }
@@ -100,12 +115,16 @@ public class TeleOp extends LinearOpMode {
                 robot.extension.extMode = Extension.ExtMode.NEAR;
                 robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER;
             }
+            if((gamestate == "HIGHBUCK" && (gamepad2.right_trigger > 0.1 && gamepad2.left_trigger > 0.1))){
+                    gamestate = "SUBMERSIBLE";
+                    subonetime = true;
+
+                    runtime.reset();
+            }
             if(gamepad2.dpad_down){
                 gamestate = "SUBMERSIBLE";
-                robot.lift.liftMode = Lift.LiftMode.SUBMERSIBLE;
                 robot.extension.extMode = Extension.ExtMode.NEAR;
-                robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
-                runtime.reset();
+                subonetime = true;
             }
             if(gamepad2.dpad_up){
                 gamestate = "HIGHBUCK";
@@ -121,6 +140,7 @@ public class TeleOp extends LinearOpMode {
             if(gamepad1.dpad_right){
                 runtime.reset();
                 robot.extension.extMode = Extension.ExtMode.HANG;
+                robot.lift.isHang = true;
             }
             if(gamepad1.x){
                 if(robot.extension.extension.getCurrentPosition() <= 2400) {
@@ -148,7 +168,6 @@ public class TeleOp extends LinearOpMode {
             if(gamepad1.dpad_down){
                 robot.claw.clawSpin.setPosition(robot.claw.spinB);
             }
-
 
         }
     }

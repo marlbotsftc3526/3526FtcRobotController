@@ -35,12 +35,12 @@ public class SampleAuto extends LinearOpMode {
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0, AngleUnit.DEGREES,0);
 
     // Define our target
-    public static double scoreX = 7;//10
+    public static double scoreX = 8;//10
     public static double scoreY = 14;//12
     public static double scoreT = -45;
     Pose2D scorePose = new Pose2D(DistanceUnit.INCH, scoreX, scoreY, AngleUnit.DEGREES, scoreT);
 
-    public static double intakeX = 25; // origionally 30
+    public static double intakeX = 26; // origionally 30
     public static double intakeY = 8; // orig 5,8
     public static double intakeT = 0;
 
@@ -80,7 +80,7 @@ public class SampleAuto extends LinearOpMode {
                     robot.extension.extMode = Extension.ExtMode.FARBACK;
                     robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                     robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
-                    if ((robot.drivetrain.targetReached)|| timer.seconds() > 3) {
+                    if ((robot.drivetrain.targetReached)|| timer.seconds() > 1.5) {
                         currentState = SampleAuto.State.SCORING;
                         timer.reset();
                     }
@@ -115,10 +115,10 @@ public class SampleAuto extends LinearOpMode {
                     }
                     if(timer.seconds() > 0.3) {
                         robot.lift.liftMode = Lift.LiftMode.GROUND;
-                        robot.extension.extMode = Extension.ExtMode.NEAR;
+                        robot.extension.extMode = Extension.ExtMode.AUTO;
                         robot.claw.clawOpen.setPosition(robot.claw.openMID);
-                        if(timer.seconds() > 1) {
-                            if (robot.extension.extension.getCurrentPosition() > robot.extension.nearpos - 100) {
+                        if(timer.seconds() > .8) {
+                            if (robot.extension.extension.getCurrentPosition() > robot.extension.autopos - 100) {
                                 robot.claw.clawPivot.setPosition(robot.claw.pivotDOWN);
                                 robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
                                 if (robot.drivetrain.targetReached || timer.seconds() > 3) {
@@ -130,13 +130,12 @@ public class SampleAuto extends LinearOpMode {
                     }
                     break;
                 case INTAKING:
-
-                    if(timer.seconds() > 0.5) {
+                    if(timer.seconds() > 0.3) {
                         robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
-                        if (timer.seconds() > 1) {
+                        if (timer.seconds() > .5) {
                             robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
                             robot.extension.extMode = Extension.ExtMode.FARBACK;
-                            if (timer.seconds() > 1.4) {
+                            if (timer.seconds() > 1) {
                                 currentState = SampleAuto.State.DRIVE_TO_SCORE;
                                 robot.drivetrain.setTargetPose(scorePose);
                                 counter++;

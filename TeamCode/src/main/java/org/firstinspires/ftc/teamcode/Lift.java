@@ -18,12 +18,16 @@ public class Lift {
     public static final double LIFT_KI = 0;
     public static final double LIFT_KD = 0;
     public static final double MAX_OUT = 1;
+    public static final double MAX_OUT_DOWN = 0.2;
 
-    public static final double highchampos = 970;
-    public static final double highchamscorepos = 2150;
+    public static final double highchampos = 1100;
+    public static final double highchamautopos = 900;
+    public static final double highchamscorepos = 2100;
     public static final double highbucketpos = 2850; //1689 for low
-    public static final double groundpos = 30;
-    public static final double submersiblepos = 500;
+    //change groundpos to 15 or 30 possibly
+    public static final double groundpos = 15; //15
+    public static final double submersiblepos = 250;
+    public static boolean isHang = false;
 
     public ElapsedTime delay = null;
     public double delayTime = 0.5;
@@ -33,6 +37,7 @@ public class Lift {
         MANUAL,
         HIGH_CHAMBER,
         HIGH_CHAMBER_SCORE,
+        HIGH_CHAMBER_AUTO,
         HIGH_BUCKET,
         GROUND,
         SUBMERSIBLE
@@ -66,6 +71,18 @@ public class Lift {
 
         resetLiftPID();
     }
+    public void initTeleOp() {
+        liftLeft  = myOpMode.hardwareMap.get(DcMotor.class, "liftLeft");
+        liftRight  = myOpMode.hardwareMap.get(DcMotor.class, "liftRight");
+        liftCenter = myOpMode.hardwareMap.get(DcMotor.class, "liftCenter");
+        liftTouchSensor = myOpMode.hardwareMap.get(TouchSensor.class, "liftLimitSwitch");
+        liftLeft.setDirection(DcMotor.Direction.REVERSE);
+        liftRight.setDirection(DcMotor.Direction.FORWARD);
+        liftCenter.setDirection(DcMotor.Direction.FORWARD);
+        liftLeftPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD, MAX_OUT);
+        liftRightPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD, MAX_OUT);
+        liftCenterPID = new PIDController(LIFT_KP, LIFT_KI, LIFT_KD, MAX_OUT);
+    }
     public void teleOp(){
         myOpMode.telemetry.addData("liftLeft: ", liftLeft.getCurrentPosition());
         myOpMode.telemetry.addData("liftRight: ", liftRight.getCurrentPosition());
@@ -74,29 +91,42 @@ public class Lift {
         if (Math.abs(myOpMode.gamepad1.right_stick_y) > 0.3) {
             liftMode = LiftMode.MANUAL;
         }
-        if(liftTouchSensor.isPressed()){
-            liftLeft.setPower(0);
-            liftRight.setPower(0);
-            liftCenter.setPower(0);
-            liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            liftCenter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
+
 
         if (liftMode == LiftMode.MANUAL) {
-            liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            liftCenter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if(liftTouchSensor.isPressed()){
+                liftLeft.setPower(0);
+                liftRight.setPower(0);
+                liftCenter.setPower(0);
+                liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
 
             if (Math.abs(myOpMode.gamepad1.right_stick_y) > 0.1 && liftLeft.getCurrentPosition() < 2900) {
                 if(myOpMode.gamepad1.right_stick_y > 0 && liftTouchSensor.isPressed() ){
                     liftLeft.setPower(0);
                     liftRight.setPower(0);
                     liftCenter.setPower(0);
-                }else {
+                }else if((myOpMode.gamepad1.right_stick_y > 0 && !liftTouchSensor.isPressed()) && !isHang){
+                    //liftLeft.setPower(Math.max(-MAX_OUT_DOWN,-myOpMode.gamepad1.right_stick_y/3));
+                    liftLeft.setPower(-MAX_OUT_DOWN);
+                    //liftRight.setPower(Math.max(-MAX_OUT_DOWN,-myOpMode.gamepad1.right_stick_y/3));
+                    liftRight.setPower(-MAX_OUT_DOWN);
+                    //liftCenter.setPower(Math.max(-MAX_OUT_DOWN,-myOpMode.gamepad1.right_stick_y/3));
+                    liftCenter.setPower(-MAX_OUT_DOWN);
+                }else if(isHang){
                     liftLeft.setPower(-myOpMode.gamepad1.right_stick_y);
                     liftRight.setPower(-myOpMode.gamepad1.right_stick_y);
                     liftCenter.setPower(-myOpMode.gamepad1.right_stick_y);
+                }else {
+                    liftLeft.setPower(-myOpMode.gamepad1.right_stick_y/1.5);
+                    liftRight.setPower(-myOpMode.gamepad1.right_stick_y/1.5);
+                    liftCenter.setPower(-myOpMode.gamepad1.right_stick_y/1.5);
                 }
             } else {
                 if(liftLeft.getCurrentPosition() < 80 || liftRight.getCurrentPosition() < 80){
@@ -120,8 +150,21 @@ public class Lift {
             liftToPositionPIDClass(highbucketpos);
         }else if (liftMode == LiftMode.GROUND) {
             liftToPositionPIDClass(groundpos);
+            if(liftTouchSensor.isPressed()){
+                liftLeft.setPower(0);
+                liftRight.setPower(0);
+                liftCenter.setPower(0);
+                liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
         }else if(liftMode == LiftMode.SUBMERSIBLE){
             liftToPositionPIDClass(submersiblepos);
+        }else if(liftMode == LiftMode.HIGH_CHAMBER_AUTO){
+            liftToPositionPIDClass(highchamautopos);
         }
 
     }
@@ -134,8 +177,22 @@ public class Lift {
             liftToPositionPIDClass(highbucketpos);
         }else if (liftMode == LiftMode.GROUND) {
             liftToPositionPIDClass(groundpos);
+            if(liftTouchSensor.isPressed()){
+                liftLeft.setPower(0);
+                liftRight.setPower(0);
+                liftCenter.setPower(0);
+                liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
         }else if(liftMode == LiftMode.SUBMERSIBLE){
             liftToPositionPIDClass(submersiblepos);
+        }
+        else if(liftMode == LiftMode.HIGH_CHAMBER_AUTO){
+            liftToPositionPIDClass(highchamautopos);
         }
     }
 
@@ -149,9 +206,9 @@ public class Lift {
             liftCenter.setPower(Math.min(MAX_OUT, outCenter));
 
         }else{
-            liftLeft.setPower(Math.max(-MAX_OUT, outCenter));
-            liftRight.setPower(Math.max(-MAX_OUT, outCenter));
-            liftCenter.setPower(Math.max(-MAX_OUT, outCenter));
+            liftLeft.setPower(Math.max(-MAX_OUT_DOWN, outCenter));
+            liftRight.setPower(Math.max(-MAX_OUT_DOWN, outCenter));
+            liftCenter.setPower(Math.max(-MAX_OUT_DOWN, outCenter));
 
         }
 

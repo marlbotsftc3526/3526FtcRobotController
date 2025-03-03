@@ -112,7 +112,7 @@ public class Drivetrain {
         if(!myOpMode.gamepad2.left_bumper){
             turn = myOpMode.gamepad2.right_stick_x;
         }else{
-            turn = myOpMode.gamepad2.right_stick_x/5;
+            turn = myOpMode.gamepad2.right_stick_x/6.5;
         }
 
         if(!myOpMode.gamepad2.left_bumper) {
@@ -137,10 +137,10 @@ public class Drivetrain {
             backLeftPower   /= max;
             backRightPower  /= max;
         }
-        frontLeft.setPower(frontLeftPower);
-        frontRight.setPower(frontRightPower);
-        backLeft.setPower(backLeftPower);
-        backRight.setPower(backRightPower);
+        frontLeft.setPower(frontLeftPower*0.9);
+        frontRight.setPower(frontRightPower*0.9);
+        backLeft.setPower(backLeftPower*0.9);
+        backRight.setPower(backRightPower*0.9);
 
         myOpMode.telemetry.addData("frontLeftPower", frontLeftPower);
 

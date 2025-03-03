@@ -35,7 +35,7 @@ public class SpecimenAuto extends LinearOpMode {
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0, AngleUnit.DEGREES,0);
 
     // Define our target
-    public static double scoreX = 19;
+    public static double scoreX = 10;
     public static double scoreY = 0;
     public static double scoreT = 0;
     Pose2D scorePose = new Pose2D(DistanceUnit.INCH, scoreX, scoreY, AngleUnit.DEGREES, scoreT);
@@ -71,12 +71,11 @@ public class SpecimenAuto extends LinearOpMode {
             switch (currentState) {
                 case DRIVE_TO_SCORE:
                     //put condition for switch at the beginning, condition can be based on time or completion of a task
-                    robot.extension.extMode = Extension.ExtMode.NEAR;
+                    robot.extension.extMode = Extension.ExtMode.AUTO;
                     robot.claw.clawOpen.setPosition(robot.claw.openCLOSE);
                     if(cycle >= 3) {
-                        robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
                         if (timer.seconds()>0.3) {
-                            robot.claw.clawSpin.setPosition(robot.claw.spinA);
+                            robot.claw.clawPivot.setPosition(robot.claw.pivotUP);
 
                         }
                     }
@@ -89,14 +88,14 @@ public class SpecimenAuto extends LinearOpMode {
                     break;
                 case SCORING:
 
-                    robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER;
-                    if (timer.seconds() > 1.5) {
+                    robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER_AUTO;
+                    if (timer.seconds() > 1) {
                         robot.claw.clawPivot.setPosition(robot.claw.pivotSCORE);
-                        if(timer.seconds() > 3){
-                            robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER;
-                            if(timer.seconds() > 3.5) {
+                        if(timer.seconds() > 2){
+                            robot.lift.liftMode = Lift.LiftMode.HIGH_CHAMBER_SCORE;
+                            if(timer.seconds() > 2.5) {
                                 robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
-                                if (timer.seconds() > 4) {
+                                if (timer.seconds() > 3.5) {
                                     currentState = SpecimenAuto.State.DRIVE_TO_INTAKE_ONE;
                                     robot.drivetrain.setTargetPose(intakePoseOne);
                                     timer.reset();
@@ -112,7 +111,7 @@ public class SpecimenAuto extends LinearOpMode {
                     }
                     robot.lift.liftMode = Lift.LiftMode.GROUND;
                     robot.extension.extMode = Extension.ExtMode.FARBACK;
-                    robot.claw.clawOpen.setPosition(robot.claw.openMID);
+                    robot.claw.clawOpen.setPosition(robot.claw.openOPEN);
                     if (robot.drivetrain.targetReached|| timer.seconds() > 5) {
                         robot.claw.clawPivot.setPosition(robot.claw.pivotBACK);
                         currentState = SpecimenAuto.State.DRIVE_TO_INTAKE_TWO;

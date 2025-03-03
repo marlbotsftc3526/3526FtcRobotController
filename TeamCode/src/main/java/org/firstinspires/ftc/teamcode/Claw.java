@@ -15,16 +15,18 @@ public class Claw {
     public static final double openCLOSE = 1;
 
     public static final double pivotDOWN = 1;
-    public static final double pivotSCORE = 0.75;
+    public static final double pivotSCORE = 0.68;
 
     public static final double pivotUP = 0.45;
 
     public static final double pivotSCOREPOS = 0.55;
 
-    public static final double pivotBACK = 0;
+    public static final double pivotBACK = 0.1;
 
-    public static final double spinA = 0.5;
-    public static final double spinB = 0;
+    public static final double spinA = 0.36;//0.5
+    public static final double spinB = 0;//0
+
+    public ElapsedTime clawruntime = new ElapsedTime();
     public Claw(LinearOpMode opmode) {
         myOpMode = opmode;
     }
@@ -35,12 +37,14 @@ public class Claw {
         clawSpin = myOpMode.hardwareMap.get(Servo.class, "clawSpin");
         clawSpin.setPosition(spinA);
         clawOpen.setPosition(openOPEN);
+        clawruntime= new ElapsedTime();
     }
     public void teleOp(){
 
-
+        myOpMode.telemetry.addData("clawSpin: ", clawSpin.getPosition());
         if((myOpMode.gamepad2.right_trigger > 0.1 && myOpMode.gamepad2.left_trigger > 0.1) && !myOpMode.gamepad2.left_bumper){
             clawOpen.setPosition(openOPEN);
+            clawruntime.reset();
         }
         if((myOpMode.gamepad2.right_trigger > 0.1 && myOpMode.gamepad2.left_trigger > 0.1) && myOpMode.gamepad2.left_bumper){
             clawOpen.setPosition(openMID);
