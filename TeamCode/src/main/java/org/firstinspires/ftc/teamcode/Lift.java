@@ -27,6 +27,8 @@ public class Lift {
     //change groundpos to 15 or 30 possibly
     public static final double groundpos = 15; //15
     public static final double submersiblepos = 250;
+    public static final double groundactivepos = 75; //15
+    public static final double submersibleactivepos = 300;
     public static boolean isHang = false;
 
     public ElapsedTime delay = null;
@@ -40,7 +42,9 @@ public class Lift {
         HIGH_CHAMBER_AUTO,
         HIGH_BUCKET,
         GROUND,
-        SUBMERSIBLE
+        SUBMERSIBLE,
+        GROUNDACTIVE,
+        SUBMERSIBLEACTIVE,
     }
     public LiftMode liftMode = LiftMode.MANUAL;
     public Lift(LinearOpMode opmode) {
@@ -165,6 +169,10 @@ public class Lift {
             liftToPositionPIDClass(submersiblepos);
         }else if(liftMode == LiftMode.HIGH_CHAMBER_AUTO){
             liftToPositionPIDClass(highchamautopos);
+        }else if(liftMode == LiftMode.GROUNDACTIVE){
+            liftToPositionPIDClass(groundactivepos);
+        }else if(liftMode == LiftMode.SUBMERSIBLEACTIVE){
+            liftToPositionPIDClass(submersibleactivepos);
         }
 
     }
@@ -193,6 +201,10 @@ public class Lift {
         }
         else if(liftMode == LiftMode.HIGH_CHAMBER_AUTO){
             liftToPositionPIDClass(highchamautopos);
+        }else if(liftMode == LiftMode.GROUNDACTIVE){
+            liftToPositionPIDClass(groundactivepos);
+        }else if(liftMode == LiftMode.SUBMERSIBLEACTIVE){
+            liftToPositionPIDClass(submersibleactivepos);
         }
     }
 

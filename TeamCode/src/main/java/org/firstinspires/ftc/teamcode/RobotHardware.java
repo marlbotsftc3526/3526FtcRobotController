@@ -55,6 +55,23 @@ public class RobotHardware {
         myOpMode.telemetry.addData(">", "Hardware Initialized");
         myOpMode.telemetry.update();
     }
+    public void initTeleOpActive() {
+        drivetrain = new Drivetrain(myOpMode);
+        //claw = new Claw(myOpMode);
+        aClaw = new ActiveClaw(myOpMode);
+        lift = new Lift(myOpMode);
+        extension = new Extension(myOpMode);
+        //camera = new DualPortalCamera(myOpMode);
+
+        drivetrain.init();
+        aClaw.init();
+        lift.initTeleOp();
+        extension.initTeleOp();
+        //camera.init();
+
+        myOpMode.telemetry.addData(">", "Hardware Initialized");
+        myOpMode.telemetry.update();
+    }
     public void update(){
         drivetrain.update();
         lift.update();
