@@ -62,6 +62,7 @@ public class TeleOpActive extends LinearOpMode {
 
             }
             if(gamestate == "SUBMERSIBLE"){
+                robot.aClaw.clawOpen.setPosition(robot.aClaw.activeIn);
                 if(robot.extension.extension.getCurrentPosition() > robot.extension.nearpos - 150){
                     robot.aClaw.clawPivot.setPosition(robot.aClaw.pivotDOWN);
 
@@ -71,7 +72,6 @@ public class TeleOpActive extends LinearOpMode {
                 }
                 if(robot.extension.extension.getCurrentPosition() > 150 && subonetime){
                     robot.lift.liftMode = Lift.LiftMode.SUBMERSIBLEACTIVE;
-                    robot.aClaw.clawOpen.setPosition(robot.aClaw.activeIn);
                     subonetime = false;
                 }
                 if(gamepad2.left_bumper){
