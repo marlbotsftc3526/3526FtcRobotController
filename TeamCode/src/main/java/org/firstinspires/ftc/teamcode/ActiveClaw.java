@@ -15,14 +15,14 @@ public class ActiveClaw {
     public static final double activeOut = 0;
     public static final double activeNo = 0.5;
 
-    public static final double pivotDOWN = 1;
+    public static final double pivotDOWN = 0.9;//0.93
     public static final double pivotSCORE = 0.68;
 
     public static final double pivotUP = 0.45;
 
     public static final double pivotSCOREPOS = 0.55;
 
-    public static final double pivotBACK = 0;
+    public static final double pivotBACK = 0.2;
 
     public static final double spinA = 0.36;
     public static final double spinB = 0;
@@ -37,6 +37,7 @@ public class ActiveClaw {
         clawPivot = myOpMode.hardwareMap.get(Servo.class, "clawPivot");
         clawSpin = myOpMode.hardwareMap.get(Servo.class, "clawSpin");
         clawSpin.setPosition(spinA);
+        clawOpen.setPosition(activeNo);
         clawruntime= new ElapsedTime();
     }
 

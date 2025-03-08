@@ -56,12 +56,13 @@ public class TeleOpActive extends LinearOpMode {
                 if(robot.lift.liftLeft.getCurrentPosition() > robot.lift.highbucketpos - 40){
                     robot.aClaw.clawPivot.setPosition(robot.aClaw.pivotBACK);
                 }
-                if(robot.extension.extension.getCurrentPosition()<= 2200 && robot.lift.liftLeft.getCurrentPosition() <= 350){
+                if(robot.extension.extension.getCurrentPosition()<= 2200 && robot.lift.liftLeft.getCurrentPosition() <= 1000){
                     robot.aClaw.clawPivot.setPosition(robot.aClaw.pivotSCORE);
                 }
 
             }
             if(gamestate == "SUBMERSIBLE"){
+                robot.drivetrain.submersibleturncoeff = robot.extension.extension.getCurrentPosition()/400.0;
                 robot.aClaw.clawOpen.setPosition(robot.aClaw.activeIn);
                 if(robot.extension.extension.getCurrentPosition() > robot.extension.nearpos - 150){
                     robot.aClaw.clawPivot.setPosition(robot.aClaw.pivotDOWN);

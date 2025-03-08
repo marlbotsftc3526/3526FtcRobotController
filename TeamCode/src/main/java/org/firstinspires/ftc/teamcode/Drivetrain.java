@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 import java.util.Locale;
 @Config
@@ -22,20 +25,25 @@ public class Drivetrain {
     public DcMotor backRight = null;
     public DcMotor backLeft = null;
 
+    private Limelight3A limelight;
+
     public SparkfunLocalizer localizer;
 
-    public static double HEADING_KP = 0.012;//0.01
+    public static double HEADING_KP = 0.0096;//0.012 //0.0095
     public static double HEADING_KI = 0.0;
     public static double HEADING_KD = 0.0;
-    public static double DRIVE_KP = 0.02; //0.02
+    public static double DRIVE_KP = 0.0162; //0.02 //0.0167
     public static double DRIVE_KI = 0.0;
     public static double DRIVE_KD = 0;//0.03;
     public static double DRIVE_MAX_OUT = 0.5;
     public static double S_CNT = 3.5;//4
+    public static double submersibleturncoeff = 0;
 
     PIDController xController;
     PIDController yController;
     PIDController headingController;
+    PIDController limelightXController;
+    PIDController limelightYController;
 
     public boolean targetReached = false;
     Pose2D targetPose;
@@ -45,6 +53,16 @@ public class Drivetrain {
 
     public void init(){
 
+        limelight = myOpMode.hardwareMap.get(Limelight3A.class, "limelight");
+
+        myOpMode.telemetry.setMsTransmissionInterval(11);
+
+        limelight.pipelineSwitch(0);
+
+        /*
+         * Starts polling for data.
+         */
+        limelight.start();
 
         frontLeft = myOpMode.hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = myOpMode.hardwareMap.get(DcMotor.class, "frontRight");
@@ -54,6 +72,8 @@ public class Drivetrain {
         xController = new PIDController(DRIVE_KP,DRIVE_KI,DRIVE_KD, DRIVE_MAX_OUT);
         yController = new PIDController(DRIVE_KP,DRIVE_KI,DRIVE_KD,DRIVE_MAX_OUT);
         headingController = new PIDController(HEADING_KP,HEADING_KI,HEADING_KD,DRIVE_MAX_OUT);
+        limelightXController = new PIDController(DRIVE_KP*2,DRIVE_KI,DRIVE_KD, DRIVE_MAX_OUT);
+        limelightYController = new PIDController(DRIVE_KP*2,DRIVE_KI,DRIVE_KD,DRIVE_MAX_OUT);
 
         localizer = new SparkfunLocalizer(myOpMode);
 
@@ -110,9 +130,9 @@ public class Drivetrain {
         double strafe;
 
         if(!myOpMode.gamepad2.left_bumper){
-            turn = myOpMode.gamepad2.right_stick_x;
+            turn = myOpMode.gamepad2.right_stick_x/2;
         }else{
-            turn = myOpMode.gamepad2.right_stick_x/6.5;
+            turn = myOpMode.gamepad2.right_stick_x/submersibleturncoeff;
         }
 
         if(!myOpMode.gamepad2.left_bumper) {
@@ -243,7 +263,23 @@ public class Drivetrain {
         frontRight.setPower(xPower_rotated + yPower_rotated + tPower);
         backRight.setPower(xPower_rotated - yPower_rotated + tPower);
     }
-
+    public void limeLight() {
+        LLResult result = limelight.getLatestResult();
+        if (result != null) {
+            if (result.isValid()) {
+                Pose3D botpose = result.getBotpose();
+                myOpMode.telemetry.addData("tx", result.getTx());
+                myOpMode.telemetry.addData("ty", result.getTy());
+                myOpMode.telemetry.addData("Botpose", botpose.toString());
+                double xPower = limelightXController.calculate(0, -result.getTx());
+                double yPower = limelightYController.calculate(0, -result.getTy());
+                frontLeft.setPower(xPower - yPower);
+                backLeft.setPower(xPower + yPower);
+                frontRight.setPower(xPower + yPower);
+                backRight.setPower(xPower - yPower);
+            }
+        }
+    }
 
 
 

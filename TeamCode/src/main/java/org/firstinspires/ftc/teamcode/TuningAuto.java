@@ -67,7 +67,7 @@ public class TuningAuto extends LinearOpMode {
             switch (currentState){
                 case DRIVE_TO_TARGET:
                     //put condition for switch at the beginning, condition can be based on time or completion of a task
-                    if(robot.drivetrain.targetReached){
+                    if(robot.drivetrain.targetReached || timer.seconds()>3){
                         currentState = State.IDLE_ONE;
                         timer.reset();
                     }
@@ -76,10 +76,11 @@ public class TuningAuto extends LinearOpMode {
                     if(timer.seconds() > 2.0){
                         currentState = State.DRIVE_TO_START;
                         robot.drivetrain.setTargetPose(startPose);
+                        timer.reset();
                     }
                     break;
                 case DRIVE_TO_START:
-                    if(robot.drivetrain.targetReached){
+                    if(robot.drivetrain.targetReached || timer.seconds()>3){
                         currentState = State.IDLE_TWO;
                         timer.reset();
                     }

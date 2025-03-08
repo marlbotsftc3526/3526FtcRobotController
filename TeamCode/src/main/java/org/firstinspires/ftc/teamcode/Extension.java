@@ -18,7 +18,7 @@ public class Extension {
     public static final double farpos = 2600;
     public static final double midpos = 2000;
     public static final double nearpos = 1650;
-    public static final double hangpos = 400;
+    public static final double hangpos = 250;
     public static final double farbackpos= 0;
     public static final double autopos=1143;
 

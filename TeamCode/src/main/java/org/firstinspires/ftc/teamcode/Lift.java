@@ -26,9 +26,9 @@ public class Lift {
     public static final double highbucketpos = 2850; //1689 for low
     //change groundpos to 15 or 30 possibly
     public static final double groundpos = 15; //15
-    public static final double submersiblepos = 250;
-    public static final double groundactivepos = 75; //15
-    public static final double submersibleactivepos = 300;
+    public static final double submersiblepos = 220;
+    public static final double groundactivepos = 15;//160 //15
+    public static final double submersibleactivepos = 420;
     public static boolean isHang = false;
 
     public ElapsedTime delay = null;
@@ -171,6 +171,17 @@ public class Lift {
             liftToPositionPIDClass(highchamautopos);
         }else if(liftMode == LiftMode.GROUNDACTIVE){
             liftToPositionPIDClass(groundactivepos);
+            if(liftTouchSensor.isPressed()){
+                liftLeft.setPower(0);
+                liftRight.setPower(0);
+                liftCenter.setPower(0);
+                liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                liftCenter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
         }else if(liftMode == LiftMode.SUBMERSIBLEACTIVE){
             liftToPositionPIDClass(submersibleactivepos);
         }
