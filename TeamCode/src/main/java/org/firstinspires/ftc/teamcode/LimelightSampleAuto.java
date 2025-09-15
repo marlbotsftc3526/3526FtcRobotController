@@ -43,7 +43,7 @@ public class LimelightSampleAuto extends LinearOpMode {
     public static double scoreT = -50;
     Pose2D scorePose = new Pose2D(DistanceUnit.INCH, scoreX, scoreY, AngleUnit.DEGREES, scoreT);
 
-    public static double intakeX = 34.5; // origionally 30
+    public static double intakeX = 35.5; // origionally 30
     public static double intakeY = -5; //-2.5 orig 5,8 //-3.5
     public static double intakeT = 90;
 

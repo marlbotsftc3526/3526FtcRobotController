@@ -36,13 +36,13 @@ public class ActiveSampleAuto extends LinearOpMode {
     Pose2D startPose = new Pose2D(DistanceUnit.INCH, 0,0, AngleUnit.DEGREES,0);
 
     // Define our target
-    public static double scoreX = 9;//10
-    public static double scoreY = 13;//12
+    public static double scoreX = 7;//10
+    public static double scoreY = 11;//12
     public static double scoreT = -50;
     Pose2D scorePose = new Pose2D(DistanceUnit.INCH, scoreX, scoreY, AngleUnit.DEGREES, scoreT);
 
     public static double intakeX = 34.5; // origionally 30
-    public static double intakeY = -5; //-2.5 orig 5,8 //-3.5
+    public static double intakeY = -6.2; //-2.5 orig 5,u8 //-3.5
     public static double intakeT = 90;
 
     public static double parkX = 48; // origionally 30
@@ -97,7 +97,7 @@ public class ActiveSampleAuto extends LinearOpMode {
                             if(timer.seconds() > 3) {
                                 if (counter<3) {
                                     currentState = ActiveSampleAuto.State.DRIVE_TO_INTAKE;
-                                    intakePose = new Pose2D(DistanceUnit.INCH, intakeX, intakeY + 8 * counter, AngleUnit.DEGREES, intakeT);
+                                    intakePose = new Pose2D(DistanceUnit.INCH, intakeX, intakeY + 8.3 * counter, AngleUnit.DEGREES, intakeT);
                                     robot.drivetrain.setTargetPose(intakePose);
                                     timer.reset();
                                 }
