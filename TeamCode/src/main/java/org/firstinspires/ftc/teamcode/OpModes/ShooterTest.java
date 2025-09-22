@@ -88,10 +88,12 @@ public class ShooterTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if(gamepad1.dpad_up){
+            if(gamepad1.a){
                 REVOLUTIONS_PER_MINUTE+=100;
-            }else if(gamepad1.dpad_down){
+                sleep(500);
+            }else if(gamepad1.b){
                 REVOLUTIONS_PER_MINUTE-=100;
+                sleep(500);
             }
 
             //calculate Ticks per second based on current RPM
@@ -100,7 +102,7 @@ public class ShooterTest extends LinearOpMode {
             shooter.setVelocity(TICKS_PER_SECOND);
 
             //calculate measured RPM from motors current degrees per second
-            double measuredRPM = shooter.getVelocity(AngleUnit.DEGREES)*60/360;
+            double measuredRPM = shooter.getVelocity()/TICKS_PER_REVOLUTION*60;
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Set RPM", REVOLUTIONS_PER_MINUTE);
