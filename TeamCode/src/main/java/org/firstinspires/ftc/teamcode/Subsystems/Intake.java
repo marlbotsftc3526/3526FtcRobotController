@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class Intake {
-    private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
+    private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
     public DcMotor spin = null;
 
@@ -15,7 +16,7 @@ public class Intake {
         OFF,
     }
 
-    public Intake(LinearOpMode opmode) {
+    public Intake(OpMode opmode) {
         myOpMode = opmode;
     }
 
@@ -26,7 +27,7 @@ public class Intake {
 
         myOpMode.telemetry.addData(">", "Intake Initialized");
     }
-    public static final double INTAKE_SPEED = .5;
+    public static final double INTAKE_SPEED = .7;
     public static final double OUTTAKE_SPEED = -.5;
 
     Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;

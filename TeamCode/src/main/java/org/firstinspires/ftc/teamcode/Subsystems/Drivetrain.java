@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,7 +16,7 @@ import java.util.Locale;
 public class Drivetrain {
 
         /* Declare OpMode members. */
-        private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
+        private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
         //TODO: Declare OpMode member for the Odometry System
         // If using GoBilda Pinpoint computer then use PinPointLocalizer class
@@ -39,7 +40,7 @@ public class Drivetrain {
 
 
 
-        public Drivetrain(LinearOpMode opmode) {
+        public Drivetrain(OpMode opmode) {
             myOpMode = opmode;
         }
 
@@ -130,17 +131,17 @@ public class Drivetrain {
             }
             //slow button (fraction of full power)
             else if (myOpMode.gamepad1.left_bumper) {
-                leftFrontDrive.setPower(leftFrontPower / 7);
-                rightFrontDrive.setPower(rightFrontPower / 7);
-                leftBackDrive.setPower(leftBackPower / 7);
-                rightBackDrive.setPower(rightBackPower / 7);
+                leftFrontDrive.setPower(leftFrontPower / 4);
+                rightFrontDrive.setPower(rightFrontPower / 4);
+                leftBackDrive.setPower(leftBackPower / 4);
+                rightBackDrive.setPower(rightBackPower / 4);
             }
             //default power
             else {
-                leftFrontDrive.setPower(leftFrontPower / 2);
-                rightFrontDrive.setPower(rightFrontPower / 2);
-                leftBackDrive.setPower(leftBackPower / 2);
-                rightBackDrive.setPower(rightBackPower / 2);
+                leftFrontDrive.setPower(leftFrontPower);
+                rightFrontDrive.setPower(rightFrontPower);
+                leftBackDrive.setPower(leftBackPower);
+                rightBackDrive.setPower(rightBackPower);
             }
         }
 

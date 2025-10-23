@@ -1,16 +1,18 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Shooter {
     /* Declare OpMode members. */
-    private LinearOpMode myOpMode = null;   // gain access to methods in the calling OpMode.
+    private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
     public DcMotorEx shoot = null;
-    public CRServo transfer = null;
+    public Servo transfer = null;
 
     //TODO Adjust based on desired states
     public enum ShootMode {
@@ -25,14 +27,16 @@ public class Shooter {
 
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
     //TODO Update values based on desired position
-    public static final double REVOLUTIONS_PER_MINUTE = 4000;
+    public static final double REVOLUTIONS_PER_MINUTE = 5000;
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
+    public static final double GATE_OPEN = 0.7;
+    public static final double GATE_CLOSE=0.25;
     double TICKS_PER_SECOND;
     ShootMode shootMode = ShootMode.OFF;
     TransferMode transferMode = TransferMode.OFF;
     //Constructor
-    public Shooter(LinearOpMode opmode) {
+    public Shooter(OpMode opmode) {
         myOpMode = opmode;
     }
 
@@ -42,7 +46,7 @@ public class Shooter {
        // shoot.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         shoot.setDirection(DcMotor.Direction.REVERSE);
 
-        transfer = myOpMode.hardwareMap.get(CRServo.class, "transfer");
+        transfer = myOpMode.hardwareMap.get(Servo.class, "transfer");
 
         myOpMode.telemetry.addData(">", "Shooter Initialized");
     }
@@ -57,10 +61,10 @@ public class Shooter {
             shoot.setVelocity(0);
         }
         if (transferMode == TransferMode.ON) {
-            transfer.setPower(TRANSFER_SPEED);
+            transfer.setPosition(GATE_OPEN);
         }
         else if (transferMode == TransferMode.OFF) {
-            transfer.setPower(0);
+            transfer.setPosition(GATE_CLOSE);
         }
     }
 
@@ -85,7 +89,7 @@ public class Shooter {
 
         public void stop () {
             shoot.setPower(0);
-            transfer.setPower(0);
+            transfer.setPosition(GATE_CLOSE);
         }
     }
 
