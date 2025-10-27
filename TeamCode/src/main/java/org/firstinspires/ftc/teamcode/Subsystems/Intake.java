@@ -48,12 +48,12 @@ public class Intake {
         update();
         //Set states based on gamepad presses
         //TODO Update based on desired control scheme
-        if (myOpMode.gamepad1.y) {
+        if (myOpMode.gamepad1.y || myOpMode.gamepad2.y) {
             intakeMode = IntakeMode.UP;
-        } else if (myOpMode.gamepad1.a) {
+        } else if (myOpMode.gamepad1.a || myOpMode.gamepad2.a) {
             intakeMode = IntakeMode.DOWN; //s=S
         }
-        else if (myOpMode.gamepad1.x) {
+        else if (myOpMode.gamepad1.x || myOpMode.gamepad2.x) {
             intakeMode = IntakeMode.OFF; //s=S
         }
 

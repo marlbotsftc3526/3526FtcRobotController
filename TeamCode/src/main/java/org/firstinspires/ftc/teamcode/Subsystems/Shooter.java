@@ -30,7 +30,7 @@ public class Shooter {
     public static final double REVOLUTIONS_PER_MINUTE = 5000;
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
-    public static final double GATE_OPEN = 0.7;
+    public static final double GATE_OPEN = 0.65;
     public static final double GATE_CLOSE=0.25;
     double TICKS_PER_SECOND;
     ShootMode shootMode = ShootMode.OFF;
@@ -72,19 +72,17 @@ public class Shooter {
         update();
         //Set states based on gamepad presses
         //TODO Update based on desired control scheme
-        if (myOpMode.gamepad1.right_bumper) {
+        if (myOpMode.gamepad1.right_bumper || myOpMode.gamepad2.right_bumper) {
             shootMode = ShootMode.ON;
-        } else if (myOpMode.gamepad1.left_bumper) {
+        } else if (myOpMode.gamepad1.left_bumper || myOpMode.gamepad2.left_bumper) {
             shootMode = ShootMode.OFF; //s=S
         }
 
-        if (myOpMode.gamepad1.right_trigger>.5) {
+        if (myOpMode.gamepad1.right_trigger>.5|| myOpMode.gamepad2.right_trigger>.5) {
             transferMode = TransferMode.ON;
         } else {
             transferMode = TransferMode.OFF;
         }
-
-
     }
 
         public void stop () {

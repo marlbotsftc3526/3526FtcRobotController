@@ -42,7 +42,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RoadRunner.OTOSLocalizer;
-import org.firstinspires.ftc.teamcode.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.RoadRunner.RRPinpointLocalizer;
 import org.firstinspires.ftc.teamcode.RoadRunner.TankDrive;
 import org.firstinspires.ftc.teamcode.RoadRunner.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.RoadRunner.TwoDeadWheelLocalizer;
@@ -68,7 +68,7 @@ public final class TuningOpModes {
                 .build();
     }
 
-    private static PinpointView makePinpointView(PinpointLocalizer pl) {
+    private static PinpointView makePinpointView(RRPinpointLocalizer pl) {
         return new PinpointView() {
             GoBildaPinpointDriver.EncoderDirection parDirection = pl.initialParDirection;
             GoBildaPinpointDriver.EncoderDirection perpDirection = pl.initialPerpDirection;
@@ -174,8 +174,8 @@ public final class TuningOpModes {
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
                     lazyImu = new OTOSIMU(ol.otos);
-                }  else if (md.localizer instanceof PinpointLocalizer) {
-                    PinpointView pv = makePinpointView((PinpointLocalizer) md.localizer);
+                }  else if (md.localizer instanceof RRPinpointLocalizer) {
+                    PinpointView pv = makePinpointView((RRPinpointLocalizer) md.localizer);
                     encoderGroups.add(new PinpointEncoderGroup(pv));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
@@ -251,8 +251,8 @@ public final class TuningOpModes {
                     ));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
-                }  else if (td.localizer instanceof PinpointLocalizer) {
-                    PinpointView pv = makePinpointView((PinpointLocalizer) td.localizer);
+                }  else if (td.localizer instanceof RRPinpointLocalizer) {
+                    PinpointView pv = makePinpointView((RRPinpointLocalizer) td.localizer);
                     encoderGroups.add(new PinpointEncoderGroup(pv));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
@@ -303,7 +303,7 @@ public final class TuningOpModes {
 
         manager.register(metaForClass(org.firstinspires.ftc.teamcode.RoadRunner.tuning.ManualFeedbackTuner.class), org.firstinspires.ftc.teamcode.RoadRunner.tuning.ManualFeedbackTuner.class);
         manager.register(metaForClass(org.firstinspires.ftc.teamcode.tuning.SplineTest.class), org.firstinspires.ftc.teamcode.tuning.SplineTest.class);
-        manager.register(metaForClass(org.firstinspires.ftc.teamcode.tuning.LocalizationTest.class), org.firstinspires.ftc.teamcode.tuning.LocalizationTest.class);
+        manager.register(metaForClass(org.firstinspires.ftc.teamcode.RoadRunner.tuning.LocalizationTest.class), org.firstinspires.ftc.teamcode.RoadRunner.tuning.LocalizationTest.class);
 
         manager.register(metaForClass(OTOSAngularScalarTuner.class), new OTOSAngularScalarTuner(dvf));
         manager.register(metaForClass(OTOSLinearScalarTuner.class), new OTOSLinearScalarTuner(dvf));
