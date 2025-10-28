@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RoadRunner.tuning;
+package org.firstinspires.ftc.teamcode.tuning;
 
 import androidx.annotation.NonNull;
 
@@ -40,12 +40,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
-import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.RoadRunner.OTOSLocalizer;
-import org.firstinspires.ftc.teamcode.RoadRunner.RRPinpointLocalizer;
-import org.firstinspires.ftc.teamcode.RoadRunner.TankDrive;
-import org.firstinspires.ftc.teamcode.RoadRunner.ThreeDeadWheelLocalizer;
-import org.firstinspires.ftc.teamcode.RoadRunner.TwoDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.OTOSLocalizer;
+import org.firstinspires.ftc.teamcode.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.TankDrive;
+import org.firstinspires.ftc.teamcode.ThreeDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.TwoDeadWheelLocalizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +68,7 @@ public final class TuningOpModes {
                 .build();
     }
 
-    private static PinpointView makePinpointView(RRPinpointLocalizer pl) {
+    private static PinpointView makePinpointView(PinpointLocalizer pl) {
         return new PinpointView() {
             GoBildaPinpointDriver.EncoderDirection parDirection = pl.initialParDirection;
             GoBildaPinpointDriver.EncoderDirection perpDirection = pl.initialPerpDirection;
@@ -89,11 +89,6 @@ public final class TuningOpModes {
             }
 
             @Override
-            public float getHeadingVelocity() {
-                return (float) pl.driver.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES);
-
-            }
-
             public float getHeadingVelocity(UnnormalizedAngleUnit unit) {
                 return (float) pl.driver.getHeadingVelocity(unit);
             }
@@ -174,8 +169,8 @@ public final class TuningOpModes {
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
                     lazyImu = new OTOSIMU(ol.otos);
-                }  else if (md.localizer instanceof RRPinpointLocalizer) {
-                    PinpointView pv = makePinpointView((RRPinpointLocalizer) md.localizer);
+                }  else if (md.localizer instanceof PinpointLocalizer) {
+                    PinpointView pv = makePinpointView((PinpointLocalizer) md.localizer);
                     encoderGroups.add(new PinpointEncoderGroup(pv));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
@@ -251,8 +246,8 @@ public final class TuningOpModes {
                     ));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
-                }  else if (td.localizer instanceof RRPinpointLocalizer) {
-                    PinpointView pv = makePinpointView((RRPinpointLocalizer) td.localizer);
+                }  else if (td.localizer instanceof PinpointLocalizer) {
+                    PinpointView pv = makePinpointView((PinpointLocalizer) td.localizer);
                     encoderGroups.add(new PinpointEncoderGroup(pv));
                     parEncs.add(new EncoderRef(0, 0));
                     perpEncs.add(new EncoderRef(0, 1));
@@ -301,9 +296,9 @@ public final class TuningOpModes {
         manager.register(metaForClass(MecanumMotorDirectionDebugger.class), new MecanumMotorDirectionDebugger(dvf));
         manager.register(metaForClass(DeadWheelDirectionDebugger.class), new DeadWheelDirectionDebugger(dvf));
 
-        manager.register(metaForClass(org.firstinspires.ftc.teamcode.RoadRunner.tuning.ManualFeedbackTuner.class), org.firstinspires.ftc.teamcode.RoadRunner.tuning.ManualFeedbackTuner.class);
-        manager.register(metaForClass(org.firstinspires.ftc.teamcode.tuning.SplineTest.class), org.firstinspires.ftc.teamcode.tuning.SplineTest.class);
-        manager.register(metaForClass(org.firstinspires.ftc.teamcode.RoadRunner.tuning.LocalizationTest.class), org.firstinspires.ftc.teamcode.RoadRunner.tuning.LocalizationTest.class);
+        manager.register(metaForClass(ManualFeedbackTuner.class), ManualFeedbackTuner.class);
+        manager.register(metaForClass(SplineTest.class), SplineTest.class);
+        manager.register(metaForClass(LocalizationTest.class), LocalizationTest.class);
 
         manager.register(metaForClass(OTOSAngularScalarTuner.class), new OTOSAngularScalarTuner(dvf));
         manager.register(metaForClass(OTOSLinearScalarTuner.class), new OTOSLinearScalarTuner(dvf));
@@ -317,7 +312,7 @@ public final class TuningOpModes {
                     LateralRampLogger.class,
                     ManualFeedforwardTuner.class,
                     MecanumMotorDirectionDebugger.class,
-                    org.firstinspires.ftc.teamcode.RoadRunner.tuning.ManualFeedbackTuner.class
+                    ManualFeedbackTuner.class
             )) {
                 configRoot.putVariable(c.getSimpleName(), ReflectionConfig.createVariableFromClass(c));
             }
