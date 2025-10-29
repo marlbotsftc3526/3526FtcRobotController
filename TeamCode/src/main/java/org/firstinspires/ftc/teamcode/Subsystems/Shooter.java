@@ -33,7 +33,7 @@ public class Shooter {
     public static final double GATE_OPEN = 0.65;
     public static final double GATE_CLOSE=0.25;
     double TICKS_PER_SECOND;
-    ShootMode shootMode = ShootMode.OFF;
+    public ShootMode shootMode = ShootMode.OFF;
     TransferMode transferMode = TransferMode.OFF;
     //Constructor
     public Shooter(OpMode opmode) {
