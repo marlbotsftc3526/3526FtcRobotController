@@ -34,12 +34,12 @@ public class RobotHardware {
         intake.teleOp();
         shooter.teleOp();
     }
-/*
+
     public void update(){
         intake.update();
         shooter.update();
     }
-*/
+
     public void stop(){
         drivetrain.stop();
         intake.stop();
