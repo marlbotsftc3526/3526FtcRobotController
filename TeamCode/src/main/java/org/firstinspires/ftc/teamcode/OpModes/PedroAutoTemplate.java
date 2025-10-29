@@ -46,7 +46,7 @@ public class PedroAutoTemplate extends LinearOpMode {
 
         follower = Constants.createFollower(hardwareMap);
         //TODO Set starting pose from path generation
-        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
+        follower.setStartingPose(new Pose(14.148048452220726, 112.21534320323015, Math.toRadians(0)));
 
         paths = new Paths(follower); // Build paths
 
@@ -119,8 +119,8 @@ public class PedroAutoTemplate extends LinearOpMode {
             panelsTelemetry.debug("Heading", follower.getPose().getHeading());
             panelsTelemetry.update(telemetry);
 
-            telemetry.addData("state", currentState);
-            telemetry.update();
+            //telemetry.addData("state", currentState);
+            //telemetry.update();
         }
     }
 
