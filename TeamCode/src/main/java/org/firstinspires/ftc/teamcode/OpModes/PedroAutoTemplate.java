@@ -42,6 +42,7 @@ public class PedroAutoTemplate extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        robot = new RobotHardware(this);
         robot.init();
 
         follower = Constants.createFollower(hardwareMap);
