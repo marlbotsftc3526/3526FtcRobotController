@@ -27,14 +27,14 @@ public class Shooter {
 
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
     //TODO Update values based on desired position
-    public static final double REVOLUTIONS_PER_MINUTE = 4500;
+    public static final double REVOLUTIONS_PER_MINUTE = 3400; //4500
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
     public static final double GATE_OPEN = 0.65;
     public static final double GATE_CLOSE=0.25;
     double TICKS_PER_SECOND;
     public ShootMode shootMode = ShootMode.OFF;
-    TransferMode transferMode = TransferMode.OFF;
+    public TransferMode transferMode = TransferMode.OFF;
     //Constructor
     public Shooter(OpMode opmode) {
         myOpMode = opmode;

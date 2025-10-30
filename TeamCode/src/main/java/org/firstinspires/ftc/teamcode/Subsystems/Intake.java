@@ -30,7 +30,7 @@ public class Intake {
     public static final double INTAKE_SPEED = .7;
     public static final double OUTTAKE_SPEED = -.5;
 
-    Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;
+   public Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;
 
     public void update() {
 
