@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -17,11 +18,16 @@ public class Drivetrain {
 
         /* Declare OpMode members. */
         private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
-
+    GoBildaPinpointDriver pinpoint;
         //TODO: Declare OpMode member for the Odometry System
         // If using GoBilda Pinpoint computer then use PinPointLocalizer class
         // If using Sparkfun OTOS then use SparfunLocalizer class
 
+    //TODO Adjust based on desired states
+    public enum DrivetrainMode {
+        FIELDCENTRIC,
+        ROBOTCENTRIC,
+    }
 
         ElapsedTime time = new ElapsedTime();
 
@@ -89,6 +95,9 @@ public class Drivetrain {
             leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
+    public Drivetrain.DrivetrainMode drivetrainMode = Drivetrain.DrivetrainMode.FIELDCENTRIC;
+
+
         public void teleOp() {
             //drive train
             double max;
@@ -98,9 +107,22 @@ public class Drivetrain {
             double leftBackPower;
             double rightBackPower;
 
-            double drive = -myOpMode.gamepad1.left_stick_y;
-            double turn = myOpMode.gamepad1.right_stick_x;
-            double strafe = -myOpMode.gamepad1.left_stick_x;
+            double drive = 0;
+            double turn = 0;
+            double strafe = 0;
+
+            if (drivetrainMode == Drivetrain.DrivetrainMode.ROBOTCENTRIC) {
+                // Send calculated power to wheels
+                drive = -myOpMode.gamepad1.left_stick_y;
+                turn = myOpMode.gamepad1.right_stick_x;
+                strafe = -myOpMode.gamepad1.left_stick_x;
+            } else if (drivetrainMode == Drivetrain.DrivetrainMode.FIELDCENTRIC) {
+                drive = Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) -
+                        pinpoint.getHeading(AngleUnit.RADIANS)));
+                turn = myOpMode.gamepad1.right_stick_x;
+                strafe = Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) -
+                        pinpoint.getHeading(AngleUnit.RADIANS)));
+            }
 
             leftFrontPower = (drive + turn - strafe);
             rightFrontPower = (drive - turn + strafe);
@@ -142,6 +164,12 @@ public class Drivetrain {
                 rightFrontDrive.setPower(rightFrontPower);
                 leftBackDrive.setPower(leftBackPower);
                 rightBackDrive.setPower(rightBackPower);
+            }
+
+            if(myOpMode.gamepad1.b){
+                drivetrainMode = DrivetrainMode.FIELDCENTRIC;
+            } else {
+                drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
             }
         }
 

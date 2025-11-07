@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import static org.firstinspires.ftc.teamcode.OpModes.PedroAutoBlueSide.HEADING_KEY;
+import static org.firstinspires.ftc.teamcode.OpModes.PedroAutoBlueSide.X_POS_KEY;
+import static org.firstinspires.ftc.teamcode.OpModes.PedroAutoBlueSide.Y_POS_KEY;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
@@ -17,7 +21,11 @@ public class Meet0Teleop extends LinearOpMode{
         robot.init();
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Waiting for Start");
+        telemetry.addData("x position", blackboard.get(X_POS_KEY));
+        telemetry.addData("y position", blackboard.get(Y_POS_KEY));
+        telemetry.addData("heading", blackboard.get(HEADING_KEY));
         telemetry.update();
+
         waitForStart();
 
 
