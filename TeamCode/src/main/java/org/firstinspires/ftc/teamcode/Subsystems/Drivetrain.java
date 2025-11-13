@@ -18,7 +18,7 @@ public class Drivetrain {
 
         /* Declare OpMode members. */
         private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
-    GoBildaPinpointDriver pinpoint;
+        GoBildaPinpointDriver pinpoint;
         //TODO: Declare OpMode member for the Odometry System
         // If using GoBilda Pinpoint computer then use PinPointLocalizer class
         // If using Sparkfun OTOS then use SparfunLocalizer class
@@ -36,6 +36,7 @@ public class Drivetrain {
         public DcMotor leftFrontDrive = null;
         public DcMotor rightBackDrive = null;
         public DcMotor leftBackDrive = null;
+        public DrivetrainMode drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
 
 
         public boolean targetReached = false;
@@ -72,10 +73,18 @@ public class Drivetrain {
             leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
             rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-
-
             resetEncoders();
             useEncoders();
+
+            pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+            pinpoint.setOffsets(80.0, -160.0, DistanceUnit.MM); //these are tuned for 3110-0002-0001 Product Insight #1
+
+            pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+
+            pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
+                    GoBildaPinpointDriver.EncoderDirection.REVERSED);
+
+            //pinpoint.resetPosAndIMU();
 
             myOpMode.telemetry.addData(">", "Drivetrain Initialized");
         }
@@ -95,10 +104,8 @@ public class Drivetrain {
             leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-    public Drivetrain.DrivetrainMode drivetrainMode = Drivetrain.DrivetrainMode.FIELDCENTRIC;
-
-
         public void teleOp() {
+            pinpoint.update();
             //drive train
             double max;
 
@@ -117,11 +124,11 @@ public class Drivetrain {
                 turn = myOpMode.gamepad1.right_stick_x;
                 strafe = -myOpMode.gamepad1.left_stick_x;
             } else if (drivetrainMode == Drivetrain.DrivetrainMode.FIELDCENTRIC) {
-                drive = Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) -
-                        pinpoint.getHeading(AngleUnit.RADIANS)));
+                drive = -(Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) +
+                        pinpoint.getHeading(AngleUnit.RADIANS))));
                 turn = myOpMode.gamepad1.right_stick_x;
-                strafe = Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) -
-                        pinpoint.getHeading(AngleUnit.RADIANS)));
+                strafe = -(Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) +
+                        pinpoint.getHeading(AngleUnit.RADIANS))));
             }
 
             leftFrontPower = (drive + turn - strafe);
@@ -160,17 +167,22 @@ public class Drivetrain {
             }
             //default power
             else {
-                leftFrontDrive.setPower(leftFrontPower);
-                rightFrontDrive.setPower(rightFrontPower);
-                leftBackDrive.setPower(leftBackPower);
-                rightBackDrive.setPower(rightBackPower);
+                leftFrontDrive.setPower(leftFrontPower/1.5);
+                rightFrontDrive.setPower(rightFrontPower/1.5);
+                leftBackDrive.setPower(leftBackPower/1.5);
+                rightBackDrive.setPower(rightBackPower/1.5);
             }
 
-            if(myOpMode.gamepad1.b){
+            if(myOpMode.gamepad1.dpad_left || myOpMode.gamepad2.dpad_left) {
                 drivetrainMode = DrivetrainMode.FIELDCENTRIC;
-            } else {
+            } else if (myOpMode.gamepad1.dpad_right || myOpMode.gamepad2.dpad_right){
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
             }
+            myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
+            myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
+
+
+
         }
 
 

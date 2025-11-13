@@ -25,6 +25,8 @@ public class Intake {
         spin.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spin.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        spin.setDirection(DcMotor.Direction.REVERSE);
+
         myOpMode.telemetry.addData(">", "Intake Initialized");
     }
     public static final double INTAKE_SPEED = .7;
