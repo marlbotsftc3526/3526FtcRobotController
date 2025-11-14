@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.control.PIDFController;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -38,8 +39,16 @@ public class Drivetrain {
         public DcMotor leftBackDrive = null;
         public DrivetrainMode drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
 
+        PIDFController headingController;
 
-        public boolean targetReached = false;
+        //declare PID controller
+        //create variable for PID constants (kP, kD...)
+        //initialize PID controller with the constants
+        //in teleOp loop
+            //calculate the motor ouput with the PID controller based on the error between current heading and target heading
+
+
+    public boolean targetReached = false;
 
         //Static Variables
         //TODO Adjust drive constants based on auto performance
@@ -53,10 +62,10 @@ public class Drivetrain {
 
         public void init() {
             //Initialize PID controllers
+            headingController = new PIDFController()
             //xController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
             //yController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
             //headingController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
-
 
             leftFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "leftFrontDrive");
             rightFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightFrontDrive");
@@ -118,6 +127,12 @@ public class Drivetrain {
             double turn = 0;
             double strafe = 0;
 
+            double goalLocationX = 14;
+            double goalLocationY = 132;
+            double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
+            double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
+            double autoAimAngle = Math.atan((roboLocationY - goalLocationY)/(roboLocationX - goalLocationX));
+
             if (drivetrainMode == Drivetrain.DrivetrainMode.ROBOTCENTRIC) {
                 // Send calculated power to wheels
                 drive = -myOpMode.gamepad1.left_stick_y;
@@ -167,16 +182,20 @@ public class Drivetrain {
             }
             //default power
             else {
-                leftFrontDrive.setPower(leftFrontPower/1.5);
-                rightFrontDrive.setPower(rightFrontPower/1.5);
-                leftBackDrive.setPower(leftBackPower/1.5);
-                rightBackDrive.setPower(rightBackPower/1.5);
+                leftFrontDrive.setPower(leftFrontPower/1.2);
+                rightFrontDrive.setPower(rightFrontPower/1.2);
+                leftBackDrive.setPower(leftBackPower/1.2);
+                rightBackDrive.setPower(rightBackPower/1.2); ///1.5
             }
 
             if(myOpMode.gamepad1.dpad_left || myOpMode.gamepad2.dpad_left) {
                 drivetrainMode = DrivetrainMode.FIELDCENTRIC;
             } else if (myOpMode.gamepad1.dpad_right || myOpMode.gamepad2.dpad_right){
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
+            }
+
+            if(myOpMode.gamepad2.dpad_up){
+
             }
             myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
             myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));

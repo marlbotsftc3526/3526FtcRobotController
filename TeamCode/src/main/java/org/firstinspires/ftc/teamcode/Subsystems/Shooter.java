@@ -38,7 +38,7 @@ public class Shooter {
     public static final double FAR_RPM = 5000;
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
-    public static final double GATE_OPEN = 0.65;
+    public static final double GATE_OPEN = 0.62;
     public static final double GATE_CLOSE=0.25;
     public static final double HOOD_CLOSE=.5;
     public static final double HOOD_FAR=1;
@@ -108,7 +108,7 @@ public class Shooter {
             transferMode = TransferMode.OFF;
         }
 
-        if (myOpMode.gamepad1.dpad_up || myOpMode.gamepad2.dpad_up){
+        if (myOpMode.gamepad2.dpad_up){
             hoodMode = HoodMode.CLOSE;
         }
         else if (myOpMode.gamepad1.dpad_down || myOpMode.gamepad2.dpad_down) {
