@@ -11,6 +11,9 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.OpModes.GobildaPinPoint;
+import org.firstinspires.ftc.teamcode.PinpointLocalizer;
+import org.firstinspires.ftc.teamcode.utility.PIDController;
 
 
 import java.util.Locale;
@@ -38,9 +41,15 @@ public class Drivetrain {
         public DcMotor rightBackDrive = null;
         public DcMotor leftBackDrive = null;
         public DrivetrainMode drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
+        public GoBildaPinpointDriver localizer;
 
-        PIDFController headingController;
+    public static double HEADING_KP = 0.05;//0.012 //0.0095
+    public static double HEADING_KI = 0.0;
+    public static double HEADING_KD = 0.0;
+    public static double MAX_OUT = 0.8;
 
+
+    PIDController headingController;
         //declare PID controller
         //create variable for PID constants (kP, kD...)
         //initialize PID controller with the constants
@@ -62,7 +71,7 @@ public class Drivetrain {
 
         public void init() {
             //Initialize PID controllers
-            headingController = new PIDFController()
+            headingController = new PIDController(HEADING_KP, HEADING_KI, HEADING_KD, MAX_OUT);
             //xController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
             //yController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
             //headingController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
@@ -131,7 +140,7 @@ public class Drivetrain {
             double goalLocationY = 132;
             double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
             double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
-            double autoAimAngle = Math.atan((roboLocationY - goalLocationY)/(roboLocationX - goalLocationX));
+            double autoAimAngle = 180*Math.atan((goalLocationY - roboLocationY)/(roboLocationX - goalLocationX))/Math.PI;
 
             if (drivetrainMode == Drivetrain.DrivetrainMode.ROBOTCENTRIC) {
                 // Send calculated power to wheels
@@ -144,6 +153,9 @@ public class Drivetrain {
                 turn = myOpMode.gamepad1.right_stick_x;
                 strafe = -(Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) +
                         pinpoint.getHeading(AngleUnit.RADIANS))));
+            }
+            if(myOpMode.gamepad2.b){
+                turn = -headingController.calculate(-autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
             }
 
             leftFrontPower = (drive + turn - strafe);
@@ -199,9 +211,10 @@ public class Drivetrain {
             }
             myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
             myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
-
-
-
+            myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
+            myOpMode.telemetry.addData("roboX: ", roboLocationX);
+            myOpMode.telemetry.addData("roboY: ", roboLocationY);
+            myOpMode.telemetry.addData("turnPower: ", turn);
         }
 
 
