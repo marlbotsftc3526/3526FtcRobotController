@@ -40,7 +40,7 @@ public class Drivetrain {
         public DcMotor leftFrontDrive = null;
         public DcMotor rightBackDrive = null;
         public DcMotor leftBackDrive = null;
-        public DrivetrainMode drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
+        public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
         public GoBildaPinpointDriver localizer;
 
     public static double HEADING_KP = 0.05;//0.012 //0.0095
@@ -136,8 +136,8 @@ public class Drivetrain {
             double turn = 0;
             double strafe = 0;
 
-            double goalLocationX = 14;
-            double goalLocationY = 132;
+            double goalLocationX = 2;
+            double goalLocationY = 142;
             double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
             double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
             double autoAimAngle = 180*Math.atan((goalLocationY - roboLocationY)/(roboLocationX - goalLocationX))/Math.PI;
