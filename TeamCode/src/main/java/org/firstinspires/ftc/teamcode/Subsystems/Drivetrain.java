@@ -32,6 +32,12 @@ public class Drivetrain {
         FIELDCENTRIC,
         ROBOTCENTRIC,
     }
+    public static enum SideMode {
+        RED,
+        BLUE
+    }
+
+
 
         ElapsedTime time = new ElapsedTime();
 
@@ -41,12 +47,15 @@ public class Drivetrain {
         public DcMotor rightBackDrive = null;
         public DcMotor leftBackDrive = null;
         public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
+    public SideMode side = SideMode.BLUE;
         public GoBildaPinpointDriver localizer;
 
     public static double HEADING_KP = 0.05;//0.012 //0.0095
     public static double HEADING_KI = 0.0;
     public static double HEADING_KD = 0.0;
     public static double MAX_OUT = 0.8;
+
+    public static double DISTANCE = 0;
 
 
     PIDController headingController;
@@ -105,6 +114,14 @@ public class Drivetrain {
             //pinpoint.resetPosAndIMU();
 
             myOpMode.telemetry.addData(">", "Drivetrain Initialized");
+
+            if(myOpMode.gamepad2.left_bumper){
+                side = SideMode.BLUE;
+                myOpMode.telemetry.addData(">", "BLUE");
+            }else if(myOpMode.gamepad2.right_bumper){
+                side = SideMode.RED;
+                myOpMode.telemetry.addData(">", "RED");
+            }
         }
 
 
@@ -135,12 +152,25 @@ public class Drivetrain {
             double drive = 0;
             double turn = 0;
             double strafe = 0;
-
             double goalLocationX = 2;
             double goalLocationY = 142;
+            double autoAimAngle = 0;
             double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
             double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
-            double autoAimAngle = 180*Math.atan((goalLocationY - roboLocationY)/(roboLocationX - goalLocationX))/Math.PI;
+
+            if(side == Drivetrain.SideMode.BLUE){
+                goalLocationX = 2;
+                goalLocationY = 142;
+                autoAimAngle = 180*Math.atan((goalLocationY - roboLocationY)/(roboLocationX - goalLocationX))/Math.PI;
+                DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
+            }else if(side == Drivetrain.SideMode.RED){
+                goalLocationX = 142;
+                goalLocationY = 142;
+                autoAimAngle = 180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI;
+                DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
+            }
+
+
 
             if (drivetrainMode == Drivetrain.DrivetrainMode.ROBOTCENTRIC) {
                 // Send calculated power to wheels
@@ -148,14 +178,22 @@ public class Drivetrain {
                 turn = myOpMode.gamepad1.right_stick_x;
                 strafe = -myOpMode.gamepad1.left_stick_x;
             } else if (drivetrainMode == Drivetrain.DrivetrainMode.FIELDCENTRIC) {
-                drive = -(Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) +
-                        pinpoint.getHeading(AngleUnit.RADIANS))));
-                turn = myOpMode.gamepad1.right_stick_x;
-                strafe = -(Math.hypot(-myOpMode.gamepad1.left_stick_x, -myOpMode.gamepad1.left_stick_y) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-myOpMode.gamepad1.left_stick_y, -myOpMode.gamepad1.left_stick_x) +
-                        pinpoint.getHeading(AngleUnit.RADIANS))));
+                if(side == Drivetrain.SideMode.BLUE) {
+                    drive = -(Math.hypot(-(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y)) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x)) +
+                            pinpoint.getHeading(AngleUnit.RADIANS))));
+                    turn = (myOpMode.gamepad1.right_stick_x + myOpMode.gamepad2.right_stick_x);
+                    strafe = -(Math.hypot(-(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y)) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x)) +
+                            pinpoint.getHeading(AngleUnit.RADIANS))));
+                }else if(side == Drivetrain.SideMode.RED){
+                    drive = (Math.hypot(-(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y)) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x)) +
+                            pinpoint.getHeading(AngleUnit.RADIANS))));
+                    turn = (myOpMode.gamepad1.right_stick_x+myOpMode.gamepad2.right_stick_x);
+                    strafe = (Math.hypot(-(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y)) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x)) +
+                            pinpoint.getHeading(AngleUnit.RADIANS))));
+                }
             }
-            if(myOpMode.gamepad2.b){
-                turn = -headingController.calculate(-autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
+            if(myOpMode.gamepad2.left_trigger>0.5){
+                turn = headingController.calculate(autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
             }
 
             leftFrontPower = (drive + turn - strafe);
@@ -200,9 +238,9 @@ public class Drivetrain {
                 rightBackDrive.setPower(rightBackPower/1.2); ///1.5
             }
 
-            if(myOpMode.gamepad1.dpad_left || myOpMode.gamepad2.dpad_left) {
+            if(myOpMode.gamepad1.dpad_left) {
                 drivetrainMode = DrivetrainMode.FIELDCENTRIC;
-            } else if (myOpMode.gamepad1.dpad_right || myOpMode.gamepad2.dpad_right){
+            } else if (myOpMode.gamepad1.dpad_right){
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
             }
 
@@ -214,7 +252,7 @@ public class Drivetrain {
             myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
             myOpMode.telemetry.addData("roboX: ", roboLocationX);
             myOpMode.telemetry.addData("roboY: ", roboLocationY);
-            myOpMode.telemetry.addData("turnPower: ", turn);
+            myOpMode.telemetry.addData("Distance: ", DISTANCE);
         }
 
 

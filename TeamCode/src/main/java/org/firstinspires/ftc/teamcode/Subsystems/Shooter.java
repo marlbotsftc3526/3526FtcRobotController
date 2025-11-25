@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Shooter {
     /* Declare OpMode members. */
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
-
+    public Drivetrain drivetrain = null;
     public DcMotorEx shoot = null;
     public Servo transfer = null;
     public Servo hood = null;
@@ -51,10 +51,11 @@ public class Shooter {
     public static final double FAR_RPM = 5325;
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
-    public static final double GATE_OPEN = 0.48;
+    public static final double GATE_OPEN = 0.567;
     public static final double GATE_CLOSE=0.25;
     public static final double HOOD_CLOSE=.635;
     public static double HOOD_FAR_TESTING = .275;
+    public static double HOOD_RETRACTED = 1;
    // 4790
    // public static final double HOOD_AUTO = .75;
     public static final double HOOD_FAR=0.34;
@@ -63,8 +64,9 @@ public class Shooter {
     public TransferMode transferMode = TransferMode.OFF;
     public HoodMode hoodMode = HoodMode.CLOSE;
     //Constructor
-    public Shooter(OpMode opmode) {
+    public Shooter(OpMode opmode, Drivetrain drive) {
         myOpMode = opmode;
+        drivetrain = drive;
     }
 
     public void init() {
@@ -82,7 +84,7 @@ public class Shooter {
 
         hood = myOpMode.hardwareMap.get(Servo.class, "hood");
 
-        hood.setPosition(1);
+        hood.setPosition(HOOD_RETRACTED);
         myOpMode.telemetry.addData(">", "Shooter Initialized");
     }
 
@@ -108,11 +110,28 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE = CLOSE_RPM;
         }
         else if (hoodMode == HoodMode.FAR) {
-            hood.setPosition(HOOD_FAR_TESTING);
-            REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
+            hood.setPosition(HOOD_FAR);
+            REVOLUTIONS_PER_MINUTE = FAR_RPM;
+        } else if (hoodMode == HoodMode.AUTO) {
+            if(drivetrain.DISTANCE  >= 78){
+                hood.setPosition(1);
+                REVOLUTIONS_PER_MINUTE = 3700+(drivetrain.DISTANCE-65)*14.3;
+            }else if(drivetrain.DISTANCE < 36){
+                hood.setPosition(0);
+                REVOLUTIONS_PER_MINUTE = 3000+(drivetrain.DISTANCE-12)*8.33;
+            }else if(drivetrain.DISTANCE >= 36 && drivetrain.DISTANCE <48){
+                hood.setPosition((drivetrain.DISTANCE-36)/12*0.1);
+                REVOLUTIONS_PER_MINUTE = 2900+(drivetrain.DISTANCE-24)*12.5;
+            }else if(drivetrain.DISTANCE >= 48 && drivetrain.DISTANCE <78){
+                hood.setPosition(0.9-(65-drivetrain.DISTANCE)/22*0.9);
+                REVOLUTIONS_PER_MINUTE = 3200+(drivetrain.DISTANCE-48)*28.5;
+            }
+            //hood.setPosition(HOOD_FAR_TESTING);
+            //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }
         myOpMode.telemetry.addData("hoodMode: ", hoodMode);
         myOpMode.telemetry.addData("hoodPosition: ", hood.getPosition());
+        myOpMode.telemetry.addData("rpm:", REVOLUTIONS_PER_MINUTE);
     }
 
     public void teleOp() {
@@ -136,17 +155,21 @@ public class Shooter {
         }
         else if (myOpMode.gamepad2.dpad_down) { //myOpMode.gamepad1.dpad_down ||
             hoodMode = HoodMode.FAR;
+        }else if (myOpMode.gamepad2.dpad_right) {
+            hoodMode = HoodMode.AUTO;
         }
+
+
         if(myOpMode.gamepad1.dpad_up){
             FAR_RPM_TESTING += 5;
         }
         if(myOpMode.gamepad1.dpad_down){
             FAR_RPM_TESTING -= 5;
         }
-        if(myOpMode.gamepad1.left_bumper){
+        if(myOpMode.gamepad1.dpad_left){
             HOOD_FAR_TESTING -= 0.005;
         }
-        if(myOpMode.gamepad1.right_bumper){
+        if(myOpMode.gamepad1.dpad_right){
             HOOD_FAR_TESTING += 0.005;
         }
         if(myOpMode.gamepad2.right_bumper){

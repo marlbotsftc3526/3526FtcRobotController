@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.PedroAutoBlueSide.Y_POS_KEY
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Meet0Teleop", group="Linear OpMode")
@@ -25,6 +26,14 @@ public class Meet0Teleop extends LinearOpMode{
         telemetry.addData("y position", blackboard.get(Y_POS_KEY));
         telemetry.addData("heading", blackboard.get(HEADING_KEY));
         telemetry.update();
+
+
+
+        /*if(myOpMode.gamepad2.left_bumper){
+            robot.drivetrain.side = Drivetrain.SideMode.BLUE;
+        }else if(myOpMode.gamepad2.right_bumper){
+            robot.drivetrain.side = Drivetrain.SideMode.RED;
+        }*/
 
         waitForStart();
 
