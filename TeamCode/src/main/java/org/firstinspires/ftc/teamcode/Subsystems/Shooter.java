@@ -18,11 +18,11 @@ public class Shooter {
     /* Declare OpMode members. */
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
-    public DcMotorEx shootLeft = null;
 
     public Drivetrain drivetrain = null;
 
     public DcMotorEx shoot = null;
+    public DcMotorEx shootLeft = null;
     public Servo transfer = null;
     public Servo hood = null;
     public PIDFCoefficients sPIDF = null;
@@ -38,6 +38,7 @@ public class Shooter {
     //TODO Adjust based on desired states
     public enum ShootMode {
         ON,
+        CUSTOMPID,
         OFF,
     }
 
@@ -82,11 +83,11 @@ public class Shooter {
     public void init() {
         shoot = myOpMode.hardwareMap.get(DcMotorEx.class, "shooter");
         shoot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-       // shoot.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        shoot.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         shoot.setDirection(DcMotor.Direction.REVERSE);
         shootLeft = myOpMode.hardwareMap.get(DcMotorEx.class, "shooterLeft");
         shootLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        // shoot.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        shootLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         shootLeft.setDirection(DcMotor.Direction.FORWARD);
         sPIDF = new PIDFCoefficients(shoot.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
         sp = sPIDF.p;
@@ -110,7 +111,23 @@ public class Shooter {
             shoot.setVelocity(TICKS_PER_SECOND);
         } else if (shootMode == ShootMode.OFF) {
             shoot.setVelocity(0);
+        }else if (shootMode == ShootMode.CUSTOMPID) {
+            TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
+            double output = shooterPID.calculate(shoot.getVelocity(),TICKS_PER_SECOND);
+            shoot.setPower(output);
+            shootLeft.setPower(output);
+            //calculate measured RPM from motors current degrees per second
+            double measuredRPM = shoot.getVelocity()/TICKS_PER_REVOLUTION*60;
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
+            dashboardTelemetry.addData("Set RPM", REVOLUTIONS_PER_MINUTE);
+            dashboardTelemetry.addData("Measured RPM", measuredRPM);
+            dashboardTelemetry.addData("Measured Ticks Per Second", shoot.getVelocity());
+            dashboardTelemetry.addData("Ticks Per Second", TICKS_PER_SECOND);
+            dashboardTelemetry.update();
         }
+
 
         if (transferMode == TransferMode.ON) {
             transfer.setPosition(GATE_OPEN);
@@ -131,8 +148,8 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE = CLOSE_RPM;
         }
         else if (hoodMode == HoodMode.FAR) {
-            hood.setPosition(HOOD_FAR);
-            REVOLUTIONS_PER_MINUTE = FAR_RPM;
+            hood.setPosition(HOOD_FAR_TESTING);
+            REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         } else if (hoodMode == HoodMode.AUTO) {
             if(drivetrain.DISTANCE  >= 110){
                 hood.setPosition(1);
@@ -166,7 +183,7 @@ public class Shooter {
         //Set states based on gamepad presses
         //TODO Update based on desired control scheme
         if (myOpMode.gamepad2.right_bumper) { // || myOpMode.gamepad2.right_bumper
-            shootMode = ShootMode.ON;
+            shootMode = ShootMode.CUSTOMPID;
         } else if (myOpMode.gamepad2.left_bumper) {//myOpMode.gamepad1.left_bumper ||
             shootMode = ShootMode.OFF; //s=S
         }
