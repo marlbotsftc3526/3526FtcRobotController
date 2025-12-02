@@ -11,16 +11,21 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utility.PIDController;
 
 @Config
 public class Shooter {
     /* Declare OpMode members. */
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
-
+    public DcMotorEx shootLeft = null;
     public DcMotorEx shoot = null;
     public Servo transfer = null;
     public Servo hood = null;
     public PIDFCoefficients sPIDF = null;
+    public PIDController shooterPID = null;
+    public static double kp = 0.01;
+    public static double ki = 0;
+    public static double kd = 0;
     public static double sp = 0;
     public static double si = 0;
     public static double sd = 0;
@@ -72,6 +77,10 @@ public class Shooter {
         shoot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
        // shoot.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         shoot.setDirection(DcMotor.Direction.REVERSE);
+        shootLeft = myOpMode.hardwareMap.get(DcMotorEx.class, "shooterLeft");
+        shootLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        // shoot.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        shootLeft.setDirection(DcMotor.Direction.FORWARD);
         sPIDF = new PIDFCoefficients(shoot.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
         sp = sPIDF.p;
         si = sPIDF.i;
