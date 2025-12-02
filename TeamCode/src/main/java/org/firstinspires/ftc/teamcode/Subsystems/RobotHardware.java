@@ -39,6 +39,7 @@ public class RobotHardware {
     public void update(){
         intake.update();
         shooter.update();
+        drivetrain.update();
     }
 
     public void stop(){

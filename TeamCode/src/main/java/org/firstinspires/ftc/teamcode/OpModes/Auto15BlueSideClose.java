@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.acmerobotics.roadrunner.Pose2d;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -17,8 +15,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "PedroAutoBlueSide", group = "AutoTemplates")
-public class PedroAutoBlueSide extends LinearOpMode {
+@Autonomous(name = "Auto15BlueSide", group = "AutoTemplates")
+public class Auto15BlueSideClose extends LinearOpMode {
     //Declare Robot and Follower
     RobotHardware robot;
     private Follower follower;
@@ -51,7 +49,10 @@ public class PedroAutoBlueSide extends LinearOpMode {
         COLLECT_ARTIFACTS3,
         DRIVE_TO_LAUNCH_POSITION4,
         LAUNCH_ARTIFACTS4,
-        END,
+        STRAIGHT4,
+        COLLECT_ARTIFACTS5,
+        DRIVE_TO_LAUNCH_POSITION5,
+        LAUNCH_ARTIFACTS5,
         IDLE
     }
 
@@ -105,9 +106,8 @@ public class PedroAutoBlueSide extends LinearOpMode {
                         follower.followPath(paths.launchzone1,true);
                         //ex. turn shooter on
                         robot.shooter.shootMode = Shooter.ShootMode.ON;
-                        robot.shooter.hoodMode = Shooter.HoodMode.CLOSE;
                     }
-
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
                     //set the condition to advance to the next state
                     /* You could check for
                         - Follower State: "if(!follower.isBusy()) {}"
@@ -123,13 +123,11 @@ public class PedroAutoBlueSide extends LinearOpMode {
                     if(onStateStart()){
                         //you could restart timers in here
                         timer.reset();
-                        robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
-                        robot.shooter.hoodMode = Shooter.HoodMode.CLOSE;
                     }
-
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                     //state transition
-                    if(timer.seconds() > 2) {
+                    if(timer.seconds() > 3) {
                         currentState = State.ALIGN_ARTIFACTS;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -163,10 +161,11 @@ public class PedroAutoBlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS2:
                     if(onStateStart()){
                         timer.reset();
-                        robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
-                    if(timer.seconds() >2){
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    if(timer.seconds() >3){
                         currentState = State.ALIGN_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -200,10 +199,11 @@ public class PedroAutoBlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS3:
                         if(onStateStart()){
                             timer.reset();
-                            robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                             robot.intake.intakeMode = Intake.IntakeMode.UP;
                         }
-                        if(timer.seconds() >2){
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                        if(timer.seconds() >3){
                             robot.shooter.transferMode = Shooter.TransferMode.OFF;
                             currentState = State.ALIGN_ARTIFACTS3;
                         }
@@ -237,22 +237,57 @@ public class PedroAutoBlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS4:
                     if(onStateStart()){
                         timer.reset();
-                        robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
-                    if(timer.seconds() >2){
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    if(timer.seconds() >3){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
-                        currentState = State.END;
+                        currentState = State.STRAIGHT4;
                     }
                     break;
-                case END:
+                case STRAIGHT4:
                     if(onStateStart()){
-                        follower.followPath(paths.ending, true);
+                        follower.followPath(paths.straight4, true);
                     }
-                    if(!follower.isBusy()){
+                    if(!follower.isBusy())
+                    {
+                        currentState = State.COLLECT_ARTIFACTS5;
+                    }
+                    break;
+                case COLLECT_ARTIFACTS5:
+                    if(onStateStart()){
+                        timer.reset();
+                        follower.followPath(paths.intakeballs4, true);
+                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                    }
+                    if(!follower.isBusy()||timer.seconds()>2){
+                        currentState = State.DRIVE_TO_LAUNCH_POSITION5;
+                    }
+                    break;
+                case DRIVE_TO_LAUNCH_POSITION5:
+                    if(onStateStart()){
+                        follower.followPath(paths.launchzone5, true);
+                    }
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    if(!follower.isBusy() || timer.seconds() >3){
+                        currentState = State.LAUNCH_ARTIFACTS;
+                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.shooter.shootMode = Shooter.ShootMode.ON;
+                        robot.shooter.transferMode = Shooter.TransferMode.ON;
+                    }
+                    break;
+                    case LAUNCH_ARTIFACTS5:
+                    if(onStateStart()){
+                        timer.reset();
+                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                    }
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    if(timer.seconds() >3.5){
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.IDLE;
-                        robot.intake.intakeMode = Intake.IntakeMode.DOWN;
-                        robot.shooter.shootMode = Shooter.ShootMode.OFF;
                     }
                     break;
                 case IDLE:
@@ -272,7 +307,7 @@ public class PedroAutoBlueSide extends LinearOpMode {
             panelsTelemetry.update(telemetry);
 
             //telemetry.addData("state", currentState);
-            //telemetry.update();
+            telemetry.update();
         }
     }
 
@@ -289,54 +324,55 @@ public class PedroAutoBlueSide extends LinearOpMode {
         public PathChain straight3;
         public PathChain intakeballs3;
         public PathChain launchzone4;
-        public PathChain ending;
+        public PathChain straight4;
+        public PathChain intakeballs4;
+        public PathChain launchzone5;
 
         public Paths(Follower follower) {
             launchzone1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(16.225, 113.839), new Pose(47.807, 96.773))
+                            new BezierLine(new Pose(14.647, 114.258), new Pose(52.556, 85.362))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-42))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-41))
                     .build();
 
             straight1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(47.807, 96.773), new Pose(46.648, 84.893))
+                            new BezierLine(new Pose(52.556, 85.362), new Pose(43.365, 80.767))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(-42), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(-41), Math.toRadians(180))
                     .build();
-
 
             intakeballs1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(46.648, 84.893), new Pose(12.748, 83.734))
+                            new BezierLine(new Pose(43.365, 80.767), new Pose(13.304, 80.076))
                     )
-                    .setConstantHeadingInterpolation(Math.toRadians(180))
+                    .setTangentHeadingInterpolation()
                     .build();
 
             launchzone2 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(12.748, 83.734), new Pose(46.938, 96.483))
+                            new BezierLine(new Pose(13.304, 80.076), new Pose(53.040, 80.940))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-41))
                     .build();
+
             straight2 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(46.938, 96.483), new Pose(47.227, 60.266))
+                            new BezierLine(new Pose(53.040, 80.940), new Pose(47.827, 60.005))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(-41), Math.toRadians(180))
                     .build();
 
-
             intakeballs2 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(47.227, 60.845), new Pose(7.533, 59.396))
+                            new BezierLine(new Pose(47.827, 60.005), new Pose(6.954, 58.817))
                     )
                     .setTangentHeadingInterpolation()
                     .build();
@@ -344,11 +380,7 @@ public class PedroAutoBlueSide extends LinearOpMode {
             launchzone3 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierCurve(
-                                    new Pose(10.431, 59.686),
-                                    new Pose(38.245, 59.396),
-                                    new Pose(47.807, 96.773)
-                            )
+                            new BezierLine(new Pose(6.954, 58.817), new Pose(53.904, 76.276))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-41))
                     .build();
@@ -356,7 +388,7 @@ public class PedroAutoBlueSide extends LinearOpMode {
             straight3 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(47.807, 96.773), new Pose(47.227, 35.928))
+                            new BezierLine(new Pose(53.904, 76.276), new Pose(47.227, 35.928))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(-41), Math.toRadians(180))
                     .build();
@@ -364,7 +396,7 @@ public class PedroAutoBlueSide extends LinearOpMode {
             intakeballs3 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(47.227, 35.928), new Pose(7.533, 35.638))
+                            new BezierLine(new Pose(47.227, 35.928), new Pose(6.954, 35.638))
                     )
                     .setTangentHeadingInterpolation()
                     .build();
@@ -372,15 +404,22 @@ public class PedroAutoBlueSide extends LinearOpMode {
             launchzone4 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(9.851, 35.348), new Pose(47.517, 95.903))
+                            new BezierLine(new Pose(6.954, 35.638), new Pose(51.485, 77.139))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-41))
                     .build();
-            ending = follower
+
+            straight4 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(47.517, 95.903), new Pose(50.414, 61.425))
+                            new BezierLine(new Pose(51.485, 77.139), new Pose(9.059, 28.915))
                     )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            intakeballs4 = follower
+                    .pathBuilder()
+                    .addPath(new BezierLine(new Pose(9.059, 28.915), new Pose(8.692, 4.056)))
                     .setTangentHeadingInterpolation()
                     .build();
         }

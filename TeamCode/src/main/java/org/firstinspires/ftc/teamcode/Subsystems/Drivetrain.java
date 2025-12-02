@@ -152,21 +152,47 @@ public class Drivetrain {
             double drive = 0;
             double turn = 0;
             double strafe = 0;
-            double goalLocationX = 2;
-            double goalLocationY = 142;
+            double goalLocationX;
+            double goalLocationY;
+            double power = 1.6;
             double autoAimAngle = 0;
             double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
             double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
 
             if(side == Drivetrain.SideMode.BLUE){
                 goalLocationX = 2;
-                goalLocationY = 142;
-                autoAimAngle = 180*Math.atan((goalLocationY - roboLocationY)/(roboLocationX - goalLocationX))/Math.PI;
+                if(roboLocationY >= 110){
+                    power = -0.01*roboLocationY+2.6;
+                }else if(roboLocationY < 110){
+                    power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
+                }
+                if(roboLocationY >= 70){
+                    goalLocationY = 144-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
+
+                }else{
+                    goalLocationY = 142;
+                }
+
+                /*if(roboLocationY >= 110 && roboLocationX >= 40 && roboLocationX < 90){
+                    goalLocationY = 138;
+                    myOpMode.telemetry.addData("ZONE 1: ", roboLocationY);
+                }else if(roboLocationY >= 90 && roboLocationY < 110 && roboLocationX >= 90){
+                    goalLocationY = 138;
+                    myOpMode.telemetry.addData("ZONE 2: ", roboLocationY);
+                }else if(roboLocationX >= 110 && roboLocationY >= 90){
+                    goalLocationY = 133;
+                    myOpMode.telemetry.addData("ZONE 3: ", roboLocationY);
+                }else{
+                    goalLocationY = 142;
+
+                }*/
+                myOpMode.telemetry.addData("goalLocationY: ", goalLocationY);
+                autoAimAngle = 180*Math.atan(Math.abs(goalLocationY - roboLocationY)/Math.abs(roboLocationX - goalLocationX))/Math.PI;
                 DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
             }else if(side == Drivetrain.SideMode.RED){
                 goalLocationX = 142;
                 goalLocationY = 142;
-                autoAimAngle = 180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI;
+                autoAimAngle = 180-180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI;
                 DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
             }
 
@@ -192,9 +218,9 @@ public class Drivetrain {
                             pinpoint.getHeading(AngleUnit.RADIANS))));
                 }
             }
-            if(myOpMode.gamepad2.left_trigger>0.5){
-                turn = headingController.calculate(autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
-            }
+            if (myOpMode.gamepad2.left_trigger > 0.5) {
+                    turn = -headingController.calculate(-autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
+                }
 
             leftFrontPower = (drive + turn - strafe);
             rightFrontPower = (drive - turn + strafe);
@@ -253,6 +279,16 @@ public class Drivetrain {
             myOpMode.telemetry.addData("roboX: ", roboLocationX);
             myOpMode.telemetry.addData("roboY: ", roboLocationY);
             myOpMode.telemetry.addData("Distance: ", DISTANCE);
+        }
+
+        public void update(){
+            double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
+            double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
+            if(side == SideMode.BLUE){
+                DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
+            }else if(side == SideMode.RED){
+                DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
+            }
         }
 
 
