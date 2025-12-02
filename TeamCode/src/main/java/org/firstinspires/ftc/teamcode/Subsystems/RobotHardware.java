@@ -19,10 +19,11 @@ public class RobotHardware {
 
     public void init() {
         drivetrain = new Drivetrain(myOpMode);
-        intake = new Intake(myOpMode);
-        shooter = new Shooter(myOpMode);
-
         drivetrain.init();
+        intake = new Intake(myOpMode);
+        shooter = new Shooter(myOpMode, drivetrain);
+
+
         intake.init();
         shooter.init();
 
@@ -38,6 +39,7 @@ public class RobotHardware {
     public void update(){
         intake.update();
         shooter.update();
+        drivetrain.update();
     }
 
     public void stop(){
