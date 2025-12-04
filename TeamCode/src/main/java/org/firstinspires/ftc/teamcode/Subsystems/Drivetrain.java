@@ -167,10 +167,10 @@ public class Drivetrain {
                     power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
                 }
                 if(roboLocationY >= 70){
-                    goalLocationY = 144-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
+                    goalLocationY = 138-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
 
                 }else{
-                    goalLocationY = 142;
+                    goalLocationY = 134;
                 }
 
                 /*if(roboLocationY >= 110 && roboLocationX >= 40 && roboLocationX < 90){
@@ -191,7 +191,17 @@ public class Drivetrain {
                 DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
             }else if(side == Drivetrain.SideMode.RED){
                 goalLocationX = 142;
-                goalLocationY = 142;
+                if(roboLocationY >= 110){
+                    power = -0.01*roboLocationY+2.6;
+                }else if(roboLocationY < 110){
+                    power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
+                }
+                if(roboLocationY >= 70){
+                    goalLocationY = 138-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
+
+                }else{
+                    goalLocationY = 134;
+                }
                 autoAimAngle = 180-180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI;
                 DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
             }

@@ -105,7 +105,6 @@ public class PedroAutoBlueSide extends LinearOpMode {
                         follower.followPath(paths.launchzone1,true);
                         //ex. turn shooter on
                         robot.shooter.shootMode = Shooter.ShootMode.ON;
-                        robot.shooter.hoodMode = Shooter.HoodMode.CLOSE;
                     }
 
                     //set the condition to advance to the next state
@@ -123,11 +122,10 @@ public class PedroAutoBlueSide extends LinearOpMode {
                     if(onStateStart()){
                         //you could restart timers in here
                         timer.reset();
-                        robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
-                        robot.shooter.hoodMode = Shooter.HoodMode.CLOSE;
+                        robot.shooter.transferMode = Shooter.TransferMode.ON;
                     }
-
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
                     //state transition
                     if(timer.seconds() > 2) {
                         currentState = State.ALIGN_ARTIFACTS;
@@ -163,9 +161,10 @@ public class PedroAutoBlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS2:
                     if(onStateStart()){
                         timer.reset();
-                        robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.shooter.transferMode = Shooter.TransferMode.ON;
                     }
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
                     if(timer.seconds() >2){
                         currentState = State.ALIGN_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
@@ -200,9 +199,10 @@ public class PedroAutoBlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS3:
                         if(onStateStart()){
                             timer.reset();
-                            robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                             robot.intake.intakeMode = Intake.IntakeMode.UP;
+                            robot.shooter.transferMode = Shooter.TransferMode.ON;
                         }
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
                         if(timer.seconds() >2){
                             robot.shooter.transferMode = Shooter.TransferMode.OFF;
                             currentState = State.ALIGN_ARTIFACTS3;
@@ -237,9 +237,10 @@ public class PedroAutoBlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS4:
                     if(onStateStart()){
                         timer.reset();
-                        robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.shooter.transferMode = Shooter.TransferMode.ON;
                     }
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
                     if(timer.seconds() >2){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.END;

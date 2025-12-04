@@ -65,7 +65,7 @@ public class CyclingBlueSide extends LinearOpMode {
 
         follower = Constants.createFollower(hardwareMap);
         //TODO Set starting pose from path generation
-        follower.setStartingPose(new Pose(11.299798792756539, 109.23138832997988, Math.toRadians(0)));
+        follower.setStartingPose(new Pose(64.49878091839476, 8.627558653834283, Math.toRadians(270)));
 
         paths = new Paths(follower); // Build paths
 
@@ -101,6 +101,7 @@ public class CyclingBlueSide extends LinearOpMode {
                     if(onStateStart()){
                         //ex. set path to follow
                         follower.followPath(paths.angleright,true);
+                        robot.shooter.shootMode = Shooter.ShootMode.ON;
                         //ex. turn shooter on
                     }
                     robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
@@ -260,7 +261,7 @@ public class CyclingBlueSide extends LinearOpMode {
             angleright = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(60.150, 7.379), new Pose(69.989, 11.627))
+                            new BezierLine(new Pose(64.499, 8.628), new Pose(69.989, 11.627))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-41))
                     .build();
