@@ -167,7 +167,7 @@ public class Drivetrain {
                     power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
                 }
                 if(roboLocationY >= 70){
-                    goalLocationY = 154-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
+                    goalLocationY = 150-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
 
                 }else{
                     goalLocationY = 144;
@@ -197,7 +197,7 @@ public class Drivetrain {
                     power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
                 }
                 if(roboLocationY >= 70){
-                    goalLocationY = 154-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
+                    goalLocationY = 150-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
 
                 }else{
                     goalLocationY = 144;
