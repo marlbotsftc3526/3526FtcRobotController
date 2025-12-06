@@ -167,10 +167,10 @@ public class Drivetrain {
                     power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
                 }
                 if(roboLocationY >= 70){
-                    goalLocationY = 138-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
+                    goalLocationY = 154-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
 
                 }else{
-                    goalLocationY = 134;
+                    goalLocationY = 144;
                 }
 
                 /*if(roboLocationY >= 110 && roboLocationX >= 40 && roboLocationX < 90){
@@ -187,7 +187,7 @@ public class Drivetrain {
 
                 }*/
                 myOpMode.telemetry.addData("goalLocationY: ", goalLocationY);
-                autoAimAngle = 180*Math.atan(Math.abs(goalLocationY - roboLocationY)/Math.abs(roboLocationX - goalLocationX))/Math.PI;
+                autoAimAngle = -180*Math.atan(Math.abs(goalLocationY - roboLocationY)/Math.abs(roboLocationX - goalLocationX))/Math.PI;
                 DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
             }else if(side == Drivetrain.SideMode.RED){
                 goalLocationX = 142;
@@ -197,12 +197,12 @@ public class Drivetrain {
                     power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
                 }
                 if(roboLocationY >= 70){
-                    goalLocationY = 138-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
+                    goalLocationY = 154-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
 
                 }else{
-                    goalLocationY = 134;
+                    goalLocationY = 144;
                 }
-                autoAimAngle = 180-180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI;
+                autoAimAngle = -(180-180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI);
                 DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
             }
 
@@ -229,7 +229,7 @@ public class Drivetrain {
                 }
             }
             if (myOpMode.gamepad2.left_trigger > 0.5) {
-                    turn = -headingController.calculate(-autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
+                    turn = -headingController.calculate(autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
                 }
 
             leftFrontPower = (drive + turn - strafe);
