@@ -48,7 +48,6 @@ public class Drivetrain {
         public DcMotor leftBackDrive = null;
         public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
     public SideMode side = SideMode.BLUE;
-        public GoBildaPinpointDriver localizer;
 
     public static double HEADING_KP = 0.05;//0.012 //0.0095
     public static double HEADING_KI = 0.0;
@@ -111,7 +110,7 @@ public class Drivetrain {
             pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
                     GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
-            //pinpoint.resetPosAndIMU();
+            pinpoint.recalibrateIMU();
 
             myOpMode.telemetry.addData(">", "Drivetrain Initialized");
 
