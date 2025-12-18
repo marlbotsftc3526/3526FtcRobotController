@@ -131,7 +131,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
-                    if(timer.seconds() > 1.2) {
+                    if(timer.seconds() > 1.5) {
                         currentState = State.ALIGN_ARTIFACTS;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -149,7 +149,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                     if(onStateStart()){
                         follower.followPath(paths.intakeballs1,true);
                     }
-                    if(!follower.isBusy()){
+                    if(!follower.isBusy() || timer.seconds() >1.5){
                         currentState = State.DRIVE_TO_LAUNCH_POSITION2;
                     }
                     break;
@@ -188,7 +188,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.intakeballs2, true);
                     }
-                    if(!follower.isBusy()|| timer.seconds()>1.5){
+                    if(!follower.isBusy()){
                         currentState = State.DRIVE_TO_LAUNCH_POSITION3;
                     }
                     break;
@@ -207,7 +207,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                         }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
-                        if(timer.seconds() >1.5){
+                        if(timer.seconds() >1.7){
                             robot.shooter.transferMode = Shooter.TransferMode.OFF;
                             currentState = State.ALIGN_ARTIFACTS3;
                         }
@@ -276,7 +276,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                     }
                     if(!follower.isBusy())
                     {
-                        currentState = State.COLLECT_ARTIFACTS5;
+                        currentState = State.IDLE;
                     }
                     break;
                     /*
@@ -330,6 +330,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
 
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
     public static class Paths {
+        /*
         public PathChain launchzone1;
         public PathChain straight1;
         public PathChain intakeballs1;
@@ -454,6 +455,134 @@ public class Auto15BlueSideClose extends LinearOpMode {
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
                     .build();
+        }
+
+         */
+        public PathChain launchzone1;
+        public PathChain straight1;
+        public PathChain intakeballs1;
+        public PathChain launchzone2;
+        public PathChain straight2;
+        public PathChain intakeballs2;
+        public PathChain launchzone3;
+        public PathChain straight3;
+        public PathChain intakeballs3;
+        public PathChain launchzone4;
+        public PathChain straight4;
+        public PathChain intakeballs4;
+        public PathChain End;
+
+        public Paths(Follower follower) {
+            launchzone1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(15.750, 112.126), new Pose(37.874, 108.001))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-38))
+                    .build();
+
+            straight1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(37.874, 108.001), new Pose(44.249, 84.001))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-38), Math.toRadians(180))
+                    .build();
+
+            intakeballs1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(44.249, 84.001), new Pose(13.500, 83.626))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            launchzone2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(13.500, 83.626), new Pose(38.249, 107.626))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-41))
+                    .build();
+
+            straight2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(38.249, 107.626), new Pose(47.827, 60.005))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-41), Math.toRadians(180))
+                    .build();
+
+            intakeballs2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(47.827, 60.005), new Pose(6.954, 58.817))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            launchzone3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(6.954, 58.817),
+                                    new Pose(45.749, 56.627),
+                                    new Pose(56.249, 80.626)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-46))
+                    .build();
+
+            straight3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(56.249, 80.626), new Pose(47.227, 35.928))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-46), Math.toRadians(180))
+                    .build();
+
+            intakeballs3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(47.227, 35.928), new Pose(6.954, 35.638))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            launchzone4 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(6.954, 35.638),
+                                    new Pose(49.874, 40.127),
+                                    new Pose(65.191, 70.406)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-49))
+                    .build();
+
+            straight4 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(65.191, 70.406), new Pose(7.125, 31.877))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-49), Math.toRadians(270))
+                    .build();
+
+            intakeballs4 = follower
+                    .pathBuilder()
+                    .addPath(new BezierLine(new Pose(7.125, 31.877), new Pose(7.125, -0.747)))
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                    .build();
+
+            End = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(7.125, -0.747), new Pose(35.249, 72.376))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                    .build();
+
         }
     }
 

@@ -6,6 +6,7 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 
@@ -36,6 +37,10 @@ public class Drivetrain {
         RED,
         BLUE
     }
+    public enum KickstandMode{
+        EXTENDED,
+        RETRACTED
+    }
 
 
 
@@ -46,6 +51,8 @@ public class Drivetrain {
         public DcMotor leftFrontDrive = null;
         public DcMotor rightBackDrive = null;
         public DcMotor leftBackDrive = null;
+        public Servo kickstandRight = null;
+        public Servo kickstandLeft = null;
         public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
     public SideMode side = SideMode.BLUE;
         public GoBildaPinpointDriver localizer;
@@ -57,6 +64,9 @@ public class Drivetrain {
 
     public static double DISTANCE = 0;
 
+    public static double kickEXTENDED = 0;
+    public static double kickRETRACTED = 0;
+    public KickstandMode kickstand = KickstandMode.RETRACTED;
 
     PIDController headingController;
         //declare PID controller
@@ -70,8 +80,6 @@ public class Drivetrain {
 
         //Static Variables
         //TODO Adjust drive constants based on auto performance
-
-
 
 
         public Drivetrain(OpMode opmode) {
@@ -112,6 +120,8 @@ public class Drivetrain {
                     GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
             //pinpoint.resetPosAndIMU();
+            kickstandLeft = myOpMode.hardwareMap.get(Servo.class, "kickstandLeft");
+            kickstandRight = myOpMode.hardwareMap.get(Servo.class, "kickstandRight");
 
             myOpMode.telemetry.addData(">", "Drivetrain Initialized");
 
@@ -122,6 +132,7 @@ public class Drivetrain {
                 side = SideMode.RED;
                 myOpMode.telemetry.addData(">", "RED");
             }
+
         }
 
 
@@ -206,7 +217,18 @@ public class Drivetrain {
                 DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
             }
 
+            if(myOpMode.gamepad1.dpad_down){
+                kickstand = KickstandMode.EXTENDED;
+            }
+            else if (myOpMode.gamepad1.dpad_up){
+                kickstand = KickstandMode.RETRACTED;
+            }
 
+            if(myOpMode.gamepad2.b){
+                pinpoint.setHeading(-90,AngleUnit.DEGREES);
+                pinpoint.setPosX(72,DistanceUnit.INCH);
+                pinpoint.setPosY(72, DistanceUnit.INCH);
+            }
 
             if (drivetrainMode == Drivetrain.DrivetrainMode.ROBOTCENTRIC) {
                 // Send calculated power to wheels
@@ -280,9 +302,6 @@ public class Drivetrain {
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
             }
 
-            if(myOpMode.gamepad2.dpad_up){
-
-            }
             myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
             myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
             myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
@@ -298,6 +317,13 @@ public class Drivetrain {
                 DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
             }else if(side == SideMode.RED){
                 DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
+            }
+            if(kickstand == KickstandMode.EXTENDED){
+                kickstandLeft.setPosition(kickEXTENDED);
+                kickstandRight.setPosition(kickEXTENDED);
+            }else if (kickstand == KickstandMode.RETRACTED){
+                kickstandRight.setPosition(kickRETRACTED);
+                kickstandLeft.setPosition(kickRETRACTED);
             }
         }
 

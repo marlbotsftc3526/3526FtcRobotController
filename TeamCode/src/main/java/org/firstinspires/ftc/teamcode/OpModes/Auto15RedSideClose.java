@@ -398,6 +398,266 @@ public class Auto15RedSideClose extends LinearOpMode {
                             new BezierCurve(
                                     new Pose(137.046, 58.817),
                                     new Pose(104.248, 56.252),
+                                    new Pose(87.751, 80.626)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-130))
+                    .build();
+
+            straight3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(87.751, 80.626), new Pose(96.773, 35.928))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-130), Math.toRadians(0))
+                    .build();
+
+            intakeballs3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(96.773, 35.928), new Pose(137.046, 35.638))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            launchzone4 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(137.046, 35.638),
+                                    new Pose(85.183, 41.143),
+                                    new Pose(80.547, 71.855)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-127))
+                    .build();
+
+            straight4 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(80.547, 71.855), new Pose(136.875, 31.877))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-127), Math.toRadians(270))
+                    .build();
+
+            intakeballs4 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(136.875, 31.877), new Pose(136.875, -0.747))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                    .build();
+
+            End = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(136.875, -0.747), new Pose(109.873, 68.626))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                    .build();
+        }
+/*
+            public PathChain launchzone1;
+            public PathChain straight1;
+            public PathChain intakeballs1;
+            public PathChain launchzone2;
+            public PathChain straight2;
+            public PathChain intakeballs2;
+            public PathChain launchzone3;
+            public PathChain straight3;
+            public PathChain intakeballs3;
+            public PathChain launchzone4;
+            public PathChain straight4;
+            public PathChain intakeballs4;
+            public PathChain End;
+
+  public Paths(Follower follower) {
+                launchzone1 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(128.250, 112.126), new Pose(106.126, 108.001))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-138))
+                        .build();
+
+                straight1 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(106.126, 108.001), new Pose(99.751, 84.001))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(-138), Math.toRadians(0))
+                        .build();
+
+                intakeballs1 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(99.751, 84.001), new Pose(130.500, 83.626))
+                        )
+                        .setTangentHeadingInterpolation()
+                        .build();
+
+                launchzone2 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(130.500, 83.626), new Pose(105.751, 107.626))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-138))
+                        .build();
+
+                straight2 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(105.751, 107.626), new Pose(96.173, 60.005))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(-138), Math.toRadians(0))
+                        .build();
+
+                intakeballs2 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(96.173, 60.005), new Pose(137.046, 58.817))
+                        )
+                        .setTangentHeadingInterpolation()
+                        .build();
+
+                launchzone3 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierCurve(
+                                        new Pose(137.046, 58.817),
+                                        new Pose(104.248, 56.252),
+                                        new Pose(87.751, 80.626)
+                                )
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-130))
+                        .build();
+
+                straight3 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(87.751, 80.626), new Pose(96.773, 35.928))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(-130), Math.toRadians(0))
+                        .build();
+
+                intakeballs3 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(96.773, 35.928), new Pose(137.046, 35.638))
+                        )
+                        .setTangentHeadingInterpolation()
+                        .build();
+
+                launchzone4 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierCurve(
+                                        new Pose(137.046, 35.638),
+                                        new Pose(85.183, 41.143),
+                                        new Pose(80.547, 71.855)
+                                )
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-127))
+                        .build();
+
+                straight4 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(80.547, 71.855), new Pose(136.875, 31.877))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(-127), Math.toRadians(270))
+                        .build();
+
+                intakeballs4 = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(136.875, 31.877), new Pose(136.875, -0.747))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                        .build();
+
+                End = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierLine(new Pose(136.875, -0.747), new Pose(109.873, 68.626))
+                        )
+                        .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                        .build();
+            }
+
+
+
+ */
+        /*
+        public PathChain launchzone1;
+        public PathChain straight1;
+        public PathChain intakeballs1;
+        public PathChain launchzone2;
+        public PathChain straight2;
+        public PathChain intakeballs2;
+        public PathChain launchzone3;
+        public PathChain straight3;
+        public PathChain intakeballs3;
+        public PathChain launchzone4;
+        public PathChain straight4;
+        public PathChain intakeballs4;
+        public PathChain End;
+
+        public Paths(Follower follower) {
+            launchzone1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(128.250, 112.126), new Pose(106.126, 108.001))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-138))
+                    .build();
+
+            straight1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(106.126, 108.001), new Pose(99.751, 84.001))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-138), Math.toRadians(0))
+                    .build();
+
+            intakeballs1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(99.751, 84.001), new Pose(130.500, 83.626))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            launchzone2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(130.500, 83.626), new Pose(105.751, 107.626))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-138))
+                    .build();
+
+            straight2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(105.751, 107.626), new Pose(96.173, 60.005))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-138), Math.toRadians(0))
+                    .build();
+
+            intakeballs2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(96.173, 60.005), new Pose(137.046, 58.817))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            launchzone3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(137.046, 58.817),
+                                    new Pose(104.248, 56.252),
                                     new Pose(105.748, 107.251)
                             )
                     )
@@ -460,6 +720,8 @@ public class Auto15RedSideClose extends LinearOpMode {
                     .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
                     .build();
         }
+
+         */
 
     }
 
