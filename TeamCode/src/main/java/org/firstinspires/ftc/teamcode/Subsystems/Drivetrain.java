@@ -55,7 +55,6 @@ public class Drivetrain {
         public Servo kickstandLeft = null;
         public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
     public SideMode side = SideMode.BLUE;
-        public GoBildaPinpointDriver localizer;
 
     public static double HEADING_KP = 0.05;//0.012 //0.0095
     public static double HEADING_KI = 0.0;
@@ -122,6 +121,9 @@ public class Drivetrain {
             //pinpoint.resetPosAndIMU();
             kickstandLeft = myOpMode.hardwareMap.get(Servo.class, "kickstandLeft");
             kickstandRight = myOpMode.hardwareMap.get(Servo.class, "kickstandRight");
+
+            pinpoint.recalibrateIMU();
+
 
             myOpMode.telemetry.addData(">", "Drivetrain Initialized");
 
