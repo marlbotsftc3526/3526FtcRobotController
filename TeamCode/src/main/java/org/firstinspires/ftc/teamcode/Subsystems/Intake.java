@@ -84,7 +84,7 @@ public class Intake {
 
         myOpMode.telemetry.addData(">", "Intake Initialized");
     }
-    public static final double INTAKE_SPEED = .7;
+    public static final double INTAKE_SPEED = 1;
     public static final double OUTTAKE_SPEED = -.5;
 
    public Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;
