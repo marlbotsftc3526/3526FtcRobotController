@@ -56,7 +56,7 @@ public class Drivetrain {
         public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
     public SideMode side = SideMode.BLUE;
 
-    public static double HEADING_KP = 0.05;//0.012 //0.0095
+    public static double HEADING_KP = 0.025;//0.012 //0.0095
     public static double HEADING_KI = 0.0;
     public static double HEADING_KD = 0.0;
     public static double MAX_OUT = 0.8;

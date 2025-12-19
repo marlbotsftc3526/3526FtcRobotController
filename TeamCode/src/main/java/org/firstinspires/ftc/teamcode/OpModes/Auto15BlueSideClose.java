@@ -555,7 +555,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                             new BezierCurve(
                                     new Pose(6.954, 35.638),
                                     new Pose(49.874, 40.127),
-                                    new Pose(65.191, 70.406)
+                                    new Pose(56.249, 80.626)
                             )
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-49))
@@ -564,7 +564,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
             straight4 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(65.191, 70.406), new Pose(7.125, 31.877))
+                            new BezierLine(new Pose(56.249, 80.626), new Pose(7.125, 31.877))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(-49), Math.toRadians(270))
                     .build();

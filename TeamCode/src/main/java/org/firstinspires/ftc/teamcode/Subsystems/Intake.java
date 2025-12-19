@@ -46,15 +46,15 @@ public class Intake {
 
     public void init() {
         prism = myOpMode.hardwareMap.get(GoBildaPrismDriver.class,"prism");
-        solidTop.setBrightness(50);
+        solidTop.setBrightness(0);
         solidTop.setStartIndex(0);
         solidTop.setStopIndex(3);
 
-        solidMiddle.setBrightness(50);
+        solidMiddle.setBrightness(0);
         solidMiddle.setStartIndex(4);
         solidMiddle.setStopIndex(7);
 
-        solidBottom.setBrightness(50);
+        solidBottom.setBrightness(0);
         solidBottom.setStartIndex(8);
         solidBottom.setStopIndex(11);
 
