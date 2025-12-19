@@ -5,6 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import static org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver.LayerHeight;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.Prism.Color;
+import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
+import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
+import org.firstinspires.ftc.teamcode.Prism.PrismAnimations.AnimationType;
+import org.firstinspires.ftc.teamcode.Prism.PrismAnimations.PoliceLights;
+import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver.Artboard;
+import org.firstinspires.ftc.teamcode.Prism.PrismConfigurator;
+
+import java.util.concurrent.TimeUnit;
+
 public class Intake {
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
@@ -12,6 +27,11 @@ public class Intake {
     private DigitalChannel laserBottom;
     private DigitalChannel laserMiddle;
     private DigitalChannel laserTop;
+
+    GoBildaPrismDriver prism;
+    PrismAnimations.Solid solidTop = new PrismAnimations.Solid(Color.PURPLE);
+    PrismAnimations.Solid solidMiddle = new PrismAnimations.Solid(Color.GREEN);
+    PrismAnimations.Solid solidBottom = new PrismAnimations.Solid(Color.BLUE);
 
     //TODO Adjust based on desired states
     public enum IntakeMode {
@@ -25,6 +45,19 @@ public class Intake {
     }
 
     public void init() {
+        prism = myOpMode.hardwareMap.get(GoBildaPrismDriver.class,"prism");
+        solidTop.setBrightness(50);
+        solidTop.setStartIndex(0);
+        solidTop.setStopIndex(3);
+
+        solidMiddle.setBrightness(50);
+        solidMiddle.setStartIndex(4);
+        solidMiddle.setStopIndex(7);
+
+        solidBottom.setBrightness(50);
+        solidBottom.setStartIndex(8);
+        solidBottom.setStopIndex(11);
+
         // Get the digital sensor from the hardware map
         laserTop = myOpMode.hardwareMap.get(DigitalChannel.class, "laserTop");
 
@@ -79,20 +112,29 @@ public class Intake {
 
         // Display detection state
         if (detectedTop) {
+            solidTop.setBrightness(50);
+            prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
             myOpMode.telemetry.addLine("Object detected!");
         } else {
+            solidTop.setBrightness(0);
             myOpMode.telemetry.addLine("No object detected");
         }
 
         if (detectedMiddle) {
+            solidMiddle.setBrightness(50);
+            prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
             myOpMode.telemetry.addLine("Object detected!");
         } else {
+            solidMiddle.setBrightness(0);
             myOpMode.telemetry.addLine("No object detected");
         }
 
         if (detectedBottom) {
+            solidBottom.setBrightness(50);
+            prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
             myOpMode.telemetry.addLine("Object detected!");
         } else {
+            solidBottom.setBrightness(0);
             myOpMode.telemetry.addLine("No object detected");
         }
 
