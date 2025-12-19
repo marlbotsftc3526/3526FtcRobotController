@@ -149,7 +149,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                     if(onStateStart()){
                         follower.followPath(paths.intakeballs1,true);
                     }
-                    if(!follower.isBusy() || timer.seconds() >1.5){
+                    if(!follower.isBusy()){
                         currentState = State.DRIVE_TO_LAUNCH_POSITION2;
                     }
                     break;
@@ -492,7 +492,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
             intakeballs1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(44.249, 84.001), new Pose(13.500, 83.626))
+                            new BezierLine(new Pose(44.249, 84.001), new Pose(13.499744843384947, 83.62614111708399))
                     )
                     .setTangentHeadingInterpolation()
                     .build();

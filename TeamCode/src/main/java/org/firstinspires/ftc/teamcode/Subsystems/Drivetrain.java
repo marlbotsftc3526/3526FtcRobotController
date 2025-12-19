@@ -63,7 +63,7 @@ public class Drivetrain {
 
     public static double DISTANCE = 0;
 
-    public static double kickEXTENDED = 0;
+    public static double kickEXTENDED = 1;
     public static double kickRETRACTED = 0;
     public KickstandMode kickstand = KickstandMode.RETRACTED;
 
@@ -121,6 +121,8 @@ public class Drivetrain {
             //pinpoint.resetPosAndIMU();
             kickstandLeft = myOpMode.hardwareMap.get(Servo.class, "kickstandLeft");
             kickstandRight = myOpMode.hardwareMap.get(Servo.class, "kickstandRight");
+            kickstandLeft.setPosition(0);
+            kickstandRight.setPosition(0);
 
             pinpoint.recalibrateIMU();
 
@@ -226,6 +228,14 @@ public class Drivetrain {
                 kickstand = KickstandMode.RETRACTED;
             }
 
+            if(kickstand == KickstandMode.EXTENDED){
+                kickstandLeft.setPosition(kickEXTENDED);
+                kickstandRight.setPosition(kickEXTENDED);
+            }else if (kickstand == KickstandMode.RETRACTED){
+                kickstandRight.setPosition(kickRETRACTED);
+                kickstandLeft.setPosition(kickRETRACTED);
+            }
+
             if(myOpMode.gamepad2.b){
                 pinpoint.setHeading(-90,AngleUnit.DEGREES);
                 pinpoint.setPosX(72,DistanceUnit.INCH);
@@ -303,7 +313,7 @@ public class Drivetrain {
             } else if (myOpMode.gamepad1.dpad_right){
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
             }
-
+            myOpMode.telemetry.addData("kickstandmode: ", kickstand);
             myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
             myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
             myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
@@ -320,13 +330,7 @@ public class Drivetrain {
             }else if(side == SideMode.RED){
                 DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
             }
-            if(kickstand == KickstandMode.EXTENDED){
-                kickstandLeft.setPosition(kickEXTENDED);
-                kickstandRight.setPosition(kickEXTENDED);
-            }else if (kickstand == KickstandMode.RETRACTED){
-                kickstandRight.setPosition(kickRETRACTED);
-                kickstandLeft.setPosition(kickRETRACTED);
-            }
+
         }
 
 
