@@ -38,7 +38,7 @@ public class Intake {
         laserMiddle.setMode(DigitalChannel.Mode.INPUT);
 
         // Get the digital sensor from the hardware map
-        laserBottom = myOpMode.hardwareMap.get(DigitalChannel.class, "laserDigitalInput");
+        laserBottom = myOpMode.hardwareMap.get(DigitalChannel.class, "laserBottom");
 
         // Set the channel as an input
         laserBottom.setMode(DigitalChannel.Mode.INPUT);
@@ -51,7 +51,7 @@ public class Intake {
 
         myOpMode.telemetry.addData(">", "Intake Initialized");
     }
-    public static final double INTAKE_SPEED = .7;
+    public static final double INTAKE_SPEED = 1;
     public static final double OUTTAKE_SPEED = -.5;
 
    public Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;

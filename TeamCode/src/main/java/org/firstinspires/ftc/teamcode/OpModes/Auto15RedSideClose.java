@@ -131,6 +131,10 @@ public class Auto15RedSideClose extends LinearOpMode {
                         timer.reset();
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
+                    robot.drivetrain.rightBackDrive.setPower(0);
+                    robot.drivetrain.rightFrontDrive.setPower(0);
+                    robot.drivetrain.leftBackDrive.setPower(0);
+                    robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
                     if(timer.seconds() > 1.2) {
@@ -169,6 +173,10 @@ public class Auto15RedSideClose extends LinearOpMode {
                         timer.reset();
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
+                    robot.drivetrain.rightBackDrive.setPower(0);
+                    robot.drivetrain.rightFrontDrive.setPower(0);
+                    robot.drivetrain.leftBackDrive.setPower(0);
+                    robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
                     if(timer.seconds() >1.5){
@@ -205,8 +213,13 @@ public class Auto15RedSideClose extends LinearOpMode {
                 case LAUNCH_ARTIFACTS3:
                         if(onStateStart()){
                             timer.reset();
+
                             robot.intake.intakeMode = Intake.IntakeMode.UP;
                         }
+                    robot.drivetrain.rightBackDrive.setPower(0);
+                    robot.drivetrain.rightFrontDrive.setPower(0);
+                    robot.drivetrain.leftBackDrive.setPower(0);
+                    robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
                         if(timer.seconds() >1.5){
@@ -245,9 +258,13 @@ public class Auto15RedSideClose extends LinearOpMode {
                         timer.reset();
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
+                    robot.drivetrain.rightBackDrive.setPower(0);
+                    robot.drivetrain.rightFrontDrive.setPower(0);
+                    robot.drivetrain.leftBackDrive.setPower(0);
+                    robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
-                    if(timer.seconds() >1.5){
+                    if(timer.seconds() >1.2){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.STRAIGHT4;
                     }
@@ -268,6 +285,30 @@ public class Auto15RedSideClose extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     if(!follower.isBusy()||timer.seconds()>1.5){
+                        currentState = State.DRIVE_TO_LAUNCH_POSITION5;
+                    }
+                    break;
+                case DRIVE_TO_LAUNCH_POSITION5:
+                    if(onStateStart()){
+                        follower.followPath(paths.launchzone5, true);
+                    }
+                    if(!follower.isBusy()){
+                        currentState = State.LAUNCH_ARTIFACTS5;
+                    }
+                    break;
+                case LAUNCH_ARTIFACTS5:
+                    if(onStateStart()){
+                        timer.reset();
+                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                    }
+                    robot.drivetrain.rightBackDrive.setPower(0);
+                    robot.drivetrain.rightFrontDrive.setPower(0);
+                    robot.drivetrain.leftBackDrive.setPower(0);
+                    robot.drivetrain.leftFrontDrive.setPower(0);
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
+                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    if(timer.seconds() >1.5){
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.END;
                     }
                     break;
@@ -329,6 +370,7 @@ public class Auto15RedSideClose extends LinearOpMode {
 
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
     public static class Paths {
+
         public PathChain launchzone1;
         public PathChain straight1;
         public PathChain intakeballs1;
@@ -341,6 +383,7 @@ public class Auto15RedSideClose extends LinearOpMode {
         public PathChain launchzone4;
         public PathChain straight4;
         public PathChain intakeballs4;
+        public PathChain launchzone5;
         public PathChain End;
 
         public Paths(Follower follower) {
@@ -448,17 +491,27 @@ public class Auto15RedSideClose extends LinearOpMode {
                     .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
                     .build();
 
+            launchzone5 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(136.875, -0.747),
+                                    new Pose(120.531, 45.199),
+                                    new Pose(86.632, 16.805)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(230))
+                    .build();
+
             End = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(136.875, -0.747), new Pose(109.873, 68.626))
+                            new BezierLine(new Pose(86.632, 16.805), new Pose(100.000, 71.513))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                    .setLinearHeadingInterpolation(Math.toRadians(230), Math.toRadians(230))
                     .build();
         }
-/*
-            public PathChain launchzone1;
-            public PathChain straight1;
+            /*public PathChain straight1;
             public PathChain intakeballs1;
             public PathChain launchzone2;
             public PathChain straight2;
