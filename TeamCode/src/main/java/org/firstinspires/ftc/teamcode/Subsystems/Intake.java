@@ -28,6 +28,11 @@ public class Intake {
     private DigitalChannel laserMiddle;
     private DigitalChannel laserTop;
 
+    boolean toplaststate = false;
+    boolean middlelaststate = false;
+    boolean bottomlaststate = false;
+
+
     GoBildaPrismDriver prism;
     PrismAnimations.Solid solidTop = new PrismAnimations.Solid(Color.PURPLE);
     PrismAnimations.Solid solidMiddle = new PrismAnimations.Solid(Color.GREEN);
@@ -81,8 +86,12 @@ public class Intake {
         spin.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         spin.setDirection(DcMotor.Direction.REVERSE);
+        prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
+        prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
+        prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
 
         myOpMode.telemetry.addData(">", "Intake Initialized");
+
     }
     public static final double INTAKE_SPEED = 1;
     public static final double OUTTAKE_SPEED = -.5;
@@ -101,41 +110,55 @@ public class Intake {
             spin.setPower(0);
          }
         // Read the sensor state (true = HIGH, false = LOW)
-        boolean stateHighTop = laserTop.getState();
-        boolean stateHighMiddle = laserMiddle.getState();
-        boolean stateHighBottom = laserBottom.getState();
+        boolean detectedTop = laserTop.getState();
+        boolean detectedMiddle = laserMiddle.getState();
+        boolean detectedBottom = laserBottom.getState();
 
-        // Active-HIGH: HIGH means an object is detected
-        boolean detectedTop = stateHighTop;
-        boolean detectedMiddle = stateHighMiddle;
-        boolean detectedBottom = stateHighBottom;
 
         // Display detection state
         if (detectedTop) {
             solidTop.setBrightness(50);
-            prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
-            myOpMode.telemetry.addLine("Object detected!");
+            //prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
+            myOpMode.telemetry.addLine("Top Object detected!");
         } else {
             solidTop.setBrightness(0);
-            myOpMode.telemetry.addLine("No object detected");
+            //prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
+            myOpMode.telemetry.addLine("No top object detected");
         }
 
         if (detectedMiddle) {
             solidMiddle.setBrightness(50);
-            prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
-            myOpMode.telemetry.addLine("Object detected!");
+            //prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
+            myOpMode.telemetry.addLine("Middle Object detected!");
         } else {
             solidMiddle.setBrightness(0);
-            myOpMode.telemetry.addLine("No object detected");
+            //prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
+            myOpMode.telemetry.addLine("No middle object detected");
         }
 
         if (detectedBottom) {
             solidBottom.setBrightness(50);
-            prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
-            myOpMode.telemetry.addLine("Object detected!");
+            //prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
+            myOpMode.telemetry.addLine("Bottom Object detected!");
         } else {
             solidBottom.setBrightness(0);
-            myOpMode.telemetry.addLine("No object detected");
+            //prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
+            myOpMode.telemetry.addLine("No bottom object detected");
+        }
+
+        if(detectedTop != toplaststate){
+            prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
+            toplaststate = detectedTop;
+        }
+
+        if(detectedMiddle != middlelaststate){
+            prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
+            middlelaststate = detectedMiddle;
+        }
+
+        if(detectedBottom != bottomlaststate){
+            prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
+            bottomlaststate = detectedBottom;
         }
 
     }

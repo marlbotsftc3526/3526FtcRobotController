@@ -63,8 +63,8 @@ public class Drivetrain {
 
     public static double DISTANCE = 0;
 
-    public static double kickEXTENDED = 1;
-    public static double kickRETRACTED = 0;
+    public static double kickEXTENDED = 0.6;
+    public static double kickRETRACTED = 0.3;
     public KickstandMode kickstand = KickstandMode.RETRACTED;
 
     PIDController headingController;
@@ -312,6 +312,14 @@ public class Drivetrain {
                 drivetrainMode = DrivetrainMode.FIELDCENTRIC;
             } else if (myOpMode.gamepad1.dpad_right){
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
+            }
+
+            if(myOpMode.gamepad1.b){
+                side = SideMode.RED;
+                myOpMode.telemetry.addData(">", "RED");
+            }else if(myOpMode.gamepad1.x){
+                side = SideMode.BLUE;
+                myOpMode.telemetry.addData(">", "BLUE");
             }
             myOpMode.telemetry.addData("kickstandmode: ", kickstand);
             myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
