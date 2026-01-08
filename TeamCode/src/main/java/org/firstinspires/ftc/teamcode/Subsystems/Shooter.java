@@ -47,6 +47,7 @@ public class Shooter {
         CLOSE,
         AUTO,
         FAR,
+        LINEAR,
     }
 
     public enum TransferMode {
@@ -58,6 +59,7 @@ public class Shooter {
     // Define Drive constants.  Make them public so they CAN be used by the calling OpMode
     //TODO Update values based on desired position
     public double REVOLUTIONS_PER_MINUTE = 3100;
+    public double RPM_TUNING_CONSTANT = 1.1;
     public static final double CLOSE_RPM = 3440;
     public static double FAR_RPM_TESTING = 4995;//4500
     public static final double FAR_RPM = 5325;
@@ -74,7 +76,7 @@ public class Shooter {
     double TICKS_PER_SECOND;
     public ShootMode shootMode = ShootMode.OFF;
     public TransferMode transferMode = TransferMode.OFF;
-    public HoodMode hoodMode = HoodMode.AUTO;
+    public HoodMode hoodMode = HoodMode.LINEAR;
     //Constructor
     public Shooter(OpMode opmode, Drivetrain drive) {
         myOpMode = opmode;
@@ -107,24 +109,6 @@ public class Shooter {
 
     public void update() {
 
-        if (shootMode == ShootMode.ON) {
-            TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
-            // Send calculated power to wheels
-            shoot.setVelocity(TICKS_PER_SECOND);
-            shootLeft.setVelocity(TICKS_PER_SECOND);
-        } else if (shootMode == ShootMode.OFF) {
-            shoot.setVelocity(0);
-            shootLeft.setVelocity(0);
-        }else if (shootMode == ShootMode.CUSTOMPID) {
-            TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
-            double output = shooterPID.calculate(TICKS_PER_SECOND, shoot.getVelocity());
-            shoot.setPower(output);
-            shootLeft.setPower(output);
-            //calculate measured RPM from motors current degrees per second
-            double measuredRPM = shoot.getVelocity()/TICKS_PER_REVOLUTION*60;
-
-
-        }
 
 
         if (transferMode == TransferMode.ON) {
@@ -169,7 +153,31 @@ public class Shooter {
                 REVOLUTIONS_PER_MINUTE = 3700+(drivetrain.DISTANCE-65)*11;
             }
             //hood.setPosition(HOOD_FAR_TESTING);
+            REVOLUTIONS_PER_MINUTE*=RPM_TUNING_CONSTANT;
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
+        }else if (hoodMode==HoodMode.LINEAR){
+            REVOLUTIONS_PER_MINUTE=18.2*drivetrain.DISTANCE+2689;
+            if (drivetrain.DISTANCE>=48){
+                hood.setPosition(1);
+            }else{
+                hood.setPosition(2.79E-3*Math.exp(0.122*drivetrain.DISTANCE));
+            }
+        }
+        if (shootMode == ShootMode.ON) {
+            TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
+            // Send calculated power to wheels
+            shoot.setVelocity(TICKS_PER_SECOND);
+            shootLeft.setVelocity(TICKS_PER_SECOND);
+        } else if (shootMode == ShootMode.OFF) {
+            shoot.setVelocity(0);
+            shootLeft.setVelocity(0);
+        }else if (shootMode == ShootMode.CUSTOMPID) {
+            TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
+            double output = shooterPID.calculate(TICKS_PER_SECOND, shoot.getVelocity());
+            shoot.setPower(output);
+            shootLeft.setPower(output);
+            //calculate measured RPM from motors current degrees per second
+            double measuredRPM = shoot.getVelocity()/TICKS_PER_REVOLUTION*60;
         }
         myOpMode.telemetry.addData("hoodMode: ", hoodMode);
         myOpMode.telemetry.addData("hoodPosition: ", hood.getPosition());

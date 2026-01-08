@@ -188,6 +188,7 @@ public class Drivetrain {
                     goalLocationY = 142;
                 }
 
+
                 /*if(roboLocationY >= 110 && roboLocationX >= 40 && roboLocationX < 90){
                     goalLocationY = 138;
                     myOpMode.telemetry.addData("ZONE 1: ", roboLocationY);
@@ -201,9 +202,10 @@ public class Drivetrain {
                     goalLocationY = 142;
 
                 }*/
+                goalLocationY = 142;
                 myOpMode.telemetry.addData("goalLocationY: ", goalLocationY);
                 autoAimAngle = -180*Math.atan(Math.abs(goalLocationY - roboLocationY)/Math.abs(roboLocationX - goalLocationX))/Math.PI;
-                DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
+                DISTANCE = Math.sqrt(((roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY))));
             }else if(side == Drivetrain.SideMode.RED){
                 goalLocationX = 142;
                 if(roboLocationY >= 110){
@@ -217,8 +219,9 @@ public class Drivetrain {
                 }else{
                     goalLocationY = 142;
                 }
+                goalLocationY = 142;
                 autoAimAngle = -(180-180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI);
-                DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
+                DISTANCE = Math.sqrt((128-roboLocationX)*(128-roboLocationX) + (128-roboLocationY)*(128-roboLocationY));
             }
 
             if(myOpMode.gamepad1.dpad_down){
