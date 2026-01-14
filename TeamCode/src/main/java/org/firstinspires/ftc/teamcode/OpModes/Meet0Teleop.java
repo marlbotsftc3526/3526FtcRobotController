@@ -28,6 +28,7 @@ public class Meet0Teleop extends LinearOpMode{
         robot = new RobotHardware(this);
         //calling init function
         robot.init();
+        robot.drivetrain.pinpoint.recalibrateIMU();
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Waiting for Start");
         telemetry.addData("x position", blackboard.get(X_POS_KEY));

@@ -23,7 +23,7 @@ public class Drivetrain {
 
         /* Declare OpMode members. */
         private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
-        GoBildaPinpointDriver pinpoint;
+        public GoBildaPinpointDriver pinpoint;
         //TODO: Declare OpMode member for the Odometry System
         // If using GoBilda Pinpoint computer then use PinPointLocalizer class
         // If using Sparkfun OTOS then use SparfunLocalizer class
@@ -129,10 +129,10 @@ public class Drivetrain {
 
             myOpMode.telemetry.addData(">", "Drivetrain Initialized");
 
-            if(myOpMode.gamepad2.left_bumper){
+            if(myOpMode.gamepad2.left_bumper || myOpMode.gamepad2.x){
                 side = SideMode.BLUE;
                 myOpMode.telemetry.addData(">", "BLUE");
-            }else if(myOpMode.gamepad2.right_bumper){
+            }else if(myOpMode.gamepad2.right_bumper || myOpMode.gamepad2.b){
                 side = SideMode.RED;
                 myOpMode.telemetry.addData(">", "RED");
             }
@@ -176,14 +176,8 @@ public class Drivetrain {
 
             if(side == Drivetrain.SideMode.BLUE){
                 goalLocationX = 2;
-                if(roboLocationY >= 110){
-                    power = -0.01*roboLocationY+2.6;
-                }else if(roboLocationY < 110){
-                    power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
-                }
-                if(roboLocationY >= 70){
-                    goalLocationY = 144-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
-
+                if(roboLocationX >= 107){
+                    goalLocationY = 137;
                 }else{
                     goalLocationY = 142;
                 }
@@ -202,25 +196,17 @@ public class Drivetrain {
                     goalLocationY = 142;
 
                 }*/
-                goalLocationY = 142;
                 myOpMode.telemetry.addData("goalLocationY: ", goalLocationY);
-                autoAimAngle = -180*Math.atan(Math.abs(goalLocationY - roboLocationY)/Math.abs(roboLocationX - goalLocationX))/Math.PI;
-                DISTANCE = Math.sqrt(((roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY))));
+               autoAimAngle = angleWrap(Math.toDegrees(Math.atan2(roboLocationY - goalLocationY, roboLocationX-goalLocationX)));
+                DISTANCE = Math.sqrt((roboLocationX-15)*(roboLocationX-15)+(128-roboLocationY)*(128-roboLocationY));
             }else if(side == Drivetrain.SideMode.RED){
                 goalLocationX = 142;
-                if(roboLocationY >= 110){
-                    power = -0.01*roboLocationY+2.6;
-                }else if(roboLocationY < 110){
-                    power = -0.0001*Math.pow(roboLocationY, 2)+2.6;
-                }
-                if(roboLocationY >= 70){
-                    goalLocationY = 144-(2*Math.pow((roboLocationX/(144-roboLocationY)), power));
-
+                if(roboLocationX <= 37){
+                    goalLocationY = 137;
                 }else{
                     goalLocationY = 142;
                 }
-                goalLocationY = 142;
-                autoAimAngle = -(180-180*Math.atan((goalLocationY - roboLocationY)/(goalLocationX - roboLocationX))/Math.PI);
+                autoAimAngle = angleWrap(Math.toDegrees(Math.atan2(roboLocationY - goalLocationY, roboLocationX - goalLocationX)));
                 DISTANCE = Math.sqrt((128-roboLocationX)*(128-roboLocationX) + (128-roboLocationY)*(128-roboLocationY));
             }
 
@@ -239,11 +225,11 @@ public class Drivetrain {
                 kickstandLeft.setPosition(kickRETRACTED);
             }
 
-            if(myOpMode.gamepad2.b){
+            /*if(myOpMode.gamepad2.b){
                 pinpoint.setHeading(-90,AngleUnit.DEGREES);
                 pinpoint.setPosX(72,DistanceUnit.INCH);
                 pinpoint.setPosY(72, DistanceUnit.INCH);
-            }
+            }*/
 
             if (drivetrainMode == Drivetrain.DrivetrainMode.ROBOTCENTRIC) {
                 // Send calculated power to wheels
@@ -252,20 +238,20 @@ public class Drivetrain {
                 strafe = -myOpMode.gamepad1.left_stick_x;
             } else if (drivetrainMode == Drivetrain.DrivetrainMode.FIELDCENTRIC) {
                 if(side == Drivetrain.SideMode.BLUE) {
-                    drive = -(Math.hypot(-(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y)) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x)) +
+                    drive = -(Math.hypot(-(myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad2.left_stick_y)) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad2.left_stick_x)) +
                             pinpoint.getHeading(AngleUnit.RADIANS))));
-                    turn = (myOpMode.gamepad1.right_stick_x + myOpMode.gamepad2.right_stick_x);
-                    strafe = -(Math.hypot(-(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y)) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y + myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x + myOpMode.gamepad2.left_stick_x)) +
+                    turn = (myOpMode.gamepad2.right_stick_x);
+                    strafe = -(Math.hypot(-(myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad2.left_stick_y)) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad2.left_stick_x)) +
                             pinpoint.getHeading(AngleUnit.RADIANS))));
                 }else if(side == Drivetrain.SideMode.RED){
-                    drive = (Math.hypot(-(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y)) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x)) +
+                    drive = (Math.hypot(-(myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad2.left_stick_y)) * Math.sin(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad2.left_stick_x)) +
                             pinpoint.getHeading(AngleUnit.RADIANS))));
-                    turn = (myOpMode.gamepad1.right_stick_x+myOpMode.gamepad2.right_stick_x);
-                    strafe = (Math.hypot(-(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y)) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad1.left_stick_y+myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad1.left_stick_x+myOpMode.gamepad2.left_stick_x)) +
+                    turn = (myOpMode.gamepad2.right_stick_x);
+                    strafe = (Math.hypot(-(myOpMode.gamepad2.left_stick_x), -(myOpMode.gamepad2.left_stick_y)) * Math.cos(AngleUnit.normalizeRadians(Math.atan2(-(myOpMode.gamepad2.left_stick_y), -(myOpMode.gamepad2.left_stick_x)) +
                             pinpoint.getHeading(AngleUnit.RADIANS))));
                 }
             }
-            if (myOpMode.gamepad2.left_trigger > 0.5) {
+            if (myOpMode.gamepad2.left_trigger > 0.5 || myOpMode.gamepad1.left_trigger > 0.5) {
                     turn = -headingController.calculate(autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
                 }
 
@@ -290,14 +276,14 @@ public class Drivetrain {
             //Slow and Turbo Buttons
             //TODO Adjust factors affecting slow and turbo buttons
             //turbo button (full power)
-            if (myOpMode.gamepad1.right_bumper) {
+            if (myOpMode.gamepad2.right_bumper) {
                 leftFrontDrive.setPower(leftFrontPower);
                 rightFrontDrive.setPower(rightFrontPower);
                 leftBackDrive.setPower(leftBackPower);
                 rightBackDrive.setPower(rightBackPower);
             }
             //slow button (fraction of full power)
-            else if (myOpMode.gamepad1.left_bumper) {
+            else if (myOpMode.gamepad2.left_bumper) {
                 leftFrontDrive.setPower(leftFrontPower / 4);
                 rightFrontDrive.setPower(rightFrontPower / 4);
                 leftBackDrive.setPower(leftBackPower / 4);
@@ -311,16 +297,16 @@ public class Drivetrain {
                 rightBackDrive.setPower(rightBackPower/1.2); ///1.5
             }
 
-            if(myOpMode.gamepad1.dpad_left) {
+            if(myOpMode.gamepad2.left_stick_x >= 0.2 || myOpMode.gamepad2.left_stick_y >= 0.2) {
                 drivetrainMode = DrivetrainMode.FIELDCENTRIC;
-            } else if (myOpMode.gamepad1.dpad_right){
+            } else if (myOpMode.gamepad1.left_stick_x >= 0.2 || myOpMode.gamepad1.left_stick_y >= 0.2){
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
             }
 
-            if(myOpMode.gamepad1.b){
+            if(myOpMode.gamepad2.b){
                 side = SideMode.RED;
                 myOpMode.telemetry.addData(">", "RED");
-            }else if(myOpMode.gamepad1.x){
+            }else if(myOpMode.gamepad2.x){
                 side = SideMode.BLUE;
                 myOpMode.telemetry.addData(">", "BLUE");
             }

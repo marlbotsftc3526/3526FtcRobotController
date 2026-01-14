@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utility.PIDController;
@@ -19,8 +20,10 @@ public class Shooter {
     /* Declare OpMode members. */
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
-
     public Drivetrain drivetrain = null;
+
+    public ElapsedTime gateTimer;
+    public boolean gateKeeper;
 
     public DcMotorEx shoot = null;
     public DcMotorEx shootLeft = null;
@@ -84,6 +87,9 @@ public class Shooter {
     }
 
     public void init() {
+        gateTimer = new ElapsedTime();
+        gateKeeper = false;
+
         shoot = myOpMode.hardwareMap.get(DcMotorEx.class, "shooter");
         shoot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         shoot.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -108,20 +114,27 @@ public class Shooter {
     }
 
     public void update() {
-
-
-
         if (transferMode == TransferMode.ON) {
             transfer.setPosition(GATE_OPEN);
         }
         else if (transferMode == TransferMode.OFF) {
             transfer.setPosition(GATE_CLOSE);
         }else if(transferMode == TransferMode.AUTO){
+            myOpMode.telemetry.addData("gateTimer:", gateTimer.milliseconds());
+            myOpMode.telemetry.addData("gateKeeper:", gateKeeper);
             myOpMode.telemetry.addData("diff:", Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE));
-            if(Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE) <= Math.min(drivetrain.DISTANCE+20, 70)){
-                transfer.setPosition(GATE_OPEN);
+            if(gateKeeper == false && gateTimer.milliseconds() > 100) {
+                if (Math.abs(shoot.getVelocity() / TICKS_PER_REVOLUTION * 60 - REVOLUTIONS_PER_MINUTE) <= 100) {
+                    gateKeeper = true;
+                    gateTimer.reset();
+                    transfer.setPosition(GATE_OPEN);
+                }
             }else{
-                transfer.setPosition(GATE_CLOSE);
+                if(gateTimer.milliseconds() > 75) {
+                    transfer.setPosition(GATE_CLOSE);
+                    gateTimer.reset();
+                    gateKeeper = false;
+                }
             }
         }
 
@@ -156,11 +169,13 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE*=RPM_TUNING_CONSTANT;
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }else if (hoodMode==HoodMode.LINEAR){
-            REVOLUTIONS_PER_MINUTE=18.2*drivetrain.DISTANCE+2689;
+            REVOLUTIONS_PER_MINUTE=16.4*drivetrain.DISTANCE+2768;
+                    //18.2*drivetrain.DISTANCE+2689;
             if (drivetrain.DISTANCE>=48){
                 hood.setPosition(1);
-            }else{
-                hood.setPosition(2.79E-3*Math.exp(0.122*drivetrain.DISTANCE));
+            }else {
+                hood.setPosition(3.64E-4 + 0.014 * drivetrain.DISTANCE + 1.42E-4 * drivetrain.DISTANCE * Math.exp(2));
+                //2.79E-3*Math.exp(0.122*drivetrain.DISTANCE
             }
         }
         if (shootMode == ShootMode.ON) {
@@ -188,19 +203,32 @@ public class Shooter {
         update();
         //Set states based on gamepad presses
         //TODO Update based on desired control scheme
-        if (myOpMode.gamepad2.right_bumper) { // || myOpMode.gamepad2.right_bumper
+        if (myOpMode.gamepad1.right_bumper) { // || myOpMode.gamepad2.right_bumper
             shootMode = ShootMode.ON;
-        } else if (myOpMode.gamepad2.left_bumper) {//myOpMode.gamepad1.left_bumper ||
+        } else if (myOpMode.gamepad1.left_bumper) {//myOpMode.gamepad1.left_bumper ||
             shootMode = ShootMode.OFF; //s=S
         }
 
-        if (myOpMode.gamepad2.right_trigger>.5) {//(myOpMode.gamepad1.right_trigger>.5||
-            transferMode = TransferMode.ON;
+        if (myOpMode.gamepad2.right_trigger>.5 || myOpMode.gamepad1.right_trigger>.5) {//(myOpMode.gamepad1.right_trigger>.5||
+            if(drivetrain.DISTANCE <= 90) {
+                transferMode = TransferMode.ON;
+            }else{
+                transferMode = TransferMode.AUTO;
+            }
         } else {
             transferMode = TransferMode.OFF;
         }
 
-        if (myOpMode.gamepad2.dpad_up){
+        if(myOpMode.gamepad2.dpad_right){
+            hoodMode = HoodMode.LINEAR;
+        }
+        if(myOpMode.gamepad1.dpad_left){
+            hoodMode = HoodMode.CLOSE;
+        }else if(myOpMode.gamepad1.dpad_right){
+            hoodMode = HoodMode.FAR;
+        }
+
+        /*if (myOpMode.gamepad2.dpad_up){
             hoodMode = HoodMode.CLOSE;
         }
         else if (myOpMode.gamepad2.dpad_down) { //myOpMode.gamepad1.dpad_down ||
@@ -208,10 +236,10 @@ public class Shooter {
             shooterPID = new PIDController(kp,ki,kd,1);
         }else if (myOpMode.gamepad2.dpad_right) {
             hoodMode = HoodMode.AUTO;
-        }
+        }*/
 
 
-        if(myOpMode.gamepad1.dpad_up){
+        /*if(myOpMode.gamepad1.dpad_up){
             FAR_RPM_TESTING += 5;
         }
         if(myOpMode.gamepad1.dpad_down){
@@ -222,7 +250,7 @@ public class Shooter {
         }
         if(myOpMode.gamepad1.dpad_right){
             HOOD_FAR_TESTING += 0.005;
-        }
+        }*/
         /*
         if(myOpMode.gamepad2.right_bumper){
             sPIDF.p = sp;

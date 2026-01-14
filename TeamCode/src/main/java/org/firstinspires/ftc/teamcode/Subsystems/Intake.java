@@ -172,7 +172,7 @@ public class Intake {
         } else if (myOpMode.gamepad1.a || myOpMode.gamepad2.a) {
             intakeMode = IntakeMode.DOWN; //s=S
         }
-        else if (myOpMode.gamepad1.x || myOpMode.gamepad2.x) {
+        else if (myOpMode.gamepad1.x) {
             intakeMode = IntakeMode.OFF; //s=S
         }
 
