@@ -111,7 +111,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                         //ex. turn shooter on
                         robot.shooter.shootMode = Shooter.ShootMode.ON;
                     }
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                     //set the condition to advance to the next state
                     /* You could check for
                         - Follower State: "if(!follower.isBusy()) {}"
@@ -168,7 +168,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                     if(timer.seconds() >1.5){
                         currentState = State.ALIGN_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
@@ -206,7 +206,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                             robot.intake.intakeMode = Intake.IntakeMode.UP;
                         }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                         if(timer.seconds() >1.7){
                             robot.shooter.transferMode = Shooter.TransferMode.OFF;
                             currentState = State.ALIGN_ARTIFACTS3;
@@ -244,7 +244,7 @@ public class Auto15BlueSideClose extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                     if(timer.seconds() >1.5){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.STRAIGHT4;

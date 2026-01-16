@@ -113,7 +113,7 @@ public class Auto15RedSideClose extends LinearOpMode {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
 
                     }
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                     //set the condition to advance to the next state
                     /* You could check for
                         - Follower State: "if(!follower.isBusy()) {}"
@@ -178,7 +178,7 @@ public class Auto15RedSideClose extends LinearOpMode {
                     robot.drivetrain.leftBackDrive.setPower(0);
                     robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                     if(timer.seconds() >1.5){
                         currentState = State.ALIGN_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
@@ -221,7 +221,7 @@ public class Auto15RedSideClose extends LinearOpMode {
                     robot.drivetrain.leftBackDrive.setPower(0);
                     robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                         if(timer.seconds() >1.5){
                             robot.shooter.transferMode = Shooter.TransferMode.OFF;
                             currentState = State.ALIGN_ARTIFACTS3;
@@ -263,7 +263,7 @@ public class Auto15RedSideClose extends LinearOpMode {
                     robot.drivetrain.leftBackDrive.setPower(0);
                     robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                     if(timer.seconds() >1.2){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.STRAIGHT4;
@@ -306,7 +306,7 @@ public class Auto15RedSideClose extends LinearOpMode {
                     robot.drivetrain.leftBackDrive.setPower(0);
                     robot.drivetrain.leftFrontDrive.setPower(0);
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+                    robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
                     if(timer.seconds() >1.5){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.END;

@@ -63,14 +63,14 @@ public class Shooter {
     //TODO Update values based on desired position
     public double REVOLUTIONS_PER_MINUTE = 3100;
     public double RPM_TUNING_CONSTANT = 1.1;
-    public static final double CLOSE_RPM = 3440;
+    public static final double CLOSE_RPM = 3500; //3440
     public static double FAR_RPM_TESTING = 4995;//4500
     public static final double FAR_RPM = 5325;
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
     public static final double GATE_OPEN = 0.567;
     public static final double GATE_CLOSE=0.25;
-    public static final double HOOD_CLOSE=.635;
+    public static final double HOOD_CLOSE=0.275; //0.625
     public static double HOOD_FAR_TESTING = .275;
     public static double HOOD_RETRACTED = 1;
    // 4790

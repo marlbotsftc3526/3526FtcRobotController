@@ -55,6 +55,7 @@ public class Auto9BlueSide extends LinearOpMode {
         END,
         DRIVE_TO_LAUNCH_POSITION5,
         LAUNCH_ARTIFACTS5,
+        LEAVE_ZONE,
         IDLE
     }
 
@@ -85,6 +86,7 @@ public class Auto9BlueSide extends LinearOpMode {
         telemetry.addData("Status", "Waiting for Start");
         telemetry.update();
 
+        robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
 
       //  Object xPosition = blackboard.getOrDefault(X_POS_KEY, 0);
         //Object yPosition = blackboard.getOrDefault(Y_POS_KEY, 0);
@@ -110,7 +112,7 @@ public class Auto9BlueSide extends LinearOpMode {
                         //ex. turn shooter on
                         robot.shooter.shootMode = Shooter.ShootMode.ON;
                     }
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+
                     //set the condition to advance to the next state
                     /* You could check for
                         - Follower State: "if(!follower.isBusy()) {}"
@@ -167,7 +169,7 @@ public class Auto9BlueSide extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+
                     if(timer.seconds() >1.5){
                         currentState = State.ALIGN_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
@@ -205,11 +207,23 @@ public class Auto9BlueSide extends LinearOpMode {
                             robot.intake.intakeMode = Intake.IntakeMode.UP;
                         }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.AUTO;
+
                         if(timer.seconds() >1.7){
                             robot.shooter.transferMode = Shooter.TransferMode.OFF;
-                            currentState = State.IDLE;
+                            currentState = State.LEAVE_ZONE;
                         }
+                        break;
+                case LEAVE_ZONE:
+                    if(onStateStart()){
+                        timer.reset();
+                        follower.followPath(paths.Leave, true);
+                    }
+                    if(!follower.isBusy()) {
+                        currentState = State.IDLE;
+                    }
+                    break;
+
+
                 case IDLE:
                     blackboard.put(X_POS_KEY, follower.getPose().getX());
                     blackboard.put(Y_POS_KEY, follower.getPose().getY());
@@ -232,87 +246,101 @@ public class Auto9BlueSide extends LinearOpMode {
     }
 
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
-        public static class Paths {
-            public PathChain shoot1;
-            public PathChain gotoartifacts;
-            public PathChain intakeartifacts1;
-            public PathChain launchartifacts2;
-            public PathChain straight2;
-            public PathChain intakeartifacts2;
-            public PathChain launchartifacts3;
 
-            public Paths(Follower follower) {
-                shoot1 = follower.pathBuilder().addPath(
-                                new BezierLine(
-                                        new Pose(56.000, 8.000),
 
-                                        new Pose(61.795, 20.354)
-                                )
-                        ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-60))
+    public static class Paths {
+        public PathChain shoot1;
+        public PathChain gotoartifacts;
+        public PathChain intakeartifacts1;
+        public PathChain launchartifacts2;
+        public PathChain straight2;
+        public PathChain intakeartifacts2;
+        public PathChain launchartifacts3;
+        public PathChain Leave;
 
-                        .build();
+        public Paths(Follower follower) {
+            shoot1 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(56.000, 8.000),
 
-                gotoartifacts = follower.pathBuilder().addPath(
-                                new BezierLine(
-                                        new Pose(61.795, 20.354),
+                                    new Pose(61.795, 20.354)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-60))
 
-                                        new Pose(44.980, 36.201)
-                                )
-                        ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(-90))
+                    .build();
 
-                        .build();
+            gotoartifacts = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(61.795, 20.354),
 
-                intakeartifacts1 = follower.pathBuilder().addPath(
-                                new BezierLine(
-                                        new Pose(44.980, 36.201),
+                                    new Pose(44.980, 36.201)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(-180))
 
-                                        new Pose(8.467, 36.109)
-                                )
-                        ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(270))
+                    .build();
 
-                        .build();
+            intakeartifacts1 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(44.980, 36.201),
 
-                launchartifacts2 = follower.pathBuilder().addPath(
-                                new BezierLine(
-                                        new Pose(8.467, 36.109),
+                                    new Pose(8.467, 36.109)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-180))
 
-                                        new Pose(61.602, 19.849)
-                                )
-                        ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-60))
+                    .build();
 
-                        .build();
+            launchartifacts2 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(8.467, 36.109),
 
-                straight2 = follower.pathBuilder().addPath(
-                                new BezierLine(
-                                        new Pose(61.602, 19.849),
+                                    new Pose(61.602, 19.849)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-60))
 
-                                        new Pose(4.982, 23.201)
-                                )
-                        ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(270))
+                    .build();
 
-                        .build();
+            straight2 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(61.602, 19.849),
 
-                intakeartifacts2 = follower.pathBuilder().addPath(
-                                new BezierLine(
-                                        new Pose(4.982, 23.201),
+                                    new Pose(4.982, 23.201)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(270))
 
-                                        new Pose(5.091, 3.322)
-                                )
-                        ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                    .build();
 
-                        .build();
+            intakeartifacts2 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(4.982, 23.201),
 
-                launchartifacts3 = follower.pathBuilder().addPath(
-                                new BezierLine(
-                                        new Pose(5.091, 3.322),
+                                    new Pose(5.091, 3.322)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
 
-                                        new Pose(61.976, 19.907)
-                                )
-                        ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-60))
+                    .build();
 
-                        .build();
-            }
+            launchartifacts3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(5.091, 3.322),
+
+                                    new Pose(61.976, 19.907)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-60))
+
+                    .build();
+
+            Leave = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(61.976, 19.907),
+
+                                    new Pose(60.626, 33.042)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(-90))
+                    .build();
+        }
     }
+
+
 
     private boolean onStateStart() {
         if (currentState != lastState) {
