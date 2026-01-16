@@ -129,7 +129,7 @@ public class Auto9RedSide extends LinearOpMode {
                         timer.reset();
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
-                    robot.shooter.transferMode = Shooter.TransferMode.ON;
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                     //state transition
                     if(timer.seconds() > 4) {
                         currentState = State.ALIGN_ARTIFACTS;
@@ -167,7 +167,7 @@ public class Auto9RedSide extends LinearOpMode {
                         timer.reset();
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
-                    robot.shooter.transferMode = Shooter.TransferMode.ON;
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                     if(timer.seconds() >4){
                         currentState = State.ALIGN_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
@@ -204,7 +204,7 @@ public class Auto9RedSide extends LinearOpMode {
                             timer.reset();
                             robot.intake.intakeMode = Intake.IntakeMode.UP;
                         }
-                    robot.shooter.transferMode = Shooter.TransferMode.ON;
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
 
                         if(timer.seconds() >1.7){
                             robot.shooter.transferMode = Shooter.TransferMode.OFF;
