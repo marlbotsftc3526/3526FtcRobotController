@@ -299,7 +299,7 @@ public class PedroAutoBlueSide extends LinearOpMode {
 
                                     new Pose(45.000, 97.352)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-40))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-31))
 
                     .build();
 
@@ -309,7 +309,7 @@ public class PedroAutoBlueSide extends LinearOpMode {
 
                                     new Pose(58.000, 82.865)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-31), Math.toRadians(180))
 
                     .build();
 

@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "Auto9RedSide", group = "AutoTemplates")
-public class Auto9RedSide extends LinearOpMode {
+@Autonomous(name = "Auto6RedSide", group = "AutoTemplates")
+public class Auto6RedSide extends LinearOpMode {
     //Declare Robot and Follower
     RobotHardware robot;
     private Follower follower;
@@ -57,7 +57,7 @@ public class Auto9RedSide extends LinearOpMode {
         DRIVE_TO_LAUNCH_POSITION5,
         LAUNCH_ARTIFACTS5,
         LEAVE_ZONE,
-        IDLE
+        IDLE,
     }
 
     // We define the current state we're on
@@ -73,7 +73,7 @@ public class Auto9RedSide extends LinearOpMode {
 
         follower = Constants.createFollower(hardwareMap);
         //TODO Set starting pose from path generation
-        follower.setStartingPose(new Pose(86.5, 11, Math.toRadians(-90)));
+        follower.setStartingPose(new Pose(87.581, 8.290, Math.toRadians(-90)));
 
         paths = new Paths(follower); // Build paths
 
@@ -88,6 +88,7 @@ public class Auto9RedSide extends LinearOpMode {
         telemetry.update();
 
         robot.shooter.hoodMode = Shooter.HoodMode.FAR; //linear
+
       //  Object xPosition = blackboard.getOrDefault(X_POS_KEY, 0);
         //Object yPosition = blackboard.getOrDefault(Y_POS_KEY, 0);
         //Object heading = blackboard.getOrDefault(HEADING_KEY, 0);
@@ -108,10 +109,11 @@ public class Auto9RedSide extends LinearOpMode {
                     //set events at the start of state
                     if(onStateStart()){
                         //ex. set path to follow
-                        follower.followPath(paths.shoot1,true);
+                        follower.followPath(paths.launchartifacts1,true);
                         //ex. turn shooter on
                         robot.shooter.shootMode = Shooter.ShootMode.ON;
                     }
+
                     //set the condition to advance to the next state
                     /* You could check for
                         - Follower State: "if(!follower.isBusy()) {}"
@@ -131,25 +133,17 @@ public class Auto9RedSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.AUTO;
                     //state transition
-                    if(timer.seconds() > 4) {
-                        currentState = State.ALIGN_ARTIFACTS;
-                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
-                    }
-                    break;
-                case ALIGN_ARTIFACTS:
-                    if(onStateStart()){
-                        follower.followPath(paths.gotoartifacts, true);
-                    }
-
-                    if(!follower.isBusy()){
+                    if(timer.seconds() > 3) {
                         currentState = State.COLLECT_ARTIFACTS;
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
                 case COLLECT_ARTIFACTS:
                     if(onStateStart()){
+                        timer.reset();
                         follower.followPath(paths.intakeartifacts1,true);
                     }
-                    if(!follower.isBusy()){
+                    if(!follower.isBusy() || timer.seconds()> 1.5){
                         currentState = State.DRIVE_TO_LAUNCH_POSITION2;
                     }
                     break;
@@ -168,48 +162,78 @@ public class Auto9RedSide extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.AUTO;
-                    if(timer.seconds() >4){
-                        currentState = State.ALIGN_ARTIFACTS2;
+
+                    if(timer.seconds() >2){
+                        currentState = State.COLLECT_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
-                case ALIGN_ARTIFACTS2:
-                    if(onStateStart()){
-                        follower.followPath(paths.straight2, true);
-                    }
-                    if(!follower.isBusy())
-                    {
-                        currentState = State.COLLECT_ARTIFACTS2;
-                    }
-                    break;
+
                 case COLLECT_ARTIFACTS2:
                     if(onStateStart()){
                         timer.reset();
                         follower.followPath(paths.intakeartifacts2, true);
                     }
-                    if(timer.seconds()>4){
+                    if(!follower.isBusy() ||timer.seconds() >1.5){
                         currentState = State.DRIVE_TO_LAUNCH_POSITION3;
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
+
                 case DRIVE_TO_LAUNCH_POSITION3:
                     if(onStateStart()){
+                        timer.reset();
                         follower.followPath(paths.launchartifacts3, true);
                     }
                     if(!follower.isBusy()){
                         currentState = State.LAUNCH_ARTIFACTS3;
+
                     }
                     break;
                 case LAUNCH_ARTIFACTS3:
-                        if(onStateStart()){
-                            timer.reset();
-                            robot.intake.intakeMode = Intake.IntakeMode.UP;
-                        }
+                    if(onStateStart()){
+                        timer.reset();
+                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                    }
                     robot.shooter.transferMode = Shooter.TransferMode.AUTO;
 
-                        if(timer.seconds() >4){
-                            robot.shooter.transferMode = Shooter.TransferMode.OFF;
-                            currentState = State.LEAVE_ZONE;
-                        }
+                    if(timer.seconds() >2){
+                        currentState = State.COLLECT_ARTIFACTS3;
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
+                    }
+                    break;
+                case COLLECT_ARTIFACTS3:
+                    if(onStateStart()){
+                        timer.reset();
+                        follower.followPath(paths.intake3, true);
+                    }
+                    if(!follower.isBusy() ||timer.seconds() >1.5){
+                        currentState = State.DRIVE_TO_LAUNCH_POSITION4;
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
+                    }
+                    break;
+
+                case DRIVE_TO_LAUNCH_POSITION4:
+                    if(onStateStart()){
+                        timer.reset();
+                        follower.followPath(paths.launchartifacts4, true);
+                    }
+                    if(!follower.isBusy()){
+                        currentState = State.LAUNCH_ARTIFACTS4;
+
+                    }
+                    break;
+                case LAUNCH_ARTIFACTS4:
+                    if(onStateStart()){
+                        timer.reset();
+                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                    }
+                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+
+                    if(timer.seconds() >2){
+                        currentState = State.LEAVE_ZONE;
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
+                    }
                     break;
                 case LEAVE_ZONE:
                     if(onStateStart()){
@@ -220,6 +244,8 @@ public class Auto9RedSide extends LinearOpMode {
                         currentState = State.IDLE;
                     }
                     break;
+
+
                 case IDLE:
                     blackboard.put(X_POS_KEY, follower.getPose().getX());
                     blackboard.put(Y_POS_KEY, follower.getPose().getY());
@@ -247,116 +273,98 @@ public class Auto9RedSide extends LinearOpMode {
 
 
 
-
-
-
-
-
-
-
-
-
-
     public static class Paths {
-        public PathChain shoot1;
-        public PathChain gotoartifacts;
+        public PathChain launchartifacts1;
         public PathChain intakeartifacts1;
         public PathChain launchartifacts2;
-        public PathChain straight2;
         public PathChain intakeartifacts2;
         public PathChain launchartifacts3;
+        public PathChain intake3;
+        public PathChain launchartifacts4;
         public PathChain Leave;
 
         public Paths(Follower follower) {
-            shoot1 = follower.pathBuilder().addPath(
+            launchartifacts1 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(87.581, 8.290),
 
-                                    new Pose(82.205, 20.354)
+                                    new Pose(84.813, 18.616)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(240))
-
-                    .build();
-
-            gotoartifacts = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(82.205, 20.354),
-
-                                    new Pose(99.020, 36.201)
-                            )
-                    ).setLinearHeadingInterpolation(Math.toRadians(240), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(247))
 
                     .build();
 
             intakeartifacts1 = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(99.020, 36.201),
-
-                                    new Pose(135.533, 36.109)
+                            new BezierCurve(
+                                    new Pose(84.813, 18.616),
+                                    new Pose(107.004, 9.754),
+                                    new Pose(128.877, 14.219)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
 
                     .build();
 
             launchartifacts2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(135.533, 36.109),
+                                    new Pose(128.877, 14.219),
 
-                                    new Pose(82.398, 19.849)
+                                    new Pose(84.922, 18.169)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(240))
-
-                    .build();
-
-            straight2 = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(82.398, 19.849),
-
-                                    new Pose(135.252, 23.201)
-                            )
-                    ).setLinearHeadingInterpolation(Math.toRadians(240), Math.toRadians(270))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(247))
 
                     .build();
 
             intakeartifacts2 = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(135.252, 23.201),
-
-                                    new Pose(136.012, 9.117)
+                            new BezierCurve(
+                                    new Pose(84.922, 18.169),
+                                    new Pose(106.047, 10.020),
+                                    new Pose(135.024, 9.171)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(270))
+                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
 
                     .build();
 
             launchartifacts3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(136.012, 9.117),
+                                    new Pose(135.024, 9.171),
 
-                                    new Pose(82.024, 19.907)
+                                    new Pose(84.990, 18.769)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(240))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(247))
+
+                    .build();
+
+            intake3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(84.990, 18.769),
+
+                                    new Pose(135.266, 4.825)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
+
+                    .build();
+
+            launchartifacts4 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(135.266, 4.825),
+
+                                    new Pose(85.211, 18.763)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(247))
 
                     .build();
 
             Leave = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(82.024, 19.907),
+                                    new Pose(85.211, 18.763),
 
-                                    new Pose(85.769, 28.004)
+                                    new Pose(108.292, 11.137)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(240), Math.toRadians(240))
+                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
 
                     .build();
         }
     }
-
-
-
-
-
-
-
-
 
 
 

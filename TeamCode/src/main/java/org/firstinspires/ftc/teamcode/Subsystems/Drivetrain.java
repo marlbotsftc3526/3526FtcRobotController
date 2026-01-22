@@ -177,7 +177,7 @@ public class Drivetrain {
             if(side == Drivetrain.SideMode.BLUE){
                 goalLocationX = 2;
                 if(roboLocationX >= 107){
-                    goalLocationY = 137;
+                    goalLocationY = 132;
                 }else{
                     goalLocationY = 142;
                 }
@@ -202,7 +202,7 @@ public class Drivetrain {
             }else if(side == Drivetrain.SideMode.RED){
                 goalLocationX = 142;
                 if(roboLocationX <= 37){
-                    goalLocationY = 137;
+                    goalLocationY = 132;
                 }else{
                     goalLocationY = 142;
                 }
@@ -291,15 +291,15 @@ public class Drivetrain {
             }
             //default power
             else {
-                leftFrontDrive.setPower(leftFrontPower/1.2);
-                rightFrontDrive.setPower(rightFrontPower/1.2);
-                leftBackDrive.setPower(leftBackPower/1.2);
-                rightBackDrive.setPower(rightBackPower/1.2); ///1.5
+                leftFrontDrive.setPower(leftFrontPower/1.1);
+                rightFrontDrive.setPower(rightFrontPower/1.1);
+                leftBackDrive.setPower(leftBackPower/1.1);
+                rightBackDrive.setPower(rightBackPower/1.1); ///1.5
             }
 
-            if(myOpMode.gamepad2.left_stick_x >= 0.2 || myOpMode.gamepad2.left_stick_y >= 0.2) {
+            if(Math.abs(myOpMode.gamepad2.left_stick_x) >= 0.2 || Math.abs(myOpMode.gamepad2.left_stick_y) >= 0.2) {
                 drivetrainMode = DrivetrainMode.FIELDCENTRIC;
-            } else if (myOpMode.gamepad1.left_stick_x >= 0.2 || myOpMode.gamepad1.left_stick_y >= 0.2){
+            } else if (Math.abs(myOpMode.gamepad1.left_stick_x) >= 0.2 || Math.abs(myOpMode.gamepad1.left_stick_y) >= 0.2){
                 drivetrainMode = DrivetrainMode.ROBOTCENTRIC;
             }
 

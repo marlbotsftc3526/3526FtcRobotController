@@ -65,17 +65,17 @@ public class Shooter {
     public double RPM_TUNING_CONSTANT = 1.1;
     public static final double CLOSE_RPM = 3500; //3440
     public static double FAR_RPM_TESTING = 4995;//4500
-    public static final double FAR_RPM = 5325;
+    public static final double FAR_RPM = 4700;
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
     public static final double GATE_OPEN = 0.567;
     public static final double GATE_CLOSE=0.25;
     public static final double HOOD_CLOSE=0.275; //0.625
-    public static double HOOD_FAR_TESTING = .275;
+    public static double HOOD_FAR_TESTING = 1;
     public static double HOOD_RETRACTED = 1;
    // 4790
    // public static final double HOOD_AUTO = .75;
-    public static final double HOOD_FAR=0.34;
+    public static final double HOOD_FAR=1;
     double TICKS_PER_SECOND;
     public ShootMode shootMode = ShootMode.OFF;
     public TransferMode transferMode = TransferMode.OFF;
@@ -143,8 +143,8 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE = CLOSE_RPM;
         }
         else if (hoodMode == HoodMode.FAR) {
-            hood.setPosition(HOOD_FAR_TESTING);
-            REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
+            hood.setPosition(HOOD_FAR);
+            REVOLUTIONS_PER_MINUTE = FAR_RPM;
         } else if (hoodMode == HoodMode.AUTO) {
             if(drivetrain.DISTANCE  >= 110){
                 hood.setPosition(1);
