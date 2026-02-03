@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.control.PIDFController;
+import com.qualcomm.hardware.limelightvision.LLFieldMap;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -17,6 +20,7 @@ import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.utility.PIDController;
 
 
+import java.util.List;
 import java.util.Locale;
 
 public class Drivetrain {
@@ -24,6 +28,7 @@ public class Drivetrain {
         /* Declare OpMode members. */
         private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
         public GoBildaPinpointDriver pinpoint;
+        private LimeLight limelight;
         //TODO: Declare OpMode member for the Odometry System
         // If using GoBilda Pinpoint computer then use PinPointLocalizer class
         // If using Sparkfun OTOS then use SparfunLocalizer class
@@ -56,6 +61,9 @@ public class Drivetrain {
         public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
     public SideMode side = SideMode.BLUE;
 
+    public static double LIMELIGHT_KP = 0.025;
+    public static double LIMELIGHT_KI = 0.0;
+    public static double LIMELIGHT_KD = 0.0;
     public static double HEADING_KP = 0.025;//0.012 //0.0095
     public static double HEADING_KI = 0.0;
     public static double HEADING_KD = 0.0;
@@ -68,12 +76,18 @@ public class Drivetrain {
     public KickstandMode kickstand = KickstandMode.RETRACTED;
 
     PIDController headingController;
+    PIDController limelightTurnController;
         //declare PID controller
         //create variable for PID constants (kP, kD...)
         //initialize PID controller with the constants
         //in teleOp loop
             //calculate the motor ouput with the PID controller based on the error between current heading and target heading
 
+    public Drivetrain(OpMode opmode, LimeLight robotLime) {
+
+        myOpMode = opmode;
+        limelight = robotLime;
+    }
 
     public boolean targetReached = false;
 
@@ -81,13 +95,10 @@ public class Drivetrain {
         //TODO Adjust drive constants based on auto performance
 
 
-        public Drivetrain(OpMode opmode) {
-            myOpMode = opmode;
-        }
-
         public void init() {
             //Initialize PID controllers
             headingController = new PIDController(HEADING_KP, HEADING_KI, HEADING_KD, MAX_OUT);
+            limelightTurnController = new PIDController(LIMELIGHT_KP,LIMELIGHT_KI,LIMELIGHT_KD, MAX_OUT);
             //xController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
             //yController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
             //headingController = new RampingController(MAX_SPEED, MIN_SPEED, RAMP_UP_RATE, RAMP_DOWN_RATE, THRESHOLD);
@@ -181,6 +192,7 @@ public class Drivetrain {
                 }else{
                     goalLocationY = 142;
                 }
+                limelight.limelight.pipelineSwitch(1);
 
 
                 /*if(roboLocationY >= 110 && roboLocationX >= 40 && roboLocationX < 90){
@@ -206,6 +218,7 @@ public class Drivetrain {
                 }else{
                     goalLocationY = 142;
                 }
+                limelight.limelight.pipelineSwitch(0);
                 autoAimAngle = angleWrap(Math.toDegrees(Math.atan2(roboLocationY - goalLocationY, roboLocationX - goalLocationX)));
                 DISTANCE = Math.sqrt((128-roboLocationX)*(128-roboLocationX) + (128-roboLocationY)*(128-roboLocationY));
             }
@@ -251,9 +264,29 @@ public class Drivetrain {
                             pinpoint.getHeading(AngleUnit.RADIANS))));
                 }
             }
+            limelight.result = limelight.limelight.getLatestResult();
+            myOpMode.telemetry.addData("tx", limelight.result.getTx());
+            myOpMode.telemetry.addData("isValid", limelight.result.isValid());
+            /*if(limelight.result.isValid()){
+                limelight.fiducials = limelight.result.getFiducialResults();
+                 = getFiducialResults().get(0);
+                myOpMode.telemetry.addData("botPose", limelight.result.getBotpose());
+                myOpMode.telemetry.addData("tag Distance", limelight.result.);
+            }*/
             if (myOpMode.gamepad2.left_trigger > 0.5 || myOpMode.gamepad1.left_trigger > 0.5) {
-                    turn = -headingController.calculate(autoAimAngle, pinpoint.getHeading(AngleUnit.DEGREES));
-                }
+
+                if(limelight.result.isValid() && Math.abs(limelight.result.getTx()) <= 15 && (DISTANCE >= 75 || roboLocationY >= 115)){
+                    if(roboLocationY <= 60) {
+                        turn = -limelightTurnController.calculate(0, limelight.result.getTx());
+                    }else if(roboLocationY <= 118){
+                        turn = -limelightTurnController.calculate(0, limelight.result.getTx()-4);
+                    }else{
+                        turn = -limelightTurnController.calculate(0, limelight.result.getTx()-7);
+                    }
+                }else{
+                    double adjustedError = angleWrap(autoAimAngle - pinpoint.getHeading(AngleUnit.DEGREES));
+                    turn = -headingController.calculate(adjustedError);
+                }}
 
             leftFrontPower = (drive + turn - strafe);
             rightFrontPower = (drive - turn + strafe);
@@ -291,10 +324,10 @@ public class Drivetrain {
             }
             //default power
             else {
-                leftFrontDrive.setPower(leftFrontPower/1.1);
-                rightFrontDrive.setPower(rightFrontPower/1.1);
-                leftBackDrive.setPower(leftBackPower/1.1);
-                rightBackDrive.setPower(rightBackPower/1.1); ///1.5
+                leftFrontDrive.setPower(leftFrontPower);
+                rightFrontDrive.setPower(rightFrontPower);
+                leftBackDrive.setPower(leftBackPower);
+                rightBackDrive.setPower(rightBackPower); ///1.5
             }
 
             if(Math.abs(myOpMode.gamepad2.left_stick_x) >= 0.2 || Math.abs(myOpMode.gamepad2.left_stick_y) >= 0.2) {

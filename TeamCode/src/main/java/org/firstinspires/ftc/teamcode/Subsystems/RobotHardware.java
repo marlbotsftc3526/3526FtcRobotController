@@ -10,6 +10,7 @@ public class RobotHardware {
     public Drivetrain drivetrain;
     public Intake intake;
     public Shooter shooter;
+    public LimeLight limelight;
 
 
     public RobotHardware(OpMode opmode) {
@@ -18,7 +19,9 @@ public class RobotHardware {
 
 
     public void init() {
-        drivetrain = new Drivetrain(myOpMode);
+        limelight = new LimeLight(myOpMode);
+        limelight.init();
+        drivetrain = new Drivetrain(myOpMode, limelight);
         drivetrain.init();
         intake = new Intake(myOpMode);
         shooter = new Shooter(myOpMode, drivetrain);
@@ -26,6 +29,7 @@ public class RobotHardware {
 
         intake.init();
         shooter.init();
+
 
         myOpMode.telemetry.addData(">", "Hardware Initialized");
     }

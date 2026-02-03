@@ -169,7 +169,9 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE*=RPM_TUNING_CONSTANT;
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }else if (hoodMode==HoodMode.LINEAR){
-            REVOLUTIONS_PER_MINUTE=16.4*drivetrain.DISTANCE+2768;
+            //REVOLUTIONS_PER_MINUTE=16.4*drivetrain.DISTANCE+2768; THIS IS WHAT IT SHOULD BE, FEB 3, WE ARE TEMPORARILY CHANGING IT IN ORDER TO REDO AUTO RANGING
+
+            REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
                     //18.2*drivetrain.DISTANCE+2689;
             if (drivetrain.DISTANCE>=48){
                 hood.setPosition(1);
@@ -213,7 +215,7 @@ public class Shooter {
             if(drivetrain.DISTANCE <= 90) {
                 transferMode = TransferMode.ON;
             }else{
-                transferMode = TransferMode.AUTO;
+                transferMode = TransferMode.ON; //THIS WAS AUTO BEFORE, ITS ON TO TEST WEIGHTED FLYWHEEL ON FEB 3 2026
             }
         } else {
             transferMode = TransferMode.OFF;
@@ -239,12 +241,12 @@ public class Shooter {
         }*/
 
 
-        /*if(myOpMode.gamepad1.dpad_up){
+        if(myOpMode.gamepad1.dpad_up){
             FAR_RPM_TESTING += 5;
         }
         if(myOpMode.gamepad1.dpad_down){
             FAR_RPM_TESTING -= 5;
-        }
+        }/*
         if(myOpMode.gamepad1.dpad_left){
             HOOD_FAR_TESTING -= 0.005;
         }

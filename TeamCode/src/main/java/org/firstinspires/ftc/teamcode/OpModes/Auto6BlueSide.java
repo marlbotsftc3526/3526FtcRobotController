@@ -280,6 +280,8 @@ public class Auto6BlueSide extends LinearOpMode {
 
 
 
+
+
     public static class Paths {
         public PathChain launchartifacts1;
         public PathChain intakeartifacts1;
@@ -296,19 +298,19 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(55.630, 8.692),
 
-                                    new Pose(61.795, 18.616)
+                                    new Pose(53.000, 18.616)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-60))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-64))
 
                     .build();
 
             intakeartifacts1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(61.795, 18.616),
+                                    new Pose(53.000, 18.616),
                                     new Pose(43.000, 9.754),
                                     new Pose(15.123, 14.219)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(-180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-64), Math.toRadians(-180))
 
                     .build();
 
@@ -316,19 +318,19 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(15.123, 14.219),
 
-                                    new Pose(64.294, 19.038)
+                                    new Pose(53.000, 19.038)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-60))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-64))
 
                     .build();
 
             intakeartifacts2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(64.294, 19.038),
+                                    new Pose(53.000, 19.038),
                                     new Pose(43.464, 12.338),
                                     new Pose(8.107, 9.171)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(-180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-64), Math.toRadians(-180))
 
                     .build();
 
@@ -336,19 +338,19 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(8.107, 9.171),
 
-                                    new Pose(64.225, 19.348)
+                                    new Pose(53.000, 19.348)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-60))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-64))
 
                     .build();
 
             turntointake = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(64.225, 19.348),
+                                    new Pose(53.000, 19.348),
 
                                     new Pose(48.668, 13.907)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-64), Math.toRadians(180))
 
                     .build();
 
@@ -366,19 +368,19 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(7.286, 4.535),
 
-                                    new Pose(64.004, 19.052)
+                                    new Pose(53.000, 19.052)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-60))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-64))
 
                     .build();
 
             Leave = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(64.004, 19.052),
+                                    new Pose(53.000, 19.052),
 
                                     new Pose(35.708, 11.137)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-60), Math.toRadians(-180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-64), Math.toRadians(-180))
 
                     .build();
         }

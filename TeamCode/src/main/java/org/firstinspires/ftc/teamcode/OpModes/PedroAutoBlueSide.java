@@ -278,7 +278,6 @@ public class PedroAutoBlueSide extends LinearOpMode {
 
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
 
-
     public static class Paths {
         public PathChain launchzone1;
         public PathChain straight1;
@@ -299,7 +298,7 @@ public class PedroAutoBlueSide extends LinearOpMode {
 
                                     new Pose(45.000, 97.352)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-31))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-27))
 
                     .build();
 
@@ -307,9 +306,9 @@ public class PedroAutoBlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(45.000, 97.352),
 
-                                    new Pose(58.000, 82.865)
+                                    new Pose(53.500, 82.865)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-31), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-27), Math.toRadians(180))
 
                     .build();
 

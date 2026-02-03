@@ -129,7 +129,7 @@ public class PedroAutoRedSide extends LinearOpMode {
                         follower.followPath(paths.straight1, true);
                     }
 
-                    if(!follower.isBusy()|| timer.seconds() >2){
+                    if(!follower.isBusy()){
                         currentState = State.COLLECT_ARTIFACTS;
                     }
                     break;
