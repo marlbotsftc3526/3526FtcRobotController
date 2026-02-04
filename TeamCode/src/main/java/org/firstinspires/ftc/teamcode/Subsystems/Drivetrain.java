@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.control.PIDFController;
 import com.qualcomm.hardware.limelightvision.LLFieldMap;
@@ -13,8 +14,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.OpModes.GobildaPinPoint;
 import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.utility.PIDController;
@@ -23,6 +26,7 @@ import org.firstinspires.ftc.teamcode.utility.PIDController;
 import java.util.List;
 import java.util.Locale;
 
+@Config
 public class Drivetrain {
         //HI RACHEL WAS HERE
         /* Declare OpMode members. */
@@ -46,7 +50,6 @@ public class Drivetrain {
         EXTENDED,
         RETRACTED
     }
-
 
 
         ElapsedTime time = new ElapsedTime();
@@ -192,7 +195,7 @@ public class Drivetrain {
                 }else{
                     goalLocationY = 142;
                 }
-                limelight.limelight.pipelineSwitch(1);
+                limelight.limelight.pipelineSwitch(2);//1 2d version, 2 is 3d version
 
 
                 /*if(roboLocationY >= 110 && roboLocationX >= 40 && roboLocationX < 90){
@@ -218,7 +221,7 @@ public class Drivetrain {
                 }else{
                     goalLocationY = 142;
                 }
-                limelight.limelight.pipelineSwitch(0);
+                limelight.limelight.pipelineSwitch(3);//0 is 2d mode, 3 is 3d
                 autoAimAngle = angleWrap(Math.toDegrees(Math.atan2(roboLocationY - goalLocationY, roboLocationX - goalLocationX)));
                 DISTANCE = Math.sqrt((128-roboLocationX)*(128-roboLocationX) + (128-roboLocationY)*(128-roboLocationY));
             }
@@ -267,12 +270,17 @@ public class Drivetrain {
             limelight.result = limelight.limelight.getLatestResult();
             myOpMode.telemetry.addData("tx", limelight.result.getTx());
             myOpMode.telemetry.addData("isValid", limelight.result.isValid());
-            /*if(limelight.result.isValid()){
+            if(limelight.result.isValid()){
                 limelight.fiducials = limelight.result.getFiducialResults();
-                 = getFiducialResults().get(0);
-                myOpMode.telemetry.addData("botPose", limelight.result.getBotpose());
-                myOpMode.telemetry.addData("tag Distance", limelight.result.);
-            }*/
+                LLResultTypes.FiducialResult tag = limelight.fiducials.get(0);
+                myOpMode.telemetry.addData("tag Distance", tag.getCameraPoseTargetSpace().getPosition().z);
+                Pose3D botpose = limelight.result.getBotpose();
+                if (botpose != null) {
+                    double x = botpose.getPosition().x;
+                    double y = botpose.getPosition().y;
+                    myOpMode.telemetry.addData("bot pose", "(" + x + ", " + y + ")");
+                }
+            }
             if (myOpMode.gamepad2.left_trigger > 0.5 || myOpMode.gamepad1.left_trigger > 0.5) {
 
                 if(limelight.result.isValid() && Math.abs(limelight.result.getTx()) <= 15 && (DISTANCE >= 75 || roboLocationY >= 115)){
@@ -350,6 +358,14 @@ public class Drivetrain {
             myOpMode.telemetry.addData("roboX: ", roboLocationX);
             myOpMode.telemetry.addData("roboY: ", roboLocationY);
             myOpMode.telemetry.addData("Distance: ", DISTANCE);
+
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
+            dashboardTelemetry.addData("AutoAim Angle", autoAimAngle);
+            dashboardTelemetry.addData("pinpoint Heading", pinpoint.getHeading(AngleUnit.DEGREES));
+            dashboardTelemetry.addData("Limelight Tx", limelight.result.getTx());
+            dashboardTelemetry.update();
         }
 
         public void update(){

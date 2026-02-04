@@ -51,6 +51,7 @@ public class Shooter {
         AUTO,
         FAR,
         LINEAR,
+        TUNING
     }
 
     public enum TransferMode {
@@ -169,9 +170,8 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE*=RPM_TUNING_CONSTANT;
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }else if (hoodMode==HoodMode.LINEAR){
-            //REVOLUTIONS_PER_MINUTE=16.4*drivetrain.DISTANCE+2768; THIS IS WHAT IT SHOULD BE, FEB 3, WE ARE TEMPORARILY CHANGING IT IN ORDER TO REDO AUTO RANGING
-
-            REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
+            REVOLUTIONS_PER_MINUTE=16.4*drivetrain.DISTANCE+2768; //THIS IS WHAT IT SHOULD BE, FEB 3, WE ARE TEMPORARILY CHANGING IT IN ORDER TO REDO AUTO RANGING
+            //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
                     //18.2*drivetrain.DISTANCE+2689;
             if (drivetrain.DISTANCE>=48){
                 hood.setPosition(1);
@@ -179,6 +179,9 @@ public class Shooter {
                 hood.setPosition(3.64E-4 + 0.014 * drivetrain.DISTANCE + 1.42E-4 * drivetrain.DISTANCE * Math.exp(2));
                 //2.79E-3*Math.exp(0.122*drivetrain.DISTANCE
             }
+        }else if(hoodMode == HoodMode.TUNING){
+            REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
+            hood.setPosition(HOOD_FAR_TESTING);
         }
         if (shootMode == ShootMode.ON) {
             TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
@@ -223,6 +226,8 @@ public class Shooter {
 
         if(myOpMode.gamepad2.dpad_right){
             hoodMode = HoodMode.LINEAR;
+        }else if(myOpMode.gamepad2.dpad_left){
+            hoodMode = HoodMode.TUNING;
         }
         if(myOpMode.gamepad1.dpad_left){
             hoodMode = HoodMode.CLOSE;
@@ -240,19 +245,20 @@ public class Shooter {
             hoodMode = HoodMode.AUTO;
         }*/
 
-
-        if(myOpMode.gamepad1.dpad_up){
+    if(hoodMode == HoodMode.TUNING) {
+        if (myOpMode.gamepad2.dpad_up) {
             FAR_RPM_TESTING += 5;
         }
-        if(myOpMode.gamepad1.dpad_down){
+        if (myOpMode.gamepad2.dpad_down) {
             FAR_RPM_TESTING -= 5;
-        }/*
-        if(myOpMode.gamepad1.dpad_left){
+        }
+        if (myOpMode.gamepad2.left_bumper) {
             HOOD_FAR_TESTING -= 0.005;
         }
-        if(myOpMode.gamepad1.dpad_right){
+        if (myOpMode.gamepad1.right_bumper) {
             HOOD_FAR_TESTING += 0.005;
-        }*/
+        }
+    }
         /*
         if(myOpMode.gamepad2.right_bumper){
             sPIDF.p = sp;
@@ -263,7 +269,9 @@ public class Shooter {
             shoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
+
          */
+
 
         myOpMode.telemetry.addData("HOOD_FAR_TESTING: ", HOOD_FAR_TESTING);
         myOpMode.telemetry.addData("FAR_RPM_TESTING: ", FAR_RPM_TESTING);

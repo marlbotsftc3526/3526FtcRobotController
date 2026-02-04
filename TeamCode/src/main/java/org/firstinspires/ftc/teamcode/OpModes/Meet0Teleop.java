@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
 
 public class Meet0Teleop extends LinearOpMode{
     RobotHardware robot;
-
+    ElapsedTime loopTimer;
     // Get the singleton instance of the FtcDashboard
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -26,6 +27,7 @@ public class Meet0Teleop extends LinearOpMode{
     public void runOpMode() {
         //calling constructor
         robot = new RobotHardware(this);
+        loopTimer = new ElapsedTime();
         //calling init function
         robot.init();
         robot.drivetrain.pinpoint.recalibrateIMU();
@@ -45,10 +47,13 @@ public class Meet0Teleop extends LinearOpMode{
         }*/
 
         waitForStart();
+        loopTimer.reset();
 
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addData("loop time", loopTimer.milliseconds());
+            loopTimer.reset();
             robot.teleOp();
             telemetry.update();
             /*
