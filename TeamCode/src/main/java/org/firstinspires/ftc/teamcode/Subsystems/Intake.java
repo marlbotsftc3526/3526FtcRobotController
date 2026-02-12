@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver.LayerHeigh
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Prism.Color;
 import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
@@ -24,6 +26,7 @@ public class Intake {
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
     public DcMotor spin = null;
+    public Servo kick = null;
     private DigitalChannel laserBottom;
     private DigitalChannel laserMiddle;
     private DigitalChannel laserTop;
@@ -32,6 +35,11 @@ public class Intake {
     boolean middlelaststate = false;
     boolean bottomlaststate = false;
 
+    public ElapsedTime kickTimer;
+
+    public boolean detectedTop;
+    public boolean detectedMiddle;
+    public boolean detectedBottom;
 
     GoBildaPrismDriver prism;
     PrismAnimations.Solid solidTop = new PrismAnimations.Solid(Color.PURPLE);
@@ -43,13 +51,26 @@ public class Intake {
         UP,
         DOWN,
         OFF,
+
     }
+
+    public enum KickMode {
+        OUT,
+        IN,
+        AUTO
+    }
+
+    public static final double WHEN_KICK_OPEN = 0;
+    public static final double WHEN_KICK_CLOSED = .55;
+    public Intake.KickMode kickMode = Intake.KickMode.IN;
 
     public Intake(OpMode opmode) {
         myOpMode = opmode;
     }
 
     public void init() {
+        kickTimer = new ElapsedTime();
+
         prism = myOpMode.hardwareMap.get(GoBildaPrismDriver.class,"prism");
         solidTop.setBrightness(0);
         solidTop.setStartIndex(0);
@@ -85,7 +106,10 @@ public class Intake {
         spin.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spin.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        kick = myOpMode.hardwareMap.get(Servo.class, "kick");
+
         spin.setDirection(DcMotor.Direction.REVERSE);
+
         prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
         prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
         prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
@@ -105,14 +129,13 @@ public class Intake {
             spin.setPower(INTAKE_SPEED);
         } else if (intakeMode == IntakeMode.DOWN) {
             spin.setPower(OUTTAKE_SPEED);
-        }
-        else if (intakeMode == IntakeMode.OFF){
+        } else if (intakeMode == IntakeMode.OFF) {
             spin.setPower(0);
-         }
+        }
         // Read the sensor state (true = HIGH, false = LOW)
-        boolean detectedTop = laserTop.getState();
-        boolean detectedMiddle = laserMiddle.getState();
-        boolean detectedBottom = laserBottom.getState();
+        detectedTop = laserTop.getState();
+        detectedMiddle = laserMiddle.getState();
+        detectedBottom = laserBottom.getState();
 
 
         // Display detection state
@@ -146,21 +169,32 @@ public class Intake {
             myOpMode.telemetry.addLine("No bottom object detected");
         }
 
-        if(detectedTop != toplaststate){
+        if (detectedTop != toplaststate) {
             prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
             toplaststate = detectedTop;
         }
 
-        if(detectedMiddle != middlelaststate){
+        if (detectedMiddle != middlelaststate) {
             prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
             middlelaststate = detectedMiddle;
         }
 
-        if(detectedBottom != bottomlaststate){
+        if (detectedBottom != bottomlaststate) {
             prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
             bottomlaststate = detectedBottom;
         }
 
+        if (kickMode == Intake.KickMode.IN) {
+            kick.setPosition(WHEN_KICK_CLOSED);
+            myOpMode.telemetry.addLine("Kick is in (closed)");
+        } else if (kickMode == Intake.KickMode.OUT) {
+            kick.setPosition(WHEN_KICK_OPEN);
+            myOpMode.telemetry.addLine("Kick is out (open)");
+        }
+
+        if (kickTimer.milliseconds()>=200){
+            kickMode = KickMode.IN;
+        }
     }
     public void teleOp() {
         update();
@@ -169,11 +203,19 @@ public class Intake {
         //TODO Update based on desired control scheme
         if (myOpMode.gamepad1.y || myOpMode.gamepad2.y) {
             intakeMode = IntakeMode.UP;
+
         } else if (myOpMode.gamepad1.a || myOpMode.gamepad2.a) {
             intakeMode = IntakeMode.DOWN; //s=S
+
         }
         else if (myOpMode.gamepad1.x) {
             intakeMode = IntakeMode.OFF; //s=S
+        }
+
+        if (myOpMode.gamepad1.b) {
+            kickTimer.reset();
+            kickMode = KickMode.OUT;
+
         }
 
     }

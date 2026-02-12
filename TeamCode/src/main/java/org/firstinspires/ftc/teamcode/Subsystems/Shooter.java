@@ -64,14 +64,14 @@ public class Shooter {
     //TODO Update values based on desired position
     public double REVOLUTIONS_PER_MINUTE = 3100;
     public double RPM_TUNING_CONSTANT = 1.1;
-    public static final double CLOSE_RPM = 3500; //3440
+    public static final double CLOSE_RPM = 3100; //3405
     public static double FAR_RPM_TESTING = 4995;//4500
-    public static final double FAR_RPM = 4700;
+    public static final double FAR_RPM = 4350; //4500//4475
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
     public static final double GATE_OPEN = 0.567;
     public static final double GATE_CLOSE=0.25;
-    public static final double HOOD_CLOSE=0.275; //0.625
+    public static final double HOOD_CLOSE=0.625; //0.625
     public static double HOOD_FAR_TESTING = 1;
     public static double HOOD_RETRACTED = 1;
    // 4790
@@ -170,9 +170,11 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE*=RPM_TUNING_CONSTANT;
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }else if (hoodMode==HoodMode.LINEAR){
-            REVOLUTIONS_PER_MINUTE=16.4*drivetrain.DISTANCE+2768; //THIS IS WHAT IT SHOULD BE, FEB 3, WE ARE TEMPORARILY CHANGING IT IN ORDER TO REDO AUTO RANGING
-            //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
-                    //18.2*drivetrain.DISTANCE+2689;
+            if (drivetrain.DISTANCE<=90){
+                REVOLUTIONS_PER_MINUTE=21.2*drivetrain.DISTANCE+2124;
+            } else {
+                REVOLUTIONS_PER_MINUTE=21.2*drivetrain.DISTANCE+2074;
+            }
             if (drivetrain.DISTANCE>=48){
                 hood.setPosition(1);
             }else {
@@ -181,7 +183,13 @@ public class Shooter {
             }
         }else if(hoodMode == HoodMode.TUNING){
             REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
-            hood.setPosition(HOOD_FAR_TESTING);
+            //hood.setPosition(HOOD_FAR_TESTING);
+            if (drivetrain.DISTANCE>=48){
+                hood.setPosition(1);
+            }else {
+                hood.setPosition(3.64E-4 + 0.014 * drivetrain.DISTANCE + 1.42E-4 * drivetrain.DISTANCE * Math.exp(2));
+                //2.79E-3*Math.exp(0.122*drivetrain.DISTANCE
+            }
         }
         if (shootMode == ShootMode.ON) {
             TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
