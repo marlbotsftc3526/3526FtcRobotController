@@ -51,7 +51,8 @@ public class Shooter {
         AUTO,
         FAR,
         LINEAR,
-        TUNING
+        TUNING,
+        AUTOCLOSE
     }
 
     public enum TransferMode {
@@ -69,11 +70,12 @@ public class Shooter {
     public static final double FAR_RPM = 4350; //4500//4475
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
-    public static final double GATE_OPEN = 0.567;
+    public static final double GATE_OPEN = 0.52;
     public static final double GATE_CLOSE=0.25;
     public static final double HOOD_CLOSE=0.625; //0.625
     public static double HOOD_FAR_TESTING = 1;
     public static double HOOD_RETRACTED = 1;
+    public static final double AUTOCLOSE = .625;
    // 4790
    // public static final double HOOD_AUTO = .75;
     public static final double HOOD_FAR=1;
@@ -121,9 +123,9 @@ public class Shooter {
         else if (transferMode == TransferMode.OFF) {
             transfer.setPosition(GATE_CLOSE);
         }else if(transferMode == TransferMode.AUTO){
-            myOpMode.telemetry.addData("gateTimer:", gateTimer.milliseconds());
-            myOpMode.telemetry.addData("gateKeeper:", gateKeeper);
-            myOpMode.telemetry.addData("diff:", Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE));
+            //myOpMode.telemetry.addData("gateTimer:", gateTimer.milliseconds());
+            //myOpMode.telemetry.addData("gateKeeper:", gateKeeper);
+            //myOpMode.telemetry.addData("diff:", Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE));
             if(gateKeeper == false && gateTimer.milliseconds() > 100) {
                 if (Math.abs(shoot.getVelocity() / TICKS_PER_REVOLUTION * 60 - REVOLUTIONS_PER_MINUTE) <= 100) {
                     gateKeeper = true;
@@ -190,6 +192,10 @@ public class Shooter {
                 hood.setPosition(3.64E-4 + 0.014 * drivetrain.DISTANCE + 1.42E-4 * drivetrain.DISTANCE * Math.exp(2));
                 //2.79E-3*Math.exp(0.122*drivetrain.DISTANCE
             }
+        }
+        else if (hoodMode == HoodMode.AUTOCLOSE){
+            hood.setPosition(AUTOCLOSE + .07);
+            REVOLUTIONS_PER_MINUTE = CLOSE_RPM + 65;
         }
         if (shootMode == ShootMode.ON) {
             TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
@@ -290,11 +296,11 @@ public class Shooter {
         double measuredRPMLeft = shootLeft.getVelocity()/TICKS_PER_REVOLUTION*60;
 
         // Show the elapsed game time and wheel power.
-        myOpMode.telemetry.addData("Set RPM", REVOLUTIONS_PER_MINUTE);
-        myOpMode.telemetry.addData("Measured RPM", measuredRPM);
-        myOpMode.telemetry.addData("Measured RPM Left", measuredRPMLeft);
-        myOpMode.telemetry.addData("ShooterMode", shootMode);
-        myOpMode.telemetry.addData("diff:", Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE));
+        //myOpMode.telemetry.addData("Set RPM", REVOLUTIONS_PER_MINUTE);
+        //myOpMode.telemetry.addData("Measured RPM", measuredRPM);
+        //myOpMode.telemetry.addData("Measured RPM Left", measuredRPMLeft);
+        //myOpMode.telemetry.addData("ShooterMode", shootMode);
+        //myOpMode.telemetry.addData("diff:", Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE));
         myOpMode.telemetry.update();
 
         FtcDashboard dashboard = FtcDashboard.getInstance();

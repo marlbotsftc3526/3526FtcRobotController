@@ -71,6 +71,9 @@ public class Drivetrain {
     public static double HEADING_KI = 0.025;
     public static double HEADING_KD = 0.0001;
     public static double MAX_OUT = 0.8;
+    public static double offset = 0;
+    public static double LKI_RANGE = 0.008;
+    public static double LKI_BASE = 0.009;
 
     public static double DISTANCE = 0;
 
@@ -213,7 +216,7 @@ public class Drivetrain {
                     goalLocationY = 142;
 
                 }*/
-                myOpMode.telemetry.addData("goalLocationY: ", goalLocationY);
+                //myOpMode.telemetry.addData("goalLocationY: ", goalLocationY);
                autoAimAngle = angleWrap(Math.toDegrees(Math.atan2(roboLocationY - goalLocationY, roboLocationX-goalLocationX)));
                 DISTANCE = Math.sqrt((roboLocationX-15)*(roboLocationX-15)+(128-roboLocationY)*(128-roboLocationY));
             }else if(side == Drivetrain.SideMode.RED){
@@ -270,7 +273,6 @@ public class Drivetrain {
                 }
             }
             limelight.result = limelight.limelight.getLatestResult();
-            myOpMode.telemetry.addData("tx", limelight.result.getTx());
             myOpMode.telemetry.addData("isValid", limelight.result.isValid());
             if(limelight.result.isValid()){
                 limelight.fiducials = limelight.result.getFiducialResults();
@@ -283,20 +285,23 @@ public class Drivetrain {
                     myOpMode.telemetry.addData("bot pose", "(" + x + ", " + y + ")");
                 }
             }
+            myOpMode.telemetry.addData("tx offset", offset);
+            myOpMode.telemetry.addData("LIMELIGHT KI", LIMELIGHT_KI);
             if (myOpMode.gamepad2.left_trigger > 0.5 || myOpMode.gamepad1.left_trigger > 0.5) {
-
                 if(limelight.result.isValid() && Math.abs(limelight.result.getTx()) <= 10 && (DISTANCE >= 75 || roboLocationY >= 115)){
                     if(roboLocationY <= 60) {
                         if(side == Drivetrain.SideMode.RED) {
-                            turn = -limelightTurnController.calculate(0, limelight.result.getTx() - (-0.078*roboLocationX - 0.024*roboLocationY+5.83));
+                            offset = limelight.result.getTx() - (-0.078*roboLocationX - 0.024*roboLocationY+5.83);
                         }else if(side == Drivetrain.SideMode.BLUE){
-                            turn = -limelightTurnController.calculate(0, limelight.result.getTx() - (-0.078*(144-roboLocationX) - 0.024*roboLocationY+5.83));
+                            offset = limelight.result.getTx() - (-0.078*(144-roboLocationX) - 0.024*roboLocationY+5.83);
                         }
                     }else if(roboLocationY <= 118){
-                        turn = -limelightTurnController.calculate(0, limelight.result.getTx()-4);
+                        offset = limelight.result.getTx()-4;
                     }else{
-                        turn = -limelightTurnController.calculate(0, limelight.result.getTx()-7);
+                        offset = limelight.result.getTx()-7;
                     }
+                    LIMELIGHT_KI = LKI_RANGE*Math.exp(-0.5*Math.abs(offset))+LKI_BASE;
+                    turn = -limelightTurnController.calculate(0, offset);
                 }else{
                     double adjustedError = angleWrap(autoAimAngle - pinpoint.getHeading(AngleUnit.DEGREES));
                     turn = -headingController.calculate(adjustedError);
@@ -360,7 +365,7 @@ public class Drivetrain {
                 side = SideMode.BLUE;
                 myOpMode.telemetry.addData(">", "BLUE");
             }
-            myOpMode.telemetry.addData("kickstandmode: ", kickstand);
+            //myOpMode.telemetry.addData("kickstandmode: ", kickstand);
             myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
             myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
             myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);

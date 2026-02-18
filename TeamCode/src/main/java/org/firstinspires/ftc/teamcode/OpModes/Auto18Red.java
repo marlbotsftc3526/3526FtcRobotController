@@ -90,7 +90,7 @@ public class Auto18Red extends LinearOpMode {
         telemetry.addData("Status", "Waiting for Start");
         telemetry.update();
 
-        robot.shooter.hoodMode = Shooter.HoodMode.CLOSE; //linear
+        robot.shooter.hoodMode = Shooter.HoodMode.AUTOCLOSE; //linear
 
         //  Object xPosition = blackboard.getOrDefault(X_POS_KEY, 0);
         //Object yPosition = blackboard.getOrDefault(Y_POS_KEY, 0);
@@ -138,7 +138,7 @@ public class Auto18Red extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         currentState = State.COLLECT_ARTIFACTS;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -166,7 +166,7 @@ public class Auto18Red extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         currentState = State.COLLECT_ARTIFACTSFROMGATE;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -194,7 +194,7 @@ public class Auto18Red extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTSFROMGATE2;
                     }
@@ -205,7 +205,7 @@ public class Auto18Red extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.opengate2, true);
                     }
-                    if (timer.seconds() > 4 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
+                    if (timer.seconds() > 3.6 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
                         currentState = State.DRIVE_TO_LAUNCH_POSITION4;
                     }
                     break;
@@ -223,7 +223,7 @@ public class Auto18Red extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTS3;
                     }
@@ -234,7 +234,7 @@ public class Auto18Red extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.intakeballs2, true);
                     }
-                    if (!follower.isBusy() || timer.seconds() > 1.5 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
+                    if (!follower.isBusy() || timer.seconds() > 1.2 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
                         currentState = State.DRIVE_TO_LAUNCH_POSITION5;
                     }
                     break;
@@ -252,8 +252,7 @@ public class Auto18Red extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.UP;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.CLOSE;
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTS4;
                     }
@@ -327,6 +326,14 @@ public class Auto18Red extends LinearOpMode {
 
 
 
+
+
+
+
+
+
+
+
     public static class Paths {
         public PathChain launchzone1;
         public PathChain intakeballs1;
@@ -344,19 +351,19 @@ public class Auto18Red extends LinearOpMode {
         public Paths(Follower follower) {
             launchzone1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(112.132, 132.7541),
+                                    new Pose(112.132, 132.754),
 
-                                    new Pose(99.091, 97.352)
+                                    new Pose(92.716, 97.361)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-139))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-131))
 
                     .build();
 
             intakeballs1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(99.091, 97.352),
-                                    new Pose(71.980, 61.024),
-                                    new Pose(128.064, 57.948)
+                                    new Pose(92.716, 97.361),
+                                    new Pose(79.678, 59.107),
+                                    new Pose(130.382, 58.527)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -364,9 +371,9 @@ public class Auto18Red extends LinearOpMode {
 
             launchzone2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(128.064, 57.948),
-                                    new Pose(72.984, 60.001),
-                                    new Pose(99.091, 97.642)
+                                    new Pose(130.382, 58.527),
+                                    new Pose(79.937, 57.973),
+                                    new Pose(91.847, 86.342)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(225.5))
 
@@ -374,9 +381,9 @@ public class Auto18Red extends LinearOpMode {
 
             opengate = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(99.091, 97.642),
+                                    new Pose(91.847, 86.342),
                                     new Pose(84.321, 55.167),
-                                    new Pose(134.384, 59.461)
+                                    new Pose(134.349, 56.563)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(40))
 
@@ -384,9 +391,9 @@ public class Auto18Red extends LinearOpMode {
 
             launchzone3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(134.384, 59.461),
-                                    new Pose(74.122, 58.115),
-                                    new Pose(99.358, 97.213)
+                                    new Pose(134.349, 56.563),
+                                    new Pose(79.337, 58.115),
+                                    new Pose(91.824, 86.203)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(225.5))
 
@@ -394,8 +401,8 @@ public class Auto18Red extends LinearOpMode {
 
             opengate2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(99.358, 97.213),
-                                    new Pose(81.233, 58.083),
+                                    new Pose(91.824, 86.203),
+                                    new Pose(81.813, 56.055),
                                     new Pose(134.384, 59.461)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(40))
@@ -405,8 +412,8 @@ public class Auto18Red extends LinearOpMode {
             launchzone4 = follower.pathBuilder().addPath(
                             new BezierCurve(
                                     new Pose(134.384, 59.461),
-                                    new Pose(78.102, 58.981),
-                                    new Pose(99.358, 97.213)
+                                    new Pose(79.261, 58.401),
+                                    new Pose(91.824, 86.203)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(225.5))
 
@@ -414,7 +421,7 @@ public class Auto18Red extends LinearOpMode {
 
             intakeballs2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(99.358, 97.213),
+                                    new Pose(91.824, 86.203),
                                     new Pose(80.767, 89.039),
                                     new Pose(130.672, 85.183)
                             )
@@ -426,7 +433,7 @@ public class Auto18Red extends LinearOpMode {
                             new BezierLine(
                                     new Pose(130.672, 85.183),
 
-                                    new Pose(99.091, 97.352)
+                                    new Pose(94.769, 90.688)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(225.5))
 
@@ -434,8 +441,8 @@ public class Auto18Red extends LinearOpMode {
 
             intakeballs3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(99.091, 97.352),
-                                    new Pose(77.468, 34.443),
+                                    new Pose(94.769, 90.688),
+                                    new Pose(75.150, 25.171),
                                     new Pose(138.495, 36.217)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
@@ -446,7 +453,7 @@ public class Auto18Red extends LinearOpMode {
                             new BezierCurve(
                                     new Pose(138.495, 36.217),
                                     new Pose(107.115, 62.845),
-                                    new Pose(99.380, 97.062)
+                                    new Pose(91.847, 86.342)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(225.5))
 
@@ -454,7 +461,7 @@ public class Auto18Red extends LinearOpMode {
 
             ending = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(99.380, 97.062),
+                                    new Pose(91.847, 86.342),
 
                                     new Pose(98.295, 63.050)
                             )
@@ -463,6 +470,14 @@ public class Auto18Red extends LinearOpMode {
                     .build();
         }
     }
+
+
+
+
+
+
+
+
 
 
 
