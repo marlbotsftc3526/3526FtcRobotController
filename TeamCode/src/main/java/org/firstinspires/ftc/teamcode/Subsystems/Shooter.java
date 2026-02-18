@@ -214,8 +214,8 @@ public class Shooter {
             double measuredRPM = shoot.getVelocity()/TICKS_PER_REVOLUTION*60;
         }
         myOpMode.telemetry.addData("hoodMode: ", hoodMode);
-        myOpMode.telemetry.addData("hoodPosition: ", hood.getPosition());
-        myOpMode.telemetry.addData("rpm:", REVOLUTIONS_PER_MINUTE);
+        //myOpMode.telemetry.addData("hoodPosition: ", hood.getPosition());
+        //myOpMode.telemetry.addData("rpm:", REVOLUTIONS_PER_MINUTE);
     }
 
     public void teleOp() {
@@ -287,8 +287,8 @@ public class Shooter {
          */
 
 
-        myOpMode.telemetry.addData("HOOD_FAR_TESTING: ", HOOD_FAR_TESTING);
-        myOpMode.telemetry.addData("FAR_RPM_TESTING: ", FAR_RPM_TESTING);
+        //myOpMode.telemetry.addData("HOOD_FAR_TESTING: ", HOOD_FAR_TESTING);
+        //myOpMode.telemetry.addData("FAR_RPM_TESTING: ", FAR_RPM_TESTING);
         //myOpMode.telemetry.addData("sPIDF.p: ", sPIDF.p);
 
 
@@ -301,8 +301,8 @@ public class Shooter {
         //myOpMode.telemetry.addData("Measured RPM Left", measuredRPMLeft);
         //myOpMode.telemetry.addData("ShooterMode", shootMode);
         //myOpMode.telemetry.addData("diff:", Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE));
-        myOpMode.telemetry.update();
-
+        //myOpMode.telemetry.update();
+        /*
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
@@ -316,6 +316,8 @@ public class Shooter {
         dashboardTelemetry.addData("sd", sd);
         dashboardTelemetry.addData("sf", sf);
         dashboardTelemetry.update();
+
+         */
 
     }
 

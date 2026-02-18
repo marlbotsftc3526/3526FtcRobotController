@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.OpModes.PedroAutoBlueSide.Y_POS_KEY
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
+
+import java.util.List;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Meet0Teleop", group="Linear OpMode")
 
@@ -47,6 +50,13 @@ public class Meet0Teleop extends LinearOpMode{
         }*/
 
         waitForStart();
+
+        //set bulk reads
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+
         loopTimer.reset();
 
 

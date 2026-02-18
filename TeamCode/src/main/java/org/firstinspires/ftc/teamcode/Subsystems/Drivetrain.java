@@ -274,6 +274,7 @@ public class Drivetrain {
             }
             limelight.result = limelight.limelight.getLatestResult();
             myOpMode.telemetry.addData("isValid", limelight.result.isValid());
+            /*
             if(limelight.result.isValid()){
                 limelight.fiducials = limelight.result.getFiducialResults();
                 LLResultTypes.FiducialResult tag = limelight.fiducials.get(0);
@@ -285,8 +286,10 @@ public class Drivetrain {
                     myOpMode.telemetry.addData("bot pose", "(" + x + ", " + y + ")");
                 }
             }
+
+             */
             myOpMode.telemetry.addData("tx offset", offset);
-            myOpMode.telemetry.addData("LIMELIGHT KI", LIMELIGHT_KI);
+            //myOpMode.telemetry.addData("LIMELIGHT KI", LIMELIGHT_KI);
             if (myOpMode.gamepad2.left_trigger > 0.5 || myOpMode.gamepad1.left_trigger > 0.5) {
                 if(limelight.result.isValid() && Math.abs(limelight.result.getTx()) <= 10 && (DISTANCE >= 75 || roboLocationY >= 115)){
                     if(roboLocationY <= 60) {
@@ -360,18 +363,20 @@ public class Drivetrain {
 
             if(myOpMode.gamepad2.b){
                 side = SideMode.RED;
-                myOpMode.telemetry.addData(">", "RED");
+                //myOpMode.telemetry.addData(">", "RED");
             }else if(myOpMode.gamepad2.x){
                 side = SideMode.BLUE;
-                myOpMode.telemetry.addData(">", "BLUE");
+                //myOpMode.telemetry.addData(">", "BLUE");
             }
-            //myOpMode.telemetry.addData("kickstandmode: ", kickstand);
-            myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
+            //myOpMode.telemetry.addData("sideMode: ", side);
+            /*
+            myOpMode.telemetry.addData("kickstandmode: ", kickstand);
+            //myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
             myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
-            myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
-            myOpMode.telemetry.addData("roboX: ", roboLocationX);
-            myOpMode.telemetry.addData("roboY: ", roboLocationY);
-            myOpMode.telemetry.addData("Distance: ", DISTANCE);
+            //myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
+            //myOpMode.telemetry.addData("roboX: ", roboLocationX);
+            //myOpMode.telemetry.addData("roboY: ", roboLocationY);
+            //myOpMode.telemetry.addData("Distance: ", DISTANCE);
 
             FtcDashboard dashboard = FtcDashboard.getInstance();
             Telemetry dashboardTelemetry = dashboard.getTelemetry();
@@ -380,6 +385,8 @@ public class Drivetrain {
             dashboardTelemetry.addData("pinpoint Heading", pinpoint.getHeading(AngleUnit.DEGREES));
             dashboardTelemetry.addData("Limelight Tx", limelight.result.getTx());
             dashboardTelemetry.update();
+
+             */
         }
 
 
