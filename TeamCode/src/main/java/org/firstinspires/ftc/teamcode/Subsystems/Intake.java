@@ -142,31 +142,31 @@ public class Intake {
         if (detectedTop) {
             solidTop.setBrightness(50);
             //prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
-            myOpMode.telemetry.addLine("Top Object detected!");
+            //myOpMode.telemetry.addLine("Top Object detected!");
         } else {
             solidTop.setBrightness(0);
             //prism.insertAndUpdateAnimation(LayerHeight.LAYER_0, solidTop);
-            myOpMode.telemetry.addLine("No top object detected");
+            //myOpMode.telemetry.addLine("No top object detected");
         }
 
         if (detectedMiddle) {
             solidMiddle.setBrightness(50);
             //prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
-            myOpMode.telemetry.addLine("Middle Object detected!");
+            //myOpMode.telemetry.addLine("Middle Object detected!");
         } else {
             solidMiddle.setBrightness(0);
             //prism.insertAndUpdateAnimation(LayerHeight.LAYER_1, solidMiddle);
-            myOpMode.telemetry.addLine("No middle object detected");
+            //myOpMode.telemetry.addLine("No middle object detected");
         }
 
         if (detectedBottom) {
             solidBottom.setBrightness(50);
             //prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
-            myOpMode.telemetry.addLine("Bottom Object detected!");
+            //myOpMode.telemetry.addLine("Bottom Object detected!");
         } else {
             solidBottom.setBrightness(0);
             //prism.insertAndUpdateAnimation(LayerHeight.LAYER_2, solidBottom);
-            myOpMode.telemetry.addLine("No bottom object detected");
+            //myOpMode.telemetry.addLine("No bottom object detected");
         }
 
         if (detectedTop != toplaststate) {
@@ -186,10 +186,10 @@ public class Intake {
 
         if (kickMode == Intake.KickMode.IN) {
             kick.setPosition(WHEN_KICK_CLOSED);
-            myOpMode.telemetry.addLine("Kick is in (closed)");
+            //myOpMode.telemetry.addLine("Kick is in (closed)");
         } else if (kickMode == Intake.KickMode.OUT) {
             kick.setPosition(WHEN_KICK_OPEN);
-            myOpMode.telemetry.addLine("Kick is out (open)");
+            //myOpMode.telemetry.addLine("Kick is out (open)");
         }
 
         if (kickTimer.milliseconds()>=200){
