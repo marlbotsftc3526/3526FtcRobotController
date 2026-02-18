@@ -272,8 +272,10 @@ public class Drivetrain {
                             pinpoint.getHeading(AngleUnit.RADIANS))));
                 }
             }
-            limelight.result = limelight.limelight.getLatestResult();
-            myOpMode.telemetry.addData("isValid", limelight.result.isValid());
+            //limelight.result = limelight.limelight.getLatestResult();
+            //myOpMode.telemetry.addData("isValid", limelight.result.isValid());
+            //MODIFIED FOR LIMELIGHT IN SEPERATE THREAD
+            myOpMode.telemetry.addData("isVisable", limelight.targetVisible);
             if(limelight.result.isValid()){
                 limelight.fiducials = limelight.result.getFiducialResults();
                 LLResultTypes.FiducialResult tag = limelight.fiducials.get(0);

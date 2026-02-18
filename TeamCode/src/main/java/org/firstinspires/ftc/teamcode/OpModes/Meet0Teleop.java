@@ -47,6 +47,7 @@ public class Meet0Teleop extends LinearOpMode{
         }*/
 
         waitForStart();
+        robot.cameraThread.start();
         loopTimer.reset();
 
 
@@ -93,5 +94,6 @@ public class Meet0Teleop extends LinearOpMode{
 
              */
         }
+        robot.cameraThread.stop();
     }
 }

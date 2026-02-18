@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 import java.util.List;
 
-    public class LimeLight {
+    public class LimeLight implements Runnable{
         private OpMode myOpMode = null;
         public Limelight3A limelight = null;
 
@@ -21,9 +21,16 @@ import java.util.List;
 
         public List<LLResultTypes.FiducialResult> fiducials;
 
+        private volatile boolean running = true;
+
+        // Use 'volatile' so the Main Thread gets the latest updates instantly
+        public volatile double tx, ty, ta;
+        public volatile boolean targetVisible;
+
         public LimeLight (OpMode opmode) {
             myOpMode = opmode;
         }
+
         public void init (){
             limelight = myOpMode.hardwareMap.get(Limelight3A.class, "limelight");
             limelight.start();
@@ -38,6 +45,34 @@ import java.util.List;
 
         public void teleOp() {
 
+        }
+
+        @Override
+        public void run() {
+            while (running && !Thread.currentThread().isInterrupted()) {
+                // Fetch results from the Limelight
+                LLResult result = limelight.getLatestResult();
+
+                if (result != null && result.isValid()) {
+                    tx = result.getTx();
+                    ty = result.getTy();
+                    ta = result.getTa();
+                    targetVisible = true;
+                } else {
+                    targetVisible = false;
+                }
+
+                // Small sleep to prevent CPU hogging (10ms = 100fps)
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+        public void stop() {
+            running = false;
         }
 
     }

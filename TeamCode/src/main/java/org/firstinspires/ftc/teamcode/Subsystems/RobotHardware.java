@@ -11,6 +11,7 @@ public class RobotHardware {
     public Intake intake;
     public Shooter shooter;
     public LimeLight limelight;
+    public Thread cameraThread;
 
 
     public RobotHardware(OpMode opmode) {
@@ -21,6 +22,7 @@ public class RobotHardware {
     public void init() {
         limelight = new LimeLight(myOpMode);
         limelight.init();
+        cameraThread = new Thread(limelight);
         drivetrain = new Drivetrain(myOpMode, limelight);
         drivetrain.init();
         intake = new Intake(myOpMode);
