@@ -292,8 +292,8 @@ public class Shooter {
         //myOpMode.telemetry.addData("sPIDF.p: ", sPIDF.p);
 
 
-        double measuredRPM = shoot.getVelocity()/TICKS_PER_REVOLUTION*60;
-        double measuredRPMLeft = shootLeft.getVelocity()/TICKS_PER_REVOLUTION*60;
+        //double measuredRPM = shoot.getVelocity()/TICKS_PER_REVOLUTION*60;
+        //double measuredRPMLeft = shootLeft.getVelocity()/TICKS_PER_REVOLUTION*60;
 
         // Show the elapsed game time and wheel power.
         //myOpMode.telemetry.addData("Set RPM", REVOLUTIONS_PER_MINUTE);
