@@ -51,7 +51,7 @@ import java.util.List;
         public void run() {
             while (running && !Thread.currentThread().isInterrupted()) {
                 // Fetch results from the Limelight
-                LLResult result = limelight.getLatestResult();
+                result = limelight.getLatestResult();
 
                 if (result != null && result.isValid()) {
                     tx = result.getTx();

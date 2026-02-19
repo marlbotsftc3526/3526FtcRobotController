@@ -11,7 +11,7 @@ public class PIDController {
 
      */
 
-    double Kp, Ki, Kd;
+    public double Kp, Ki, Kd;
     double lastError = 0;
     double integralSum = 0;
     double integralCap = 0.25;
