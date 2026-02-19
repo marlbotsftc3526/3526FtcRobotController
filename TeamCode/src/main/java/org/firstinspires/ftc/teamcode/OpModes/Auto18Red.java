@@ -327,13 +327,6 @@ public class Auto18Red extends LinearOpMode {
 
 
 
-
-
-
-
-
-
-
     public static class Paths {
         public PathChain launchzone1;
         public PathChain intakeballs1;
@@ -383,19 +376,19 @@ public class Auto18Red extends LinearOpMode {
                             new BezierCurve(
                                     new Pose(91.847, 86.342),
                                     new Pose(84.321, 55.167),
-                                    new Pose(134.349, 56.563)
+                                    new Pose(134.710, 56.048)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(40))
+                    ).setConstantHeadingInterpolation(Math.toRadians(36))
 
                     .build();
 
             launchzone3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(134.349, 56.563),
+                                    new Pose(134.710, 56.048),
                                     new Pose(79.337, 58.115),
                                     new Pose(91.824, 86.203)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(225.5))
+                    ).setLinearHeadingInterpolation(Math.toRadians(35), Math.toRadians(225.5))
 
                     .build();
 
@@ -403,19 +396,19 @@ public class Auto18Red extends LinearOpMode {
                             new BezierCurve(
                                     new Pose(91.824, 86.203),
                                     new Pose(81.813, 56.055),
-                                    new Pose(134.384, 59.461)
+                                    new Pose(134.710, 56.048)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(40))
+                    ).setConstantHeadingInterpolation(Math.toRadians(36))
 
                     .build();
 
             launchzone4 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(134.384, 59.461),
+                                    new Pose(134.710, 56.048),
                                     new Pose(79.261, 58.401),
                                     new Pose(91.824, 86.203)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(225.5))
+                    ).setLinearHeadingInterpolation(Math.toRadians(40), Math.toRadians(225.5))
 
                     .build();
 
@@ -470,6 +463,9 @@ public class Auto18Red extends LinearOpMode {
                     .build();
         }
     }
+
+
+
 
 
 

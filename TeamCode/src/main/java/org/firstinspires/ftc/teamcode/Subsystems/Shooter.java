@@ -194,8 +194,8 @@ public class Shooter {
             }
         }
         else if (hoodMode == HoodMode.AUTOCLOSE){
-            hood.setPosition(AUTOCLOSE + .07);
-            REVOLUTIONS_PER_MINUTE = CLOSE_RPM + 65;
+            hood.setPosition(AUTOCLOSE + .05);
+            REVOLUTIONS_PER_MINUTE = CLOSE_RPM + 80;
         }
         if (shootMode == ShootMode.ON) {
             TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
