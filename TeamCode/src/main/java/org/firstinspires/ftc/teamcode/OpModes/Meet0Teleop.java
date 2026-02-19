@@ -107,6 +107,7 @@ public class Meet0Teleop extends LinearOpMode{
 
              */
         }
-        robot.cameraThread.stop();
+        robot.limelight.stop();
+        robot.cameraThread.interrupt();
     }
 }

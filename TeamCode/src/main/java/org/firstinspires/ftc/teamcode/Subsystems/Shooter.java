@@ -300,6 +300,7 @@ public class Shooter {
         //myOpMode.telemetry.addData("Measured RPM", measuredRPM);
         //myOpMode.telemetry.addData("Measured RPM Left", measuredRPMLeft);
         //myOpMode.telemetry.addData("ShooterMode", shootMode);
+        myOpMode.telemetry.addData("HoodMode", hoodMode);
         //myOpMode.telemetry.addData("diff:", Math.abs(shoot.getVelocity()/TICKS_PER_REVOLUTION*60 - REVOLUTIONS_PER_MINUTE));
         //myOpMode.telemetry.update();
         /*

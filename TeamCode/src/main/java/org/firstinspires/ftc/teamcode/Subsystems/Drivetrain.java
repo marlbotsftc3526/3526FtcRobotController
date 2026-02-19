@@ -72,6 +72,7 @@ public class Drivetrain {
     public static double HEADING_KD = 0.0001;
     public static double MAX_OUT = 0.8;
     public static double offset = 0;
+    public static double min_turn_speed = 0.2;
     public static double LKI_RANGE = 0.008;
     public static double LKI_BASE = 0.009;
 
@@ -231,7 +232,7 @@ public class Drivetrain {
                 DISTANCE = Math.sqrt((128-roboLocationX)*(128-roboLocationX) + (128-roboLocationY)*(128-roboLocationY));
             }
 
-            if(myOpMode.gamepad1.dpad_down){
+            if(myOpMode.gamepad1.dpad_down && myOpMode.gamepad1.left_bumper){
                 kickstand = KickstandMode.EXTENDED;
             }
             else if (myOpMode.gamepad1.dpad_up){
@@ -295,7 +296,7 @@ public class Drivetrain {
             }
 
              */
-            myOpMode.telemetry.addData("tx offset", offset);
+
             //myOpMode.telemetry.addData("LIMELIGHT KI", LIMELIGHT_KI);
             if (myOpMode.gamepad2.left_trigger > 0.5 || myOpMode.gamepad1.left_trigger > 0.5) {
                 //if(limelight.result.isValid() && Math.abs(limelight.result.getTx()) <= 10 && (DISTANCE >= 75 || roboLocationY >= 115)){
@@ -311,8 +312,11 @@ public class Drivetrain {
                     }else{
                         offset = limelight.tx-7;
                     }
-                    LIMELIGHT_KI = LKI_RANGE*Math.exp(-0.5*Math.abs(offset))+LKI_BASE;
+                    //LIMELIGHT_KI = LKI_RANGE*Math.exp(-0.5*Math.abs(offset))+LKI_BASE;
                     turn = -limelightTurnController.calculate(0, offset);
+                    //if(offset >= 0.5) {
+                        //turn = Math.signum(-limelightTurnController.calculate(0, offset)) * Math.max(Math.abs(-limelightTurnController.calculate(0, offset)), min_turn_speed);
+                    //}
                 }else{
                     double adjustedError = angleWrap(autoAimAngle - pinpoint.getHeading(AngleUnit.DEGREES));
                     turn = -headingController.calculate(adjustedError);
@@ -327,6 +331,7 @@ public class Drivetrain {
 
                 }
             }
+            myOpMode.telemetry.addData("tx offset", offset);
 
             leftFrontPower = (drive + turn - strafe);
             rightFrontPower = (drive - turn + strafe);
@@ -386,8 +391,7 @@ public class Drivetrain {
             //myOpMode.telemetry.addData("roboY: ", roboLocationY);
             //myOpMode.telemetry.addData("Distance: ", DISTANCE);
 
-            FtcDashboard dashboard = FtcDashboard.getInstance();
-            Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
 
             dashboardTelemetry.addData("AutoAim Angle", autoAimAngle);
             dashboardTelemetry.addData("pinpoint Heading", pinpoint.getHeading(AngleUnit.DEGREES));
@@ -395,6 +399,10 @@ public class Drivetrain {
             dashboardTelemetry.update();
 
              */
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry dashboardTelemetry = dashboard.getTelemetry();
+            dashboardTelemetry.addData("offset tx", offset);
+            dashboardTelemetry.update();
         }
 
 
