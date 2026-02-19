@@ -351,6 +351,7 @@ public class Drivetrain {
         //myOpMode.telemetry.addData("tx offset", offset);
         myOpMode.telemetry.addData("tx", limelight.tx);
         myOpMode.telemetry.addData("turn", turn);
+        myOpMode.telemetry.addData("min_turn_speed", min_turn_speed);
 
         leftFrontPower = (drive + turn - strafe);
         rightFrontPower = (drive - turn + strafe);
