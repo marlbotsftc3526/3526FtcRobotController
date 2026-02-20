@@ -63,11 +63,11 @@ import java.util.List;
                 }
 
                 // Small sleep to prevent CPU hogging (10ms = 100fps)
-                try {
-                    Thread.sleep(10);
+                /*try {
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                }
+                }*/
             }
         }
 

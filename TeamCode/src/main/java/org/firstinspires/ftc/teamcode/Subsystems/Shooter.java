@@ -70,7 +70,7 @@ public class Shooter {
     public static final double FAR_RPM = 4350; //4500//4475
     public static final double TICKS_PER_REVOLUTION = 28;
     public static final double TRANSFER_SPEED = -1;
-    public static final double GATE_OPEN = 0.52;
+    public static final double GATE_OPEN = 0.46;
     public static final double GATE_CLOSE=0.25;
     public static final double HOOD_CLOSE=0.625; //0.625
     public static double HOOD_FAR_TESTING = 1;
@@ -172,10 +172,15 @@ public class Shooter {
             REVOLUTIONS_PER_MINUTE*=RPM_TUNING_CONSTANT;
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }else if (hoodMode==HoodMode.LINEAR){
-            if (drivetrain.DISTANCE<=90){
+            if (drivetrain.roboLocationY <= 70){
                 REVOLUTIONS_PER_MINUTE=21.2*drivetrain.DISTANCE+2124;
-            } else {
-                REVOLUTIONS_PER_MINUTE=21.2*drivetrain.DISTANCE+2074;
+                if(REVOLUTIONS_PER_MINUTE <= 4300){
+                    REVOLUTIONS_PER_MINUTE = 4300;
+                }else if(REVOLUTIONS_PER_MINUTE >= 5000){
+                    REVOLUTIONS_PER_MINUTE = 5000;
+                }
+            }else{
+                REVOLUTIONS_PER_MINUTE=21.2*drivetrain.DISTANCE+2124;
             }
             if (drivetrain.DISTANCE>=48){
                 hood.setPosition(1);
@@ -229,11 +234,7 @@ public class Shooter {
         }
 
         if (myOpMode.gamepad2.right_trigger>.5 || myOpMode.gamepad1.right_trigger>.5) {//(myOpMode.gamepad1.right_trigger>.5||
-            if(drivetrain.DISTANCE <= 90) {
-                transferMode = TransferMode.ON;
-            }else{
                 transferMode = TransferMode.ON; //THIS WAS AUTO BEFORE, ITS ON TO TEST WEIGHTED FLYWHEEL ON FEB 3 2026
-            }
         } else {
             transferMode = TransferMode.OFF;
         }

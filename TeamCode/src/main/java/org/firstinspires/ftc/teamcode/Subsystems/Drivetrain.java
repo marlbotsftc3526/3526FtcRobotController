@@ -64,20 +64,22 @@ public class Drivetrain {
     public DrivetrainMode drivetrainMode = DrivetrainMode.FIELDCENTRIC;
     public SideMode side = SideMode.BLUE;
 
-    public static double LIMELIGHT_KP = 0.015;
-    public static double LIMELIGHT_KI = 0.009; //0.003
-    public static double LIMELIGHT_KD = 0.0003; // 0.0001
-    public static double HEADING_KP = 0.005;
-    public static double HEADING_KI = 0.025;
-    public static double HEADING_KD = 0.0001;
+    public static double LIMELIGHT_KP = 0.02;//0.015 2/19;
+    public static double LIMELIGHT_KI = 0;//0.009 2/19; //0.003
+    public static double LIMELIGHT_KD = 0; // 0.0003; 2/19// 0.0001
+    public static double HEADING_KP = 0.01;
+    public static double HEADING_KI = 0;
+    public static double HEADING_KD = 0;
     public static double MAX_OUT = 0.8;
     public static double offset = 0;
-    public static double min_turn_speed = 0.2;
-    public static double TRANSITION_THRESHOLD = 10;
+    public static double min_turn_speed = 0.1;
+    public static double TRANSITION_THRESHOLD = 15;
     public static double LKI_RANGE = 0.008;
     public static double LKI_BASE = 0.009;
 
     public static double DISTANCE = 0;
+    public static double roboLocationX;
+    public static double roboLocationY;
 
     public static double kickEXTENDED = 0.6;
     public static double kickRETRACTED = 0.3;
@@ -201,8 +203,8 @@ public class Drivetrain {
         double goalLocationY;
         double power = 1.6;
         double autoAimAngle = 0;
-        double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
-        double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
+        roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
+        roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
 
         if(side == Drivetrain.SideMode.BLUE){
             goalLocationX = 2;
@@ -311,27 +313,28 @@ public class Drivetrain {
         if (myOpMode.gamepad2.left_trigger > 0.5 || myOpMode.gamepad1.left_trigger > 0.5) {
             //if(limelight.result.isValid() && Math.abs(limelight.result.getTx()) <= 10 && (DISTANCE >= 75 || roboLocationY >= 115)){
             //if(limelight.targetVisible && Math.abs(limelight.tx) <= 10 && (DISTANCE >= 75 || roboLocationY >= 115)){
-            if(limelight.targetVisible && Math.abs(limelight.tx) <= TRANSITION_THRESHOLD){
-                /*
-                    if(roboLocationY <= 60) {
-                        if(side == Drivetrain.SideMode.RED) {
-                            offset = limelight.tx- (-0.078*roboLocationX - 0.024*roboLocationY+5.83);
-                        }else if(side == Drivetrain.SideMode.BLUE){
-                            offset = limelight.tx - (-0.078*(144-roboLocationX) - 0.024*roboLocationY+5.83);
-                        }
-                    }else if(roboLocationY <= 118){
-                        offset = limelight.tx-4;
-                    }else{
-                        offset = limelight.tx-7;
-                    }
-
-                 */
+            if(roboLocationY <= 60) {
+                if(side == Drivetrain.SideMode.RED) {
+                    offset = limelight.tx- (-0.078*roboLocationX - 0.024*roboLocationY+5.83);
+                }else if(side == Drivetrain.SideMode.BLUE){
+                    offset = limelight.tx - (-0.078*(144-roboLocationX) - 0.024*roboLocationY+5.83);
+                }
+            }else if(roboLocationY <= 118){
+                offset = limelight.tx-4;
+            }else{
+                offset = limelight.tx-7;
+            }
+            if(limelight.targetVisible && Math.abs(offset) <= TRANSITION_THRESHOLD && (DISTANCE >= 75 || roboLocationY >= 115)){
                     //LIMELIGHT_KI = LKI_RANGE*Math.exp(-0.5*Math.abs(offset))+LKI_BASE;
-                    turn = -limelightTurnController.calculate(0, limelight.tx);
-                    turn = Math.signum(turn) * Math.max(Math.abs(turn), min_turn_speed);
-                    //if(offset >= 0.5) {
-                    //turn = Math.signum(-limelightTurnController.calculate(0, offset)) * Math.max(Math.abs(-limelightTurnController.calculate(0, offset)), min_turn_speed);
-                    //}
+
+                    /*if(Math.abs(limelight.tx)>=1) {
+                        turn = -limelightTurnController.calculate(0, limelight.tx);
+                        turn = Math.signum(turn) * Math.max(Math.abs(turn), min_turn_speed);
+                    }*/
+                    if(Math.abs(offset) >= 1) {
+                        turn = -limelightTurnController.calculate(0, offset);
+                        turn = Math.signum(turn) * Math.max(Math.abs(turn), min_turn_speed);
+                    }
                 }else{
                     double adjustedError = angleWrap(autoAimAngle - pinpoint.getHeading(AngleUnit.DEGREES));
                     turn = -headingController.calculate(adjustedError);
@@ -348,7 +351,7 @@ public class Drivetrain {
 
             }
         }
-        //myOpMode.telemetry.addData("tx offset", offset);
+        myOpMode.telemetry.addData("tx offset", offset);
         myOpMode.telemetry.addData("tx", limelight.tx);
         myOpMode.telemetry.addData("turn", turn);
         myOpMode.telemetry.addData("min_turn_speed", min_turn_speed);
@@ -423,7 +426,7 @@ public class Drivetrain {
          */
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
-        dashboardTelemetry.addData("offset tx", offset);
+        dashboardTelemetry.addData("tx", limelight.tx);
         dashboardTelemetry.update();
     }
 
