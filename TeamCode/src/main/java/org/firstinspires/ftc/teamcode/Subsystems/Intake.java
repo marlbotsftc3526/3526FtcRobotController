@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver.Artboard;
 import org.firstinspires.ftc.teamcode.Prism.PrismConfigurator;
 
 import java.util.concurrent.TimeUnit;
-
+@Config
 public class Intake {
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
@@ -46,9 +47,12 @@ public class Intake {
     PrismAnimations.Solid solidMiddle = new PrismAnimations.Solid(Color.GREEN);
     PrismAnimations.Solid solidBottom = new PrismAnimations.Solid(Color.BLUE);
 
+
+
     //TODO Adjust based on desired states
     public enum IntakeMode {
         UP,
+        LAUNCH,
         DOWN,
         OFF,
 
@@ -63,6 +67,13 @@ public class Intake {
     public static final double WHEN_KICK_OPEN = 0;
     public static final double WHEN_KICK_CLOSED = .55;
     public Intake.KickMode kickMode = Intake.KickMode.IN;
+
+    public static double INTAKE_SPEED = 1;
+    public static double INTAKE_LAUNCHER_SPEED = 0.8;
+    public static double OUTTAKE_SPEED = -.5;
+
+    public Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;
+
 
     public Intake(OpMode opmode) {
         myOpMode = opmode;
@@ -117,17 +128,15 @@ public class Intake {
         myOpMode.telemetry.addData(">", "Intake Initialized");
 
     }
-    public static final double INTAKE_SPEED = 1;
-    public static final double OUTTAKE_SPEED = -.5;
-
-   public Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;
 
     public void update() {
 
         if (intakeMode == IntakeMode.UP) {
             // Send calculated power to wheels
             spin.setPower(INTAKE_SPEED);
-        } else if (intakeMode == IntakeMode.DOWN) {
+        } else if(intakeMode == IntakeMode.LAUNCH){
+            spin.setPower(INTAKE_LAUNCHER_SPEED);
+        }else if (intakeMode == IntakeMode.DOWN) {
             spin.setPower(OUTTAKE_SPEED);
         } else if (intakeMode == IntakeMode.OFF) {
             spin.setPower(0);

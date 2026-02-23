@@ -26,7 +26,7 @@ public class RobotHardware {
         drivetrain = new Drivetrain(myOpMode, limelight);
         drivetrain.init();
         intake = new Intake(myOpMode);
-        shooter = new Shooter(myOpMode, drivetrain);
+        shooter = new Shooter(myOpMode, drivetrain, intake);
 
 
         intake.init();
