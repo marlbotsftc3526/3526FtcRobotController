@@ -40,6 +40,7 @@ public class Shooter {
     public static double sd = 0;
     public static double sf = 0;
     public static double measuredRPM;
+    public static double hoodTune = 1;
 
     //TODO Adjust based on desired states
     public enum ShootMode {
@@ -71,6 +72,7 @@ public class Shooter {
     public static double FAR_RPM_TESTING = 4995;//4500
     public static final double FAR_RPM = 4350; //4500//4475
     public static final double TICKS_PER_REVOLUTION = 28;
+    public static int BANG_BANG_THRESHOLD = 10;
     public static final double TRANSFER_SPEED = -1;
     public static final double GATE_OPEN = 0.46;
     public static final double GATE_CLOSE=0.25;
@@ -178,14 +180,14 @@ public class Shooter {
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }else if (hoodMode==HoodMode.LINEAR){
             if (drivetrain.roboLocationY <= 70){
-                REVOLUTIONS_PER_MINUTE=21.2*drivetrain.DISTANCE+2124;
-                if(REVOLUTIONS_PER_MINUTE <= 4300){
-                    REVOLUTIONS_PER_MINUTE = 4300;
-                }else if(REVOLUTIONS_PER_MINUTE >= 5000){
-                    REVOLUTIONS_PER_MINUTE = 5000;
+                REVOLUTIONS_PER_MINUTE=0.0837*drivetrain.DISTANCE*drivetrain.DISTANCE+7.4251*drivetrain.DISTANCE+2426.6;
+                if(drivetrain.INZONE){
+                    REVOLUTIONS_PER_MINUTE=0.0837*drivetrain.DISTANCE*drivetrain.DISTANCE+7.4251*drivetrain.DISTANCE+2426.6;
                 }
             }else{
-                REVOLUTIONS_PER_MINUTE=21.2*drivetrain.DISTANCE+2124;
+                if(drivetrain.INZONE) {
+                    REVOLUTIONS_PER_MINUTE = 0.0837 * drivetrain.DISTANCE * drivetrain.DISTANCE + 7.4251 * drivetrain.DISTANCE + 2426.6;
+                }
             }
             if (drivetrain.DISTANCE>=48){
                 hood.setPosition(1);
@@ -222,7 +224,7 @@ public class Shooter {
             shoot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             shootLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             TICKS_PER_SECOND = REVOLUTIONS_PER_MINUTE / 60 * TICKS_PER_REVOLUTION;
-            if(Math.abs(measuredRPM - REVOLUTIONS_PER_MINUTE) >= 25){
+            if(Math.abs(measuredRPM - REVOLUTIONS_PER_MINUTE) >= BANG_BANG_THRESHOLD){
                 if(measuredRPM < REVOLUTIONS_PER_MINUTE) {
                     shoot.setPower(1);
                     shootLeft.setPower(1);
@@ -233,8 +235,10 @@ public class Shooter {
             }
 
         }
-        //myOpMode.telemetry.addData("hoodPosition: ", hood.getPosition());
-        //myOpMode.telemetry.addData("rpm:", REVOLUTIONS_PER_MINUTE);
+        myOpMode.telemetry.addData("hoodPosition: ", hood.getPosition());
+        myOpMode.telemetry.addData("set rpm:", REVOLUTIONS_PER_MINUTE);
+        myOpMode.telemetry.addData("measured RPM", measuredRPM);
+
     }
 
     public void teleOp() {
@@ -320,7 +324,7 @@ public class Shooter {
 
         // Show the elapsed game time and wheel power.
         //myOpMode.telemetry.addData("Set RPM", REVOLUTIONS_PER_MINUTE);
-        //myOpMode.telemetry.addData("Measured RPM", measuredRPM);
+
         //myOpMode.telemetry.addData("Measured RPM Left", measuredRPMLeft);
         //myOpMode.telemetry.addData("ShooterMode", shootMode);
         myOpMode.telemetry.addData("shootMode", shootMode);

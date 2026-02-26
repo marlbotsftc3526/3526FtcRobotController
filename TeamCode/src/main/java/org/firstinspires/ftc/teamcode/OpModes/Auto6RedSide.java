@@ -66,7 +66,7 @@ public class Auto6RedSide extends LinearOpMode {
     public void runOpMode() {
         robot = new RobotHardware(this);
         robot.init();
-        robot.drivetrain.side = Drivetrain.SideMode.BLUE;
+        robot.drivetrain.side = Drivetrain.SideMode.RED;
 
         follower = Constants.createFollower(hardwareMap);
         //TODO Set starting pose from path generation

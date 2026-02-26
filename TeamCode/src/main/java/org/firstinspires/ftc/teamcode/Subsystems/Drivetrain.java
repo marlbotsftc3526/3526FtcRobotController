@@ -80,6 +80,7 @@ public class Drivetrain {
     public static double DISTANCE = 0;
     public static double roboLocationX;
     public static double roboLocationY;
+    public static boolean INZONE;
 
     public static double kickEXTENDED = 0.6;
     public static double kickRETRACTED = 0.3;
@@ -264,7 +265,13 @@ public class Drivetrain {
             pinpoint.setPosX(72,DistanceUnit.INCH);
             pinpoint.setPosY(72, DistanceUnit.INCH);
         }*/
-
+        if(Math.abs(72-roboLocationX) <= -roboLocationY+48){
+            INZONE = true;
+        }else if(Math.abs(72-roboLocationX) - 12 <= roboLocationY - 72){
+            INZONE = true;
+        }else{
+            INZONE = false;
+        }
         if (drivetrainMode == Drivetrain.DrivetrainMode.ROBOTCENTRIC) {
             // Send calculated power to wheels
             drive = myOpMode.gamepad1.left_stick_y;
@@ -290,7 +297,7 @@ public class Drivetrain {
         //myOpMode.telemetry.addData("isValid", limelight.result.isValid());
         //MODIFIED FOR LIMELIGHT IN SEPERATE THREAD
         myOpMode.telemetry.addData("tagVisible", limelight.targetVisible);
-
+        myOpMode.telemetry.addData("INZONE", INZONE);
         //limelight.result = limelight.limelight.getLatestResult();
         //myOpMode.telemetry.addData("isValid", limelight.result.isValid());
         /*
@@ -315,15 +322,25 @@ public class Drivetrain {
             //if(limelight.targetVisible && Math.abs(limelight.tx) <= 10 && (DISTANCE >= 75 || roboLocationY >= 115)){
             if(roboLocationY <= 60) {
                 if(side == Drivetrain.SideMode.RED) {
-                    offset = limelight.tx- (-0.078*roboLocationX - 0.024*roboLocationY+5.83);
+                    offset = limelight.tx- (-0.083*roboLocationX - 0.024*roboLocationY+5.7);
                 }else if(side == Drivetrain.SideMode.BLUE){
                     offset = limelight.tx - (-0.078*(144-roboLocationX) - 0.024*roboLocationY+5.83);
                 }
-            }else if(roboLocationY <= 118){
+            }else {
+                if(side == Drivetrain.SideMode.RED) {
+                    offset = limelight.tx-(33.2402 - 0.7239 * roboLocationX - 0.2277 * roboLocationY + 0.00208 * roboLocationX * roboLocationX
+                            - 0.0002 * roboLocationY * roboLocationY + 0.00503 * roboLocationX * roboLocationY);
+                }else if(side == Drivetrain.SideMode.BLUE) {
+                    offset = limelight.tx-(33.2402 - 0.7239 * (144-roboLocationX) - 0.2277 * roboLocationY + 0.00208 * (144-roboLocationX)  * (144-roboLocationX)
+                            - 0.0002 * roboLocationY * roboLocationY + 0.00503 * (144-roboLocationX)  * roboLocationY);
+                }
+            }
+
+                /*if(roboLocationY <= 118){
                 offset = limelight.tx-4;
             }else{
                 offset = limelight.tx-7;
-            }
+            }*/ //feb 25, trying ashlynne's new close curve
             if(limelight.targetVisible && Math.abs(offset) <= TRANSITION_THRESHOLD && (DISTANCE >= 75 || roboLocationY >= 115)){
                     //LIMELIGHT_KI = LKI_RANGE*Math.exp(-0.5*Math.abs(offset))+LKI_BASE;
 
@@ -407,23 +424,23 @@ public class Drivetrain {
             //myOpMode.telemetry.addData(">", "BLUE");
         }
         //myOpMode.telemetry.addData("sideMode: ", side);
-        /*
-        myOpMode.telemetry.addData("kickstandmode: ", kickstand);
+
+        //myOpMode.telemetry.addData("kickstandmode: ", kickstand);
         //myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
-        myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
+        //myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
         //myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
-        //myOpMode.telemetry.addData("roboX: ", roboLocationX);
-        //myOpMode.telemetry.addData("roboY: ", roboLocationY);
+        myOpMode.telemetry.addData("roboX: ", roboLocationX);
+        myOpMode.telemetry.addData("roboY: ", roboLocationY);
         //myOpMode.telemetry.addData("Distance: ", DISTANCE);
 
 
 
-        dashboardTelemetry.addData("AutoAim Angle", autoAimAngle);
-        dashboardTelemetry.addData("pinpoint Heading", pinpoint.getHeading(AngleUnit.DEGREES));
-        dashboardTelemetry.addData("Limelight Tx", limelight.result.getTx());
-        dashboardTelemetry.update();
+       // dashboardTelemetry.addData("AutoAim Angle", autoAimAngle);
+       // dashboardTelemetry.addData("pinpoint Heading", pinpoint.getHeading(AngleUnit.DEGREES));
+       // dashboardTelemetry.addData("Limelight Tx", limelight.result.getTx());
+       // dashboardTelemetry.update();
 
-         */
+
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
         dashboardTelemetry.addData("tx", limelight.tx);
