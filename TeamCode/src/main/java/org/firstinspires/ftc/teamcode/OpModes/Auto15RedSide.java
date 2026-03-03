@@ -111,7 +111,7 @@ public class Auto15RedSide extends LinearOpMode {
                         //ex. set path to follow
                         follower.followPath(paths.launchzone1, true);
                         //ex. turn shooter on
-                        robot.shooter.shootMode = Shooter.ShootMode.ON;
+                        robot.shooter.shootMode = Shooter.ShootMode.BANGBANG;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
 

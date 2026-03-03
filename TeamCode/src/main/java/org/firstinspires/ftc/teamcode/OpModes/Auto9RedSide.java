@@ -379,6 +379,13 @@ public class Auto9RedSide extends LinearOpMode {
 
 
 
+
+
+
+
+
+
+
     public static class Paths {
         public PathChain launchartifacts1;
         public PathChain intakeartifacts1;
@@ -398,19 +405,19 @@ public class Auto9RedSide extends LinearOpMode {
         public Paths(Follower follower) {
             launchartifacts1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(88.000, 8.000),
+                                    new Pose(87.823, 7.865),
 
-                                    new Pose(84.733, 18.578)
+                                    new Pose(86.000, 18.578)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(243))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(245))
 
                     .build();
 
             intakeartifacts1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(84.733, 18.578),
-                                    new Pose(144.225, 78.047),
-                                    new Pose(133.555, 37.910)
+                                    new Pose(86.000, 18.578),
+                                    new Pose(88.683, 37.786),
+                                    new Pose(132.967, 34.384)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -418,19 +425,19 @@ public class Auto9RedSide extends LinearOpMode {
 
             launchartifacts2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(133.555, 37.910),
+                                    new Pose(132.967, 34.384),
 
-                                    new Pose(84.634, 18.379)
+                                    new Pose(86.000, 18.379)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(243))
+                    ).setConstantHeadingInterpolation(Math.toRadians(242))
 
                     .build();
 
             intakeartifacts2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(84.634, 18.379),
+                                    new Pose(86.000, 18.379),
 
-                                    new Pose(139.195, 12.415)
+                                    new Pose(138.313, 13.003)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -438,9 +445,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             launchartifacts3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(139.195, 12.415),
+                                    new Pose(138.313, 13.003),
 
-                                    new Pose(84.674, 18.306)
+                                    new Pose(86.000, 18.306)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(243))
 
@@ -448,9 +455,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             intakeartifacts3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(84.674, 18.306),
+                                    new Pose(86.000, 18.306),
 
-                                    new Pose(136.396, 6.746)
+                                    new Pose(138.159, 5.277)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -458,9 +465,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             launchartifacts4 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(136.396, 6.746),
+                                    new Pose(138.159, 5.277),
 
-                                    new Pose(84.769, 18.523)
+                                    new Pose(86.000, 18.523)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(243))
 
@@ -468,9 +475,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             intakeartifacts4 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(84.769, 18.523),
+                                    new Pose(86.000, 18.523),
 
-                                    new Pose(139.637, 3.652)
+                                    new Pose(139.637, 1.007)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -478,9 +485,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             launchartifacts5 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(139.637, 3.652),
+                                    new Pose(139.637, 1.007),
 
-                                    new Pose(84.693, 18.632)
+                                    new Pose(86.000, 18.632)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(243))
 
@@ -488,9 +495,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             intakeartifacts5 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(84.693, 18.632),
+                                    new Pose(86.000, 18.632),
 
-                                    new Pose(140.072, 8.030)
+                                    new Pose(139.778, 4.797)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -498,9 +505,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             launchartifacts6 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(140.072, 8.030),
+                                    new Pose(139.778, 4.797),
 
-                                    new Pose(84.688, 18.356)
+                                    new Pose(86.000, 18.356)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(243))
 
@@ -508,9 +515,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             intakeartifacts6 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(84.688, 18.356),
+                                    new Pose(86.000, 18.356),
 
-                                    new Pose(139.787, 6.154)
+                                    new Pose(139.787, 2.333)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -518,9 +525,9 @@ public class Auto9RedSide extends LinearOpMode {
 
             launchartifacts7 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(139.787, 6.154),
+                                    new Pose(139.787, 2.333),
 
-                                    new Pose(84.683, 18.338)
+                                    new Pose(86.000, 18.338)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(243))
 
@@ -528,7 +535,7 @@ public class Auto9RedSide extends LinearOpMode {
 
             end = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(84.683, 18.338),
+                                    new Pose(86.000, 18.338),
 
                                     new Pose(99.357, 16.285)
                             )
@@ -537,6 +544,13 @@ public class Auto9RedSide extends LinearOpMode {
                     .build();
         }
     }
+
+
+
+
+
+
+
 
 
 

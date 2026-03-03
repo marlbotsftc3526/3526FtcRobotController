@@ -83,7 +83,7 @@ public class Auto9BlueSide extends LinearOpMode {
         telemetry.addData("Status", "Waiting for Start");
         telemetry.update();
 
-        robot.shooter.hoodMode = Shooter.HoodMode.LINEAR;
+        robot.shooter.hoodMode = Shooter.HoodMode.FAR;
 
         //  Object xPosition = blackboard.getOrDefault(X_POS_KEY, 0);
         //Object yPosition = blackboard.getOrDefault(Y_POS_KEY, 0);
@@ -107,7 +107,7 @@ public class Auto9BlueSide extends LinearOpMode {
                         //ex. set path to follow
                         follower.followPath(paths.launchartifacts1,true);
                         //ex. turn shooter on
-                        robot.shooter.shootMode = Shooter.ShootMode.ON;
+                        robot.shooter.shootMode = Shooter.ShootMode.BANGBANG;
                     }
 
                     //set the condition to advance to the next state
@@ -125,9 +125,9 @@ public class Auto9BlueSide extends LinearOpMode {
                     if(onStateStart()){
                         //you could restart timers in here
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
-                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
                     if(timer.seconds() > 1.5) {
                         currentState = State.COLLECT_ARTIFACTS;
@@ -136,6 +136,7 @@ public class Auto9BlueSide extends LinearOpMode {
                     break;
                 case COLLECT_ARTIFACTS:
                     if(onStateStart()){
+                        timer.reset();
                         follower.followPath(paths.intakeartifacts1,true);
                     }
                     if(!follower.isBusy() || timer.seconds()> 1.5|| robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom){
@@ -144,6 +145,7 @@ public class Auto9BlueSide extends LinearOpMode {
                     break;
                 case DRIVE_TO_LAUNCH_POSITION2:
                     if(onStateStart()){
+                        timer.reset();
                         follower.followPath(paths.launchartifacts2, true);
                     }
                     if(!follower.isBusy()){
@@ -154,9 +156,9 @@ public class Auto9BlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS2:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
-                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
 
                     if(timer.seconds() >1.5){
                         currentState = State.COLLECT_ARTIFACTS2;
@@ -183,9 +185,9 @@ public class Auto9BlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS3:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
-                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
 
                     if(timer.seconds() >1.7){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
@@ -212,21 +214,12 @@ public class Auto9BlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS4:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
-                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
 
                     if(timer.seconds() >1.7){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
-                        currentState = State.STRAIGHT4;
-                    }
-                    break;
-                case STRAIGHT4:
-                    if(onStateStart()){
-                        follower.followPath(paths.turntointake, true);
-                    }
-
-                    if(!follower.isBusy()){
                         currentState = State.COLLECT_ARTIFACTS5;
                     }
                     break;
@@ -250,9 +243,9 @@ public class Auto9BlueSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS5:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
-                    robot.shooter.transferMode = Shooter.TransferMode.AUTO;
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
 
                     if(timer.seconds() >1.7){
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
@@ -294,6 +287,7 @@ public class Auto9BlueSide extends LinearOpMode {
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
 
 
+
     public static class Paths {
         public PathChain launchartifacts1;
         public PathChain intakeartifacts1;
@@ -302,9 +296,10 @@ public class Auto9BlueSide extends LinearOpMode {
         public PathChain launchartifacts3;
         public PathChain intakeartifacts3;
         public PathChain launchartifacts4;
-        public PathChain turntointake;
         public PathChain intakeartifacts4;
         public PathChain launchartifacts5;
+        public PathChain intakeartifacts5;
+        public PathChain launchartifacts6;
         public PathChain end;
 
         public Paths(Follower follower) {
@@ -314,7 +309,7 @@ public class Auto9BlueSide extends LinearOpMode {
 
                                     new Pose(55.417, 14.466)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(300))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(296))
 
                     .build();
 
@@ -322,7 +317,7 @@ public class Auto9BlueSide extends LinearOpMode {
                             new BezierCurve(
                                     new Pose(55.417, 14.466),
                                     new Pose(60.369, 39.996),
-                                    new Pose(12.079, 35.438)
+                                    new Pose(11.003, 34.383)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -330,95 +325,106 @@ public class Auto9BlueSide extends LinearOpMode {
 
             launchartifacts2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(12.079, 35.438),
+                                    new Pose(11.003, 34.383),
 
-                                    new Pose(53.373, 13.640)
+                                    new Pose(59.367, 18.379)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(294))
+                    ).setConstantHeadingInterpolation(Math.toRadians(296))
 
                     .build();
 
             intakeartifacts2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(53.373, 13.640),
+                                    new Pose(59.367, 18.379),
                                     new Pose(33.894, 10.696),
-                                    new Pose(10.287, 13.363)
+                                    new Pose(5.687, 13.003)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(294), Math.toRadians(180))
+                    ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                     .build();
 
             launchartifacts3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(10.287, 13.363),
+                                    new Pose(5.687, 13.003),
 
-                                    new Pose(53.129, 13.581)
+                                    new Pose(59.367, 18.379)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(294))
+                    ).setConstantHeadingInterpolation(Math.toRadians(296))
 
                     .build();
 
             intakeartifacts3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(53.129, 13.581),
+                                    new Pose(59.367, 18.379),
                                     new Pose(32.010, 6.944),
-                                    new Pose(7.303, 8.988)
+                                    new Pose(5.841, 5.277)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(294), Math.toRadians(180))
+                    ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                     .build();
 
             launchartifacts4 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(7.303, 8.988),
+                                    new Pose(5.841, 5.277),
 
-                                    new Pose(53.003, 13.635)
+                                    new Pose(59.367, 18.379)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(294))
-
-                    .build();
-
-            turntointake = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(53.003, 13.635),
-
-                                    new Pose(33.480, 9.421)
-                            )
-                    ).setLinearHeadingInterpolation(Math.toRadians(294), Math.toRadians(180))
+                    ).setConstantHeadingInterpolation(Math.toRadians(296))
 
                     .build();
 
             intakeartifacts4 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(33.480, 9.421),
+                                    new Pose(59.367, 18.379),
 
-                                    new Pose(5.134, 4.096)
+                                    new Pose(4.363, 1.007)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                    ).setConstantHeadingInterpolation(Math.toRadians(180))
 
                     .build();
 
             launchartifacts5 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(5.134, 4.096),
+                                    new Pose(4.363, 1.007),
 
-                                    new Pose(53.416, 13.411)
+                                    new Pose(59.367, 18.379)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(294))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(296))
+
+                    .build();
+
+            intakeartifacts5 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(59.367, 18.379),
+
+                                    new Pose(4.222, 4.797)
+                            )
+                    ).setConstantHeadingInterpolation(Math.toRadians(180))
+
+                    .build();
+
+            launchartifacts6 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(4.222, 4.797),
+
+                                    new Pose(59.367, 18.379)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(296))
 
                     .build();
 
             end = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(53.416, 13.411),
+                                    new Pose(59.367, 18.379),
 
                                     new Pose(38.727, 13.309)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(294), Math.toRadians(180))
+                    ).setConstantHeadingInterpolation(Math.toRadians(296))
 
                     .build();
         }
     }
+
 
 
 

@@ -180,7 +180,6 @@ public class Shooter {
             //REVOLUTIONS_PER_MINUTE = FAR_RPM_TESTING;
         }else if (hoodMode==HoodMode.LINEAR){
             if (drivetrain.roboLocationY <= 70){
-                REVOLUTIONS_PER_MINUTE=0.0837*drivetrain.DISTANCE*drivetrain.DISTANCE+7.4251*drivetrain.DISTANCE+2426.6;
                 if(drivetrain.INZONE){
                     REVOLUTIONS_PER_MINUTE=0.0837*drivetrain.DISTANCE*drivetrain.DISTANCE+7.4251*drivetrain.DISTANCE+2426.6;
                 }
@@ -189,10 +188,11 @@ public class Shooter {
                     REVOLUTIONS_PER_MINUTE = 0.0837 * drivetrain.DISTANCE * drivetrain.DISTANCE + 7.4251 * drivetrain.DISTANCE + 2426.6;
                 }
             }
-            if (drivetrain.DISTANCE>=48){
+            if (drivetrain.DISTANCE>=60){
                 hood.setPosition(1);
             }else {
-                hood.setPosition(3.64E-4 + 0.014 * drivetrain.DISTANCE + 1.42E-4 * drivetrain.DISTANCE * Math.exp(2));
+                hood.setPosition(0.0208+0.0167*drivetrain.DISTANCE);
+                //hood.setPosition(3.64E-4 + 0.008 * drivetrain.DISTANCE + 1.42E-4 * drivetrain.DISTANCE * drivetrain.DISTANCE);
                 //2.79E-3*Math.exp(0.122*drivetrain.DISTANCE
             }
         }else if(hoodMode == HoodMode.TUNING){

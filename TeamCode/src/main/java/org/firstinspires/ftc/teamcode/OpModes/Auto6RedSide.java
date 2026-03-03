@@ -108,7 +108,7 @@ public class Auto6RedSide extends LinearOpMode {
                         //ex. set path to follow
                         follower.followPath(paths.launchartifacts1,true);
                         //ex. turn shooter on
-                        robot.shooter.shootMode = Shooter.ShootMode.ON;
+                        robot.shooter.shootMode = Shooter.ShootMode.BANGBANG;
                     }
 
                     //set the condition to advance to the next state
@@ -126,7 +126,7 @@ public class Auto6RedSide extends LinearOpMode {
                     if(onStateStart()){
                         //you could restart timers in here
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
@@ -156,7 +156,7 @@ public class Auto6RedSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS2:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
@@ -189,7 +189,7 @@ public class Auto6RedSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS3:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
@@ -231,7 +231,7 @@ public class Auto6RedSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS4:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
@@ -272,7 +272,7 @@ public class Auto6RedSide extends LinearOpMode {
                 case LAUNCH_ARTIFACTS5:
                     if(onStateStart()){
                         timer.reset();
-                        robot.intake.intakeMode = Intake.IntakeMode.UP;
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
@@ -358,7 +358,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.134, 17.607)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(247))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(250)) // was 247, changed in scrimmage
 
                     .build();
 
@@ -368,7 +368,7 @@ public class Auto6RedSide extends LinearOpMode {
                                     new Pose(106.047, 10.020),
                                     new Pose(140.739, 9.171)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(250), Math.toRadians(0))
 
                     .build();
 
@@ -378,7 +378,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.236, 17.458)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(247))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(250)) // was 247, changed in scrimmage
 
                     .build();
 
@@ -388,7 +388,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(101.400, 13.907)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(250), Math.toRadians(0))
 
                     .build();
 
@@ -408,7 +408,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.236, 17.452)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(247))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(250)) // was 247, changed in scrimmage
 
                     .build();
 
@@ -418,7 +418,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(108.767, 10.358)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(250), Math.toRadians(0))
 
                     .build();
 
@@ -438,7 +438,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.126, 17.487)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(247))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(250)) // was 247, changed in scrimmage
 
                     .build();
 
@@ -448,7 +448,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(109.992, 9.935)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(247), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(250), Math.toRadians(0))
 
                     .build();
         }

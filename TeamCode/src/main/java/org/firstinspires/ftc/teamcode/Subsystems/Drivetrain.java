@@ -265,7 +265,7 @@ public class Drivetrain {
             pinpoint.setPosX(72,DistanceUnit.INCH);
             pinpoint.setPosY(72, DistanceUnit.INCH);
         }*/
-        if(Math.abs(72-roboLocationX) <= -roboLocationY+48){
+        if(Math.abs(72-roboLocationX) <= -roboLocationY+36){
             INZONE = true;
         }else if(Math.abs(72-roboLocationX) - 12 <= roboLocationY - 72){
             INZONE = true;
@@ -324,15 +324,16 @@ public class Drivetrain {
                 if(side == Drivetrain.SideMode.RED) {
                     offset = limelight.tx- (-0.083*roboLocationX - 0.024*roboLocationY+5.7);
                 }else if(side == Drivetrain.SideMode.BLUE){
-                    offset = limelight.tx - (-0.078*(144-roboLocationX) - 0.024*roboLocationY+5.83);
+                    offset = limelight.tx - (-13.06+0.283*roboLocationX+0.443*roboLocationY-0.0018*roboLocationX*roboLocationX
+                            -0.0084*roboLocationY*roboLocationY-0.0012*roboLocationX*roboLocationY);
                 }
             }else {
                 if(side == Drivetrain.SideMode.RED) {
                     offset = limelight.tx-(33.2402 - 0.7239 * roboLocationX - 0.2277 * roboLocationY + 0.00208 * roboLocationX * roboLocationX
                             - 0.0002 * roboLocationY * roboLocationY + 0.00503 * roboLocationX * roboLocationY);
                 }else if(side == Drivetrain.SideMode.BLUE) {
-                    offset = limelight.tx-(33.2402 - 0.7239 * (144-roboLocationX) - 0.2277 * roboLocationY + 0.00208 * (144-roboLocationX)  * (144-roboLocationX)
-                            - 0.0002 * roboLocationY * roboLocationY + 0.00503 * (144-roboLocationX)  * roboLocationY);
+                    offset = limelight.tx-(71.1395-0.297*roboLocationX-0.9632*roboLocationY-0.002*roboLocationX*roboLocationX
+                            +0.0054*roboLocationX*roboLocationY+0.002*roboLocationY*roboLocationY);
                 }
             }
 
@@ -360,10 +361,10 @@ public class Drivetrain {
 
         if(myOpMode.gamepad2.right_bumper){
             if(side == Drivetrain.SideMode.RED){
-                double adjustedError = angleWrap(38 - pinpoint.getHeading(AngleUnit.DEGREES));
+                double adjustedError = angleWrap(35 - pinpoint.getHeading(AngleUnit.DEGREES));
                 turn = -headingController.calculate(adjustedError);
             }else if(side == Drivetrain.SideMode.BLUE){
-                double adjustedError = angleWrap(142 - pinpoint.getHeading(AngleUnit.DEGREES));
+                double adjustedError = angleWrap(145 - pinpoint.getHeading(AngleUnit.DEGREES));
                 turn = -headingController.calculate(adjustedError);
 
             }
@@ -427,7 +428,7 @@ public class Drivetrain {
 
         //myOpMode.telemetry.addData("kickstandmode: ", kickstand);
         //myOpMode.telemetry.addData("drivetrainMode: ", drivetrainMode);
-        //myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
+        myOpMode.telemetry.addData("heading: ", pinpoint.getHeading(AngleUnit.DEGREES));
         //myOpMode.telemetry.addData("AutoAim Angle ", autoAimAngle);
         myOpMode.telemetry.addData("roboX: ", roboLocationX);
         myOpMode.telemetry.addData("roboY: ", roboLocationY);
