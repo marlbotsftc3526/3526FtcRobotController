@@ -69,7 +69,7 @@ public class Intake {
     public Intake.KickMode kickMode = Intake.KickMode.IN;
 
     public static double INTAKE_SPEED = 1;
-    public static double INTAKE_LAUNCHER_SPEED = 0.8;
+    public static double INTAKE_LAUNCHER_SPEED = 0.7;
     public static double OUTTAKE_SPEED = -.5;
 
     public Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;

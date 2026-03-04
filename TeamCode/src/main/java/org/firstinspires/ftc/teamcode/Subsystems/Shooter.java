@@ -79,7 +79,7 @@ public class Shooter {
     public static final double HOOD_CLOSE=0.625; //0.625
     public static double HOOD_FAR_TESTING = 1;
     public static double HOOD_RETRACTED = 1;
-    public static final double AUTOCLOSE = .625;
+    public static final double AUTOCLOSE = .65;
    // 4790
    // public static final double HOOD_AUTO = .75;
     public static final double HOOD_FAR=1;
