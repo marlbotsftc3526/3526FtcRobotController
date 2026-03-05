@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
-@Autonomous(name = "Auto18RedTest", group = "AutoTemplates")
+@Autonomous(name = "Auto18Red", group = "AutoTemplates")
 public class Auto18RedTest extends LinearOpMode {
     //Declare Robot and Follower
     RobotHardware robot;

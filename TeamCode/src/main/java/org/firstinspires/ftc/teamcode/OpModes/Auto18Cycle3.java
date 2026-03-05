@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-
+@Disabled
 @Autonomous(name = "Auto18RedCycle3", group = "AutoTemplates")
 public class Auto18Cycle3 extends LinearOpMode {
     //Declare Robot and Follower

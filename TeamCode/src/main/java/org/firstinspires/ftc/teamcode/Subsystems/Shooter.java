@@ -55,7 +55,8 @@ public class Shooter {
         FAR,
         LINEAR,
         TUNING,
-        AUTOCLOSE
+        AUTOCLOSE,
+        AUTOFAR
     }
 
     public enum TransferMode {
@@ -80,6 +81,7 @@ public class Shooter {
     public static double HOOD_FAR_TESTING = 1;
     public static double HOOD_RETRACTED = 1;
     public static final double AUTOCLOSE = .65;
+    public static final double AUTOFARRPM = 4350;
    // 4790
    // public static final double HOOD_AUTO = .75;
     public static final double HOOD_FAR=1;
