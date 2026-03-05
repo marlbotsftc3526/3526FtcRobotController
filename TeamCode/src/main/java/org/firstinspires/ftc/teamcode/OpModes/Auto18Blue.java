@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
@@ -8,8 +9,10 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
@@ -45,9 +48,11 @@ public class Auto18Blue extends LinearOpMode {
         DRIVE_TO_LAUNCH_POSITION2,
         LAUNCH_ARTIFACTS2,
         COLLECT_ARTIFACTSFROMGATE,
+        SLOW,
         DRIVE_TO_LAUNCH_POSITION3,
         LAUNCH_ARTIFACTS3,
         COLLECT_ARTIFACTSFROMGATE2,
+        SLOW2,
         DRIVE_TO_LAUNCH_POSITION4,
         LAUNCH_ARTIFACTS4,
         COLLECT_ARTIFACTS3,
@@ -97,6 +102,7 @@ public class Auto18Blue extends LinearOpMode {
         waitForStart();
         timer.reset();
 
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive() && !isStopRequested()) {
             // Anything outside of the switch statement will run independent of the currentState
@@ -112,7 +118,7 @@ public class Auto18Blue extends LinearOpMode {
                         //ex. set path to follow
                         follower.followPath(paths.launchzone1, true);
                         //ex. turn shooter on
-                        robot.shooter.shootMode = Shooter.ShootMode.BANGBANG;
+                        robot.shooter.shootMode = Shooter.ShootMode.ON;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
 
@@ -136,7 +142,7 @@ public class Auto18Blue extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         currentState = State.COLLECT_ARTIFACTS;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -145,7 +151,7 @@ public class Auto18Blue extends LinearOpMode {
                     if (onStateStart()) {
                         follower.followPath(paths.intakeballs1, true);
                     }
-                    if (!follower.isBusy()) {
+                    if (!follower.isBusy() || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
                         currentState = State.DRIVE_TO_LAUNCH_POSITION2;
                     }
                     break;
@@ -164,7 +170,7 @@ public class Auto18Blue extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         currentState = State.COLLECT_ARTIFACTSFROMGATE;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -174,7 +180,16 @@ public class Auto18Blue extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.opengate, true);
                     }
-                    if (timer.seconds() > 4 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
+                    if (!follower.isBusy()) { // if (timer.seconds() > 3.5 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) { //3.5
+                        currentState = State.SLOW;
+                    }
+                    break;
+                case SLOW:
+                    if (onStateStart()) {
+                        timer.reset();
+                        follower.followPath(paths.slow, .5, true);
+                    }
+                    if (timer.seconds() > 2 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) { //3.5
                         currentState = State.DRIVE_TO_LAUNCH_POSITION3;
                     }
                     break;
@@ -192,7 +207,7 @@ public class Auto18Blue extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTSFROMGATE2;
                     }
@@ -203,7 +218,16 @@ public class Auto18Blue extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.opengate2, true);
                     }
-                    if (timer.seconds() > 3.5 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
+                    if (!follower.isBusy()) { // if (timer.seconds() > 3.5 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) 3.5
+                        currentState = State.SLOW2;
+                    }
+                    break;
+                case SLOW2:
+                    if (onStateStart()) {
+                        timer.reset();
+                        follower.followPath(paths.slow2, .5, true);
+                    }
+                    if (timer.seconds() > 2 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) { // 3.5
                         currentState = State.DRIVE_TO_LAUNCH_POSITION4;
                     }
                     break;
@@ -221,7 +245,7 @@ public class Auto18Blue extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTS3;
                     }
@@ -232,7 +256,7 @@ public class Auto18Blue extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.intakeballs2, true);
                     }
-                    if (!follower.isBusy() || timer.seconds() > 1 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
+                    if (!follower.isBusy() || timer.seconds() > 1.2 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
                         currentState = State.DRIVE_TO_LAUNCH_POSITION5;
                     }
                     break;
@@ -250,8 +274,7 @@ public class Auto18Blue extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    robot.shooter.hoodMode = Shooter.HoodMode.CLOSE;
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45 ) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTS4;
                     }
@@ -260,7 +283,7 @@ public class Auto18Blue extends LinearOpMode {
                     if (onStateStart()) {
                         timer.reset();
                         follower.followPath(paths.intakeballs3, true);
-                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
+                        robot.intake.intakeMode = Intake.IntakeMode.UP;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     if (!follower.isBusy() || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
@@ -270,6 +293,7 @@ public class Auto18Blue extends LinearOpMode {
 
                 case DRIVE_TO_LAUNCH_POSITION6:
                     if (onStateStart()) {
+                        timer.reset();
                         follower.followPath(paths.launchzone6, true);
                     }
                     if (!follower.isBusy()) {
@@ -283,13 +307,14 @@ public class Auto18Blue extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if (timer.seconds() > .5 ) {
+                    if (timer.seconds() > .45) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.END;
                     }
                     break;
                 case END:
                     if (onStateStart()) {
+                        timer.reset();
                         follower.followPath(paths.ending, true);
                     }
                     if (!follower.isBusy()) {
@@ -304,6 +329,12 @@ public class Auto18Blue extends LinearOpMode {
                     //telemetry.addData("OpMode started times", blackboard.get(TIMES_STARTED_KEY));
                     break;
             }
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry dashboardTelemetry = dashboard.getTelemetry();
+            dashboardTelemetry.addData("Set RPM", robot.shooter.REVOLUTIONS_PER_MINUTE);
+            dashboardTelemetry.addData("Measured RPM", robot.shooter.measuredRPM);
+            dashboardTelemetry.addData("motor power", robot.shooter.shoot.getPower());
+            dashboardTelemetry.update();
 
             // Log values to Panels and Driver Station
             panelsTelemetry.debug("Current State", currentState);
@@ -321,21 +352,15 @@ public class Auto18Blue extends LinearOpMode {
 
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
 
-
-
-
-
-
-
-
-
     public static class Paths {
         public PathChain launchzone1;
         public PathChain intakeballs1;
         public PathChain launchzone2;
         public PathChain opengate;
+        public PathChain slow;
         public PathChain launchzone3;
         public PathChain opengate2;
+        public PathChain slow2;
         public PathChain launchzone4;
         public PathChain intakeballs2;
         public PathChain launchzone5;
@@ -348,17 +373,17 @@ public class Auto18Blue extends LinearOpMode {
                             new BezierLine(
                                     new Pose(31.868, 132.754),
 
-                                    new Pose(44.042, 107.232)
+                                    new Pose(51.284, 97.361)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(315))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(309))
 
                     .build();
 
             intakeballs1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(44.042, 107.232),
-                                    new Pose(64.330, 59.107),
-                                    new Pose(13.620, 58.527)
+                                    new Pose(51.284, 97.361),
+                                    new Pose(61.122, 58.515),
+                                    new Pose(13.618, 57.400)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -366,59 +391,79 @@ public class Auto18Blue extends LinearOpMode {
 
             launchzone2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(13.620, 58.527),
-                                    new Pose(64.330, 57.973),
-                                    new Pose(52.160, 90.116)
+                                    new Pose(13.618, 57.400),
+                                    new Pose(60.837, 58.557),
+                                    new Pose(52.153, 86.342)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(315))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
 
                     .build();
 
             opengate = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(52.160, 90.116),
-                                    new Pose(59.680, 55.167),
-                                    new Pose(11, 60)//was 9.616 and 59.461, rachel changed 2/27 during scrimmage
+                                    new Pose(52.153, 86.342),
+                                    new Pose(56.653, 55.167),
+                                    new Pose(21.198, 58.000)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(145)) // was 140
+                    ).setConstantHeadingInterpolation(Math.toRadians(151))
+
+                    .build();
+
+            slow = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(21.198, 58.000),
+
+                                    new Pose(12.000, 60.000)
+                            )
+                    ).setConstantHeadingInterpolation(Math.toRadians(147))
 
                     .build();
 
             launchzone3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(11, 60),
-                                    new Pose(64.330, 58.115),
-                                    new Pose(52.180, 90.558)
+                                    new Pose(12.000, 60.000),
+                                    new Pose(61.126, 58.695),
+                                    new Pose(52.153, 86.342)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(315))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
 
                     .build();
 
             opengate2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(52.180, 90.558),
-                                    new Pose(59.680, 55.167),
-                                    new Pose(11, 60)//was 9.616 and 59.461, rachel changed 2/27 during scrimmage
+                                    new Pose(52.153, 86.342),
+                                    new Pose(56.653, 55.167),
+                                    new Pose(21.198, 58.000)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(145)) // was 140
+                    ).setConstantHeadingInterpolation(Math.toRadians(151))
+
+                    .build();
+
+            slow2 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(21.198, 58.000),
+
+                                    new Pose(12.000, 60.000)
+                            )
+                    ).setConstantHeadingInterpolation(Math.toRadians(147))
 
                     .build();
 
             launchzone4 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(11, 60),
-                                    new Pose(64.330, 58.401),
-                                    new Pose(52.180, 90.268)
+                                    new Pose(12.000, 60.000),
+                                    new Pose(61.126, 58.687),
+                                    new Pose(52.176, 86.203)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(315))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
 
                     .build();
 
             intakeballs2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(52.180, 90.268),
+                                    new Pose(52.176, 86.203),
                                     new Pose(59.577, 86.136),
-                                    new Pose(13.330, 85.183)
+                                    new Pose(13.328, 85.183)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -426,19 +471,19 @@ public class Auto18Blue extends LinearOpMode {
 
             launchzone5 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(13.330, 85.183),
+                                    new Pose(13.328, 85.183),
 
-                                    new Pose(52.180, 90.688)
+                                    new Pose(52.170, 86.868)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(315))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
 
                     .build();
 
             intakeballs3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(52.180, 90.688),
-                                    new Pose(63.484, 21.107),
-                                    new Pose(5.510, 36.217)
+                                    new Pose(52.170, 86.868),
+                                    new Pose(62.615, 25.163),
+                                    new Pose(12.169, 37.000)
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(180))
 
@@ -446,32 +491,25 @@ public class Auto18Blue extends LinearOpMode {
 
             launchzone6 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(5.510, 36.217),
+                                    new Pose(12.169, 37.000),
                                     new Pose(37.000, 62.845),
-                                    new Pose(47.772, 96.596)
+                                    new Pose(52.176, 86.203)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(315))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
 
                     .build();
 
             ending = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(47.772, 96.596),
+                                    new Pose(52.176, 86.203),
 
-                                    new Pose(45.710, 63.050)
+                                    new Pose(45.705, 63.050)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(315))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
 
                     .build();
         }
     }
-
-
-
-
-
-
-
 
     private boolean onStateStart() {
         if (currentState != lastState) {

@@ -154,7 +154,7 @@ public class Shooter {
         }
         else if (hoodMode == HoodMode.FAR) {
             hood.setPosition(HOOD_FAR);
-            REVOLUTIONS_PER_MINUTE = FAR_RPM;
+            REVOLUTIONS_PER_MINUTE = FAR_RPM + 40;
         } else if (hoodMode == HoodMode.AUTO) {
             if(drivetrain.DISTANCE  >= 110){
                 hood.setPosition(1);
@@ -207,7 +207,7 @@ public class Shooter {
         }
         else if (hoodMode == HoodMode.AUTOCLOSE){
             hood.setPosition(AUTOCLOSE + .05);
-            REVOLUTIONS_PER_MINUTE = CLOSE_RPM + 80;
+            REVOLUTIONS_PER_MINUTE = CLOSE_RPM + 120;
         }
         measuredRPM = shoot.getVelocity()/TICKS_PER_REVOLUTION*60;
         if (shootMode == ShootMode.ON) {
