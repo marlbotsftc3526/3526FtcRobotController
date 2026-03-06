@@ -357,7 +357,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.243, 17.390)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(248))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(252))
 
                     .build();
 
@@ -377,7 +377,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.134, 17.607)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(252))
 
                     .build();
 
@@ -397,7 +397,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.236, 17.458)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(252))
 
                     .build();
 
@@ -406,6 +406,7 @@ public class Auto6RedSide extends LinearOpMode {
                                     new Pose(89.236, 17.458),
 
                                     new Pose(139.637, 1.007)
+
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(0))
 
@@ -417,7 +418,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.236, 17.458)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(252))
 
                     .build();
 
@@ -437,7 +438,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.126, 17.487)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(252))
 
                     .build();
 
@@ -457,7 +458,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.126, 17.487)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(252))
 
                     .build();
 
@@ -467,7 +468,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(109.992, 9.935)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(249))
+                    ).setConstantHeadingInterpolation(Math.toRadians(252))
 
                     .build();
         }
