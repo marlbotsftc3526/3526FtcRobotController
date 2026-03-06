@@ -337,6 +337,10 @@ public class Auto6BlueSide extends LinearOpMode {
 
 
 
+
+
+
+
     public static class Paths {
         public PathChain launchartifacts1;
         public PathChain intakeartifacts1;
@@ -356,7 +360,7 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(55.630, 8.692),
 
-                                    new Pose(59.367, 18.966)
+                                    new Pose(56.722, 18.379)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(289))
 
@@ -364,7 +368,7 @@ public class Auto6BlueSide extends LinearOpMode {
 
             intakeartifacts1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(59.367, 18.966),
+                                    new Pose(56.722, 18.379),
                                     new Pose(33.894, 10.696),
                                     new Pose(8.038, 13.297)
                             )
@@ -376,7 +380,7 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(8.038, 13.297),
 
-                                    new Pose(59.367, 18.966)
+                                    new Pose(56.722, 18.673)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(289))
 
@@ -384,7 +388,7 @@ public class Auto6BlueSide extends LinearOpMode {
 
             intakeartifacts2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(59.367, 18.966),
+                                    new Pose(56.722, 18.673),
                                     new Pose(32.010, 6.944),
                                     new Pose(5.841, 5.277)
                             )
@@ -396,7 +400,7 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(5.841, 5.277),
 
-                                    new Pose(59.367, 18.966)
+                                    new Pose(56.722, 18.673)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(289))
 
@@ -404,7 +408,7 @@ public class Auto6BlueSide extends LinearOpMode {
 
             intakeartifacts3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(59.367, 18.966),
+                                    new Pose(56.722, 18.673),
 
                                     new Pose(4.363, 1.007)
                             )
@@ -416,7 +420,7 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(4.363, 1.007),
 
-                                    new Pose(59.367, 18.966)
+                                    new Pose(56.722, 18.673)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(289))
 
@@ -424,7 +428,7 @@ public class Auto6BlueSide extends LinearOpMode {
 
             intakeartifacts4 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(59.367, 18.966),
+                                    new Pose(56.722, 18.673),
 
                                     new Pose(6.573, 8.912)
                             )
@@ -436,7 +440,7 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(6.573, 8.912),
 
-                                    new Pose(59.367, 18.966)
+                                    new Pose(56.722, 18.673)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(289))
 
@@ -444,7 +448,7 @@ public class Auto6BlueSide extends LinearOpMode {
 
             intakeartifacts5 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(59.367, 18.966),
+                                    new Pose(56.722, 18.673),
 
                                     new Pose(5.112, 4.824)
                             )
@@ -456,7 +460,7 @@ public class Auto6BlueSide extends LinearOpMode {
                             new BezierLine(
                                     new Pose(5.112, 4.824),
 
-                                    new Pose(59.367, 18.966)
+                                    new Pose(56.428, 18.673)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(289))
 
@@ -464,7 +468,7 @@ public class Auto6BlueSide extends LinearOpMode {
 
             end = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(59.367, 18.966),
+                                    new Pose(56.428, 18.673),
 
                                     new Pose(42.547, 14.191)
                             )
@@ -473,6 +477,10 @@ public class Auto6BlueSide extends LinearOpMode {
                     .build();
         }
     }
+
+
+
+
 
 
 

@@ -53,6 +53,9 @@ public class Auto6RedSide extends LinearOpMode {
         COLLECT_ARTIFACTS4,
         DRIVE_TO_LAUNCH_POSITION5,
         LAUNCH_ARTIFACTS5,
+        COLLECT_ARTIFACTS5,
+        DRIVE_TO_LAUNCH_POSITION6,
+        LAUNCH_ARTIFACTS6,
         END,
         IDLE,
     }
@@ -130,7 +133,7 @@ public class Auto6RedSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
-                    if(timer.seconds() > 3) {
+                    if(timer.seconds() > 2) {
                         currentState = State.COLLECT_ARTIFACTS;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -140,7 +143,7 @@ public class Auto6RedSide extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.intakeartifacts1,true);
                     }
-                    if(timer.seconds()> 2){
+                    if(timer.seconds()> 1.5){
                         currentState = State.DRIVE_TO_LAUNCH_POSITION2;
                     }
                     break;
@@ -160,7 +163,7 @@ public class Auto6RedSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >2){
+                    if(timer.seconds() >1.5){
                         currentState = State.COLLECT_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -193,7 +196,7 @@ public class Auto6RedSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >2){
+                    if(timer.seconds() >1.5){
                         currentState = State.COLLECT_ARTIFACTS3;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -226,7 +229,7 @@ public class Auto6RedSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >2){
+                    if(timer.seconds() >1.5){
                         currentState = State.COLLECT_ARTIFACTS4;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -258,7 +261,39 @@ public class Auto6RedSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >2){
+                    if(timer.seconds() >1.5){
+                        currentState = State.COLLECT_ARTIFACTS5;
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
+                    }
+                    break;
+                case COLLECT_ARTIFACTS5:
+                    if(onStateStart()){
+                        timer.reset();
+                        follower.followPath(paths.intakeartifacts5, true);
+                    }
+                    if(!follower.isBusy() ||timer.seconds() >1.5 || robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom){
+                        currentState = State.DRIVE_TO_LAUNCH_POSITION6;
+                        robot.shooter.transferMode = Shooter.TransferMode.OFF;
+                    }
+                    break;
+                case DRIVE_TO_LAUNCH_POSITION6:
+                    if(onStateStart()){
+                        timer.reset();
+                        follower.followPath(paths.launchartifacts6, true);
+                    }
+                    if(!follower.isBusy()){
+                        currentState = State.LAUNCH_ARTIFACTS6;
+
+                    }
+                    break;
+                case LAUNCH_ARTIFACTS6:
+                    if(onStateStart()){
+                        timer.reset();
+                        robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
+                    }
+                    robot.shooter.transferMode = Shooter.TransferMode.ON;
+
+                    if(timer.seconds() >1.5){
                         currentState = State.END;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -311,6 +346,8 @@ public class Auto6RedSide extends LinearOpMode {
         public PathChain launchartifacts4;
         public PathChain intakeartifacts4;
         public PathChain launchartifacts5;
+        public PathChain intakeartifacts5;
+        public PathChain launchartifacts6;
         public PathChain end;
 
         public Paths(Follower follower) {
@@ -320,7 +357,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.243, 17.390)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(244))
+                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(248))
 
                     .build();
 
@@ -340,7 +377,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.134, 17.607)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(244))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
 
                     .build();
 
@@ -360,7 +397,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.236, 17.458)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(244))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
 
                     .build();
 
@@ -380,7 +417,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.236, 17.458)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(244))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
 
                     .build();
 
@@ -400,7 +437,27 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(89.126, 17.487)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(244))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
+
+                    .build();
+
+            intakeartifacts5 = follower.pathBuilder().addPath(
+                            new BezierCurve(
+                                    new Pose(89.236, 17.458),
+                                    new Pose(106.619, 0.011),
+                                    new Pose(139.199, 4.562)
+                            )
+                    ).setConstantHeadingInterpolation(Math.toRadians(0))
+
+                    .build();
+
+            launchartifacts6 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(139.199, 4.562),
+
+                                    new Pose(89.126, 17.487)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(249))
 
                     .build();
 
@@ -410,7 +467,7 @@ public class Auto6RedSide extends LinearOpMode {
 
                                     new Pose(109.992, 9.935)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(244))
+                    ).setConstantHeadingInterpolation(Math.toRadians(249))
 
                     .build();
         }
