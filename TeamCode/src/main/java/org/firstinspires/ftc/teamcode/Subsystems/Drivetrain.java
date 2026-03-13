@@ -86,6 +86,8 @@ public class Drivetrain {
     public static double kickRETRACTED = 0.3;
     public KickstandMode kickstand = KickstandMode.RETRACTED;
 
+    public double turn = 0;
+
     PIDController headingController;
     PIDController limelightTurnController;
         //declare PID controller
@@ -198,7 +200,7 @@ public class Drivetrain {
         double rightBackPower;
 
         double drive = 0;
-        double turn = 0;
+        //double turn = 0;
         double strafe = 0;
         double goalLocationX;
         double goalLocationY;

@@ -42,7 +42,14 @@ import java.util.List;
             fiducials = result.getFiducialResults();
             limelight.start();
         }
-
+        public void update() {
+            LLResult result = limelight.getLatestResult();
+            if (result != null && result.isValid()) {
+                double tx = result.getTx(); // How far left or right the target is (degrees)
+                double ty = result.getTy(); // How far up or down the target is (degrees)
+                double ta = result.getTa(); // How big the target looks (0%-100% of the image)
+            }
+        }
         public void teleOp() {
 
         }
@@ -75,6 +82,12 @@ import java.util.List;
             running = false;
         }
 
+        public void setPollRateHz(int i) {
+            
+        }
+
+        public void start() {
+        }
     }
 
     //pipeline 0 is red goal

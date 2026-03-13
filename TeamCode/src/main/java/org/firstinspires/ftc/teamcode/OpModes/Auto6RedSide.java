@@ -13,9 +13,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.Subsystems.LimeLight;
 import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.utility.PIDController;
+
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 @Autonomous(name = "Auto6RedSide", group = "AutoTemplates")
 public class Auto6RedSide extends LinearOpMode {
@@ -30,6 +37,8 @@ public class Auto6RedSide extends LinearOpMode {
     public static final String HEADING_KEY = "Heading";
     // Panels Telemetry instance
 
+    PIDController limelightTurnController;
+
     //Declare timer for use in switch, could have multiple timers if useful
     ElapsedTime timer = new ElapsedTime();
 
@@ -38,23 +47,27 @@ public class Auto6RedSide extends LinearOpMode {
     //TODO Update states to reflect flow of robot actions
     enum State {
         DRIVE_TO_LAUNCH_POSITION,
+        ADJUST,
         LAUNCH_ARTIFACTS,
         COLLECT_ARTIFACTS,
         DRIVE_TO_LAUNCH_POSITION2,
+        ADJUST2,
         LAUNCH_ARTIFACTS2,
         COLLECT_ARTIFACTS2,
         DRIVE_TO_LAUNCH_POSITION3,
+        ADJUST3,
         LAUNCH_ARTIFACTS3,
-        TURNTOINTAKE1,
         COLLECT_ARTIFACTS3,
         DRIVE_TO_LAUNCH_POSITION4,
+        ADJUST4,
         LAUNCH_ARTIFACTS4,
-        TURNTOINTAKE2,
         COLLECT_ARTIFACTS4,
         DRIVE_TO_LAUNCH_POSITION5,
+        ADJUST5,
         LAUNCH_ARTIFACTS5,
         COLLECT_ARTIFACTS5,
         DRIVE_TO_LAUNCH_POSITION6,
+        ADJUST6,
         LAUNCH_ARTIFACTS6,
         END,
         IDLE,
@@ -66,9 +79,16 @@ public class Auto6RedSide extends LinearOpMode {
     State lastState = State.IDLE;
 
     @Override
+
+
     public void runOpMode() {
         robot = new RobotHardware(this);
         robot.init();
+
+            robot.limelight = hardwareMap.get(LimeLight.class, "LimeLight");
+            robot.limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+            robot.limelight.start(); // This tells Limelight to start looking!
+
         robot.drivetrain.side = Drivetrain.SideMode.RED;
 
         follower = Constants.createFollower(hardwareMap);
@@ -121,9 +141,23 @@ public class Auto6RedSide extends LinearOpMode {
                         - Sensor Value: "if(touchDetected) {}" etc...
                         */
                     if(!follower.isBusy()) {
+                        currentState = State.ADJUST;
+                    }
+                    break;
+
+                case ADJUST:
+                    if (onStateStart()){
+                        timer.reset();
+                        if(Math.abs(robot.drivetrain.offset) >= 1) {
+                            robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
+                            robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                        }
+                    }
+                    if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS;
                     }
                     break;
+
                 case LAUNCH_ARTIFACTS:
                     //state start
                     if(onStateStart()){
@@ -152,10 +186,24 @@ public class Auto6RedSide extends LinearOpMode {
                         follower.followPath(paths.launchartifacts2, true);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS2;
+                        currentState = State.ADJUST2;
 
                     }
                     break;
+
+                case ADJUST2:
+                    if (onStateStart()){
+                        timer.reset();
+                        if(Math.abs(robot.drivetrain.offset) >= 1) {
+                            robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
+                            robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                        }
+                    }
+                    if(timer.seconds() > 2) {
+                        currentState = State.LAUNCH_ARTIFACTS2;
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS2:
                     if(onStateStart()){
                         timer.reset();
@@ -185,10 +233,24 @@ public class Auto6RedSide extends LinearOpMode {
                         follower.followPath(paths.launchartifacts3, true);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS3;
+                        currentState = State.ADJUST3;
 
                     }
                     break;
+
+                case ADJUST3:
+                    if (onStateStart()){
+                        timer.reset();
+                        if(Math.abs(robot.drivetrain.offset) >= 1) {
+                            robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
+                            robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                        }
+                    }
+                    if(timer.seconds() > 2) {
+                        currentState = State.LAUNCH_ARTIFACTS3;
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS3:
                     if(onStateStart()){
                         timer.reset();
@@ -218,10 +280,24 @@ public class Auto6RedSide extends LinearOpMode {
                         follower.followPath(paths.launchartifacts4, true);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS4;
+                        currentState = State.ADJUST4;
 
                     }
                     break;
+
+                case ADJUST4:
+                    if (onStateStart()){
+                        timer.reset();
+                        if(Math.abs(robot.drivetrain.offset) >= 1) {
+                            robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
+                            robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                        }
+                    }
+                    if(timer.seconds() > 2) {
+                        currentState = State.LAUNCH_ARTIFACTS4;
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS4:
                     if(onStateStart()){
                         timer.reset();
@@ -250,10 +326,24 @@ public class Auto6RedSide extends LinearOpMode {
                         follower.followPath(paths.launchartifacts5, true);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS5;
+                        currentState = State.ADJUST5;
 
                     }
                     break;
+
+                case ADJUST5:
+                    if (onStateStart()){
+                        timer.reset();
+                        if(Math.abs(robot.drivetrain.offset) >= 1) {
+                            robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
+                            robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                        }
+                    }
+                    if(timer.seconds() > 2) {
+                        currentState = State.LAUNCH_ARTIFACTS5;
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS5:
                     if(onStateStart()){
                         timer.reset();
@@ -282,10 +372,24 @@ public class Auto6RedSide extends LinearOpMode {
                         follower.followPath(paths.launchartifacts6, true);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS6;
+                        currentState = State.ADJUST6;
 
                     }
                     break;
+
+                case ADJUST6:
+                    if (onStateStart()){
+                        timer.reset();
+                        if(Math.abs(robot.drivetrain.offset) >= 1) {
+                            robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
+                            robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                        }
+                    }
+                    if(timer.seconds() > 2) {
+                        currentState = State.LAUNCH_ARTIFACTS6;
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS6:
                     if(onStateStart()){
                         timer.reset();
