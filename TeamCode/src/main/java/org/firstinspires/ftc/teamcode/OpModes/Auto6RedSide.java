@@ -151,10 +151,24 @@ public class Auto6RedSide extends LinearOpMode {
                         if(Math.abs(robot.drivetrain.offset) >= 1) {
                             robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
                             robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                            robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
+                            robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
+                        }
+                        else{
+                            robot.drivetrain.leftFrontDrive.setPower(0);
+                            robot.drivetrain.rightFrontDrive.setPower(0);
+                            robot.drivetrain.leftBackDrive.setPower(0);
+                            robot.drivetrain.rightBackDrive.setPower(0);
                         }
                     }
                     if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS;
+                        robot.drivetrain.leftFrontDrive.setPower(0);
+                        robot.drivetrain.rightFrontDrive.setPower(0);
+                        robot.drivetrain.leftBackDrive.setPower(0);
+                        robot.drivetrain.rightBackDrive.setPower(0);
                     }
                     break;
 
@@ -197,10 +211,24 @@ public class Auto6RedSide extends LinearOpMode {
                         if(Math.abs(robot.drivetrain.offset) >= 1) {
                             robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
                             robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                            robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
+                            robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
+                        }
+                        else{
+                            robot.drivetrain.leftFrontDrive.setPower(0);
+                            robot.drivetrain.rightFrontDrive.setPower(0);
+                            robot.drivetrain.leftBackDrive.setPower(0);
+                            robot.drivetrain.rightBackDrive.setPower(0);
                         }
                     }
                     if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS2;
+                        robot.drivetrain.leftFrontDrive.setPower(0);
+                        robot.drivetrain.rightFrontDrive.setPower(0);
+                        robot.drivetrain.leftBackDrive.setPower(0);
+                        robot.drivetrain.rightBackDrive.setPower(0);
                     }
                     break;
 
@@ -244,10 +272,24 @@ public class Auto6RedSide extends LinearOpMode {
                         if(Math.abs(robot.drivetrain.offset) >= 1) {
                             robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
                             robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                            robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
+                            robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
+                        }
+                        else{
+                            robot.drivetrain.leftFrontDrive.setPower(0);
+                            robot.drivetrain.rightFrontDrive.setPower(0);
+                            robot.drivetrain.leftBackDrive.setPower(0);
+                            robot.drivetrain.rightBackDrive.setPower(0);
                         }
                     }
                     if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS3;
+                        robot.drivetrain.leftFrontDrive.setPower(0);
+                        robot.drivetrain.rightFrontDrive.setPower(0);
+                        robot.drivetrain.leftBackDrive.setPower(0);
+                        robot.drivetrain.rightBackDrive.setPower(0);
                     }
                     break;
 
@@ -291,10 +333,24 @@ public class Auto6RedSide extends LinearOpMode {
                         if(Math.abs(robot.drivetrain.offset) >= 1) {
                             robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
                             robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                            robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
+                            robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
+                        }
+                        else{
+                            robot.drivetrain.leftFrontDrive.setPower(0);
+                            robot.drivetrain.rightFrontDrive.setPower(0);
+                            robot.drivetrain.leftBackDrive.setPower(0);
+                            robot.drivetrain.rightBackDrive.setPower(0);
                         }
                     }
                     if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS4;
+                        robot.drivetrain.leftFrontDrive.setPower(0);
+                        robot.drivetrain.rightFrontDrive.setPower(0);
+                        robot.drivetrain.leftBackDrive.setPower(0);
+                        robot.drivetrain.rightBackDrive.setPower(0);
                     }
                     break;
 
@@ -337,10 +393,24 @@ public class Auto6RedSide extends LinearOpMode {
                         if(Math.abs(robot.drivetrain.offset) >= 1) {
                             robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
                             robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                            robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
+                            robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
+                        }
+                        else{
+                            robot.drivetrain.leftFrontDrive.setPower(0);
+                            robot.drivetrain.rightFrontDrive.setPower(0);
+                            robot.drivetrain.leftBackDrive.setPower(0);
+                            robot.drivetrain.rightBackDrive.setPower(0);
                         }
                     }
                     if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS5;
+                        robot.drivetrain.leftFrontDrive.setPower(0);
+                        robot.drivetrain.rightFrontDrive.setPower(0);
+                        robot.drivetrain.leftBackDrive.setPower(0);
+                        robot.drivetrain.rightBackDrive.setPower(0);
                     }
                     break;
 
@@ -383,10 +453,24 @@ public class Auto6RedSide extends LinearOpMode {
                         if(Math.abs(robot.drivetrain.offset) >= 1) {
                             robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
                             robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                            robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
+                            robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
+                            robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
+                        }
+                        else{
+                            robot.drivetrain.leftFrontDrive.setPower(0);
+                            robot.drivetrain.rightFrontDrive.setPower(0);
+                            robot.drivetrain.leftBackDrive.setPower(0);
+                            robot.drivetrain.rightBackDrive.setPower(0);
                         }
                     }
                     if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS6;
+                        robot.drivetrain.leftFrontDrive.setPower(0);
+                        robot.drivetrain.rightFrontDrive.setPower(0);
+                        robot.drivetrain.leftBackDrive.setPower(0);
+                        robot.drivetrain.rightBackDrive.setPower(0);
                     }
                     break;
 
