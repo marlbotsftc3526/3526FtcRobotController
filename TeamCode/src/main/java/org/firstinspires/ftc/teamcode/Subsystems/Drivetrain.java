@@ -453,14 +453,14 @@ public class Drivetrain {
 
 
     public void update(){
-        double roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
-        double roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
+        pinpoint.update();
+        roboLocationX = pinpoint.getPosX(DistanceUnit.INCH);
+        roboLocationY = pinpoint.getPosY(DistanceUnit.INCH);
         if(side == SideMode.BLUE){
             DISTANCE = Math.sqrt(roboLocationX*roboLocationX + (144-roboLocationY)*(144-roboLocationY));
         }else if(side == SideMode.RED){
             DISTANCE = Math.sqrt((144-roboLocationX)*(144-roboLocationX) + (144-roboLocationY)*(144-roboLocationY));
         }
-
     }
 
 
@@ -469,6 +469,25 @@ public class Drivetrain {
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
+    }
+
+    public void adjust(){
+        limelight.update();
+        if(limelight.targetVisible) {
+            offset = limelight.tx - (-0.083 * roboLocationX - 0.024 * roboLocationY + 5.7);
+            if (Math.abs(offset) >= 1) {
+                turn = -limelightTurnController.calculate(0, offset);
+                turn = Math.signum(turn) * Math.max(Math.abs(turn), min_turn_speed);
+                leftFrontDrive.setPower(turn);
+                rightFrontDrive.setPower(-turn);
+                leftBackDrive.setPower(turn);
+                rightBackDrive.setPower(-turn);
+            } else {
+                stop();
+            }
+        }else {
+            stop();
+        }
     }
 
     // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.

@@ -33,21 +33,23 @@ import java.util.List;
 
         public void init (){
             limelight = myOpMode.hardwareMap.get(Limelight3A.class, "limelight");
-            limelight.start();
+
             limelight.pipelineSwitch(0);
-            limelight.getLatestResult();
 
-            result = limelight.getLatestResult();
-
-            fiducials = result.getFiducialResults();
             limelight.start();
+            limelight.getLatestResult();
+            result = limelight.getLatestResult();
+            fiducials = result.getFiducialResults();
         }
         public void update() {
-            LLResult result = limelight.getLatestResult();
+            result = limelight.getLatestResult();
             if (result != null && result.isValid()) {
-                double tx = result.getTx(); // How far left or right the target is (degrees)
-                double ty = result.getTy(); // How far up or down the target is (degrees)
-                double ta = result.getTa(); // How big the target looks (0%-100% of the image)
+                tx = result.getTx(); // How far left or right the target is (degrees)
+                ty = result.getTy(); // How far up or down the target is (degrees)
+                ta = result.getTa();// How big the target looks (0%-100% of the image)
+                targetVisible = true;
+            } else {
+                targetVisible = false;
             }
         }
         public void teleOp() {
