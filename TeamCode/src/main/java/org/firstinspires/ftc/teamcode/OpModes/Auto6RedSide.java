@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.LimeLight;
@@ -85,7 +86,6 @@ public class Auto6RedSide extends LinearOpMode {
         robot = new RobotHardware(this);
         robot.init();
 
-            robot.limelight = hardwareMap.get(LimeLight.class, "LimeLight");
             robot.limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
             robot.limelight.start(); // This tells Limelight to start looking!
 
@@ -114,6 +114,7 @@ public class Auto6RedSide extends LinearOpMode {
         //Object heading = blackboard.getOrDefault(HEADING_KEY, 0);
 
         waitForStart();
+        robot.cameraThread.start();
         timer.reset();
 
         // run until the end of the match (driver presses STOP)
@@ -148,20 +149,23 @@ public class Auto6RedSide extends LinearOpMode {
                 case ADJUST:
                     if (onStateStart()){
                         timer.reset();
-                        if(Math.abs(robot.drivetrain.offset) >= 1) {
-                            robot.drivetrain.turn = -limelightTurnController.calculate(0, robot.drivetrain.offset);
-                            robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
-                            robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
-                            robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
-                            robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
-                            robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
-                        }
-                        else{
-                            robot.drivetrain.leftFrontDrive.setPower(0);
-                            robot.drivetrain.rightFrontDrive.setPower(0);
-                            robot.drivetrain.leftBackDrive.setPower(0);
-                            robot.drivetrain.rightBackDrive.setPower(0);
-                        }
+                    }
+                    robot.drivetrain.roboLocationX = robot.drivetrain.pinpoint.getPosX(DistanceUnit.INCH);
+                    robot.drivetrain.roboLocationY = robot.drivetrain.pinpoint.getPosY(DistanceUnit.INCH);
+                    robot.drivetrain.offset = robot.limelight.tx- (-0.083*robot.drivetrain.roboLocationX - 0.024*robot.drivetrain.roboLocationY+5.7);
+                    if(Math.abs(robot.drivetrain.offset) >= 1) {
+                        robot.drivetrain.turn = -robot.drivetrain.limelightTurnController.calculate(0, robot.drivetrain.offset);
+                        robot.drivetrain.turn = Math.signum(robot.drivetrain.turn) * Math.max(Math.abs(robot.drivetrain.turn), robot.drivetrain.min_turn_speed);
+                        robot.drivetrain.leftFrontDrive.setPower(robot.drivetrain.turn);
+                        robot.drivetrain.rightFrontDrive.setPower(-robot.drivetrain.turn);
+                        robot.drivetrain.leftBackDrive.setPower(robot.drivetrain.turn);
+                        robot.drivetrain.rightBackDrive.setPower(-robot.drivetrain.turn);
+                    }
+                    else{
+                        robot.drivetrain.leftFrontDrive.setPower(0);
+                        robot.drivetrain.rightFrontDrive.setPower(0);
+                        robot.drivetrain.leftBackDrive.setPower(0);
+                        robot.drivetrain.rightBackDrive.setPower(0);
                     }
                     if(timer.seconds() > 2) {
                         currentState = State.LAUNCH_ARTIFACTS;
@@ -511,12 +515,18 @@ public class Auto6RedSide extends LinearOpMode {
             panelsTelemetry.debug("X", follower.getPose().getX());
             panelsTelemetry.debug("Y", follower.getPose().getY());
             panelsTelemetry.debug("Heading", follower.getPose().getHeading());
+            panelsTelemetry.debug("turn", robot.drivetrain.turn);
+            panelsTelemetry.debug("offset", robot.drivetrain.offset);
+            panelsTelemetry.debug("Tx", robot.limelight.tx);
             panelsTelemetry.update(telemetry);
 
             //telemetry.addData("state", currentState);
             telemetry.update();
         }
+        robot.limelight.stop();
+        robot.cameraThread.interrupt();
     }
+
 
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
 

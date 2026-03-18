@@ -89,7 +89,7 @@ public class Drivetrain {
     public double turn = 0;
 
     PIDController headingController;
-    PIDController limelightTurnController;
+    public PIDController limelightTurnController;
         //declare PID controller
         //create variable for PID constants (kP, kD...)
         //initialize PID controller with the constants
