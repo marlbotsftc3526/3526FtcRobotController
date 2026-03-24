@@ -49,7 +49,7 @@ public class Color {
     public static final Color BLUE        = new Color(0,   0,   255);
     public static final Color TEAL        = new Color(0,   128, 128);
     public static final Color MAGENTA     = new Color(255, 0,   255);
-    public static final Color PURPLE      = new Color(128, 0,   128);
+    public static final Color PURPLE      = new Color(102, 0,   153);
     public static final Color PINK        = new Color(255, 20,  128);
     public static final Color WHITE       = new Color(255, 255, 255);
     public static final Color TRANSPARENT = new Color(0,   0,   0);

@@ -44,8 +44,8 @@ public class Intake {
 
     GoBildaPrismDriver prism;
     PrismAnimations.Solid solidTop = new PrismAnimations.Solid(Color.PURPLE);
-    PrismAnimations.Solid solidMiddle = new PrismAnimations.Solid(Color.GREEN);
-    PrismAnimations.Solid solidBottom = new PrismAnimations.Solid(Color.BLUE);
+    PrismAnimations.Solid solidMiddle = new PrismAnimations.Solid(Color.PURPLE);
+    PrismAnimations.Solid solidBottom = new PrismAnimations.Solid(Color.PURPLE);
 
 
 
