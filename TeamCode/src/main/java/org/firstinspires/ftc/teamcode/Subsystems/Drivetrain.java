@@ -490,6 +490,24 @@ public class Drivetrain {
         }
     }
 
+    public void adjustblue(){
+        limelight.update();
+        if (limelight.targetVisible) {
+            offset = limelight.tx - (-13.06+0.283*roboLocationX+0.443*roboLocationY-0.0018*roboLocationX*roboLocationX
+                    -0.0084*roboLocationY*roboLocationY-0.0012*roboLocationX*roboLocationY);
+            if(Math.abs(offset) >= 1) {
+                turn = -limelightTurnController.calculate(0, offset);
+                turn = Math.signum(turn) * Math.max(Math.abs(turn), min_turn_speed);
+                leftFrontDrive.setPower(turn);
+                rightFrontDrive.setPower(-turn);
+                leftBackDrive.setPower(turn);
+                rightBackDrive.setPower(-turn);
+            }else{
+                stop();
+            }
+        }
+    }
+
     // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
     public double angleWrap(double degrees) {
 

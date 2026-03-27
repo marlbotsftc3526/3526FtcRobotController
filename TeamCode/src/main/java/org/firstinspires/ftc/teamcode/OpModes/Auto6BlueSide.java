@@ -38,21 +38,27 @@ public class Auto6BlueSide extends LinearOpMode {
     //TODO Update states to reflect flow of robot actions
     enum State {
         DRIVE_TO_LAUNCH_POSITION,
+        ADJUST,
         LAUNCH_ARTIFACTS,
         COLLECT_ARTIFACTS,
         DRIVE_TO_LAUNCH_POSITION2,
+        ADJUST2,
         LAUNCH_ARTIFACTS2,
         COLLECT_ARTIFACTS2,
         DRIVE_TO_LAUNCH_POSITION3,
+        ADJUST3,
         LAUNCH_ARTIFACTS3,
         COLLECT_ARTIFACTS3,
         DRIVE_TO_LAUNCH_POSITION4,
+        ADJUST4,
         LAUNCH_ARTIFACTS4,
         COLLECT_ARTIFACTS4,
         DRIVE_TO_LAUNCH_POSITION5,
+        ADJUST5,
         LAUNCH_ARTIFACTS5,
         COLLECT_ARTIFACTS5,
         DRIVE_TO_LAUNCH_POSITION6,
+        ADJUST6,
         LAUNCH_ARTIFACTS6,
         END,
         IDLE,
@@ -90,7 +96,13 @@ public class Auto6BlueSide extends LinearOpMode {
         //  Object xPosition = blackboard.getOrDefault(X_POS_KEY, 0);
         //Object yPosition = blackboard.getOrDefault(Y_POS_KEY, 0);
         //Object heading = blackboard.getOrDefault(HEADING_KEY, 0);
-
+        while(!isStarted() && !isStopRequested()){
+            robot.limelight.update();
+            telemetry.addData("targetVisible", robot.limelight.targetVisible);
+            telemetry.addData("tx", robot.limelight.tx);
+            telemetry.addData("Status", "Waiting for Start");
+            telemetry.update();
+        }
         waitForStart();
         timer.reset();
 
@@ -107,7 +119,7 @@ public class Auto6BlueSide extends LinearOpMode {
                     //set events at the start of state
                     if(onStateStart()){
                         //ex. set path to follow
-                        follower.followPath(paths.launchartifacts1,true);
+                        follower.followPath(paths.launchartifacts1);
                         //ex. turn shooter on
                         robot.shooter.shootMode = Shooter.ShootMode.BANGBANG;
                     }
@@ -119,9 +131,21 @@ public class Auto6BlueSide extends LinearOpMode {
                         - Sensor Value: "if(touchDetected) {}" etc...
                         */
                     if(!follower.isBusy()) {
-                        currentState = State.LAUNCH_ARTIFACTS;
+                        currentState = Auto6BlueSide.State.ADJUST;
                     }
                     break;
+
+                case ADJUST:
+                    if (onStateStart()){
+                        timer.reset();
+                    }
+                    robot.drivetrain.adjustblue();
+                    if(timer.seconds() > 1) {
+                        currentState = Auto6BlueSide.State.LAUNCH_ARTIFACTS;
+                        robot.drivetrain.stop();
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS:
                     //state start
                     if(onStateStart()){
@@ -131,8 +155,8 @@ public class Auto6BlueSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
-                    if(timer.seconds() > 2) {
-                        currentState = State.COLLECT_ARTIFACTS;
+                    if(timer.seconds() > 0.75) {
+                        currentState = Auto6BlueSide.State.COLLECT_ARTIFACTS;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
@@ -141,19 +165,31 @@ public class Auto6BlueSide extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.intakeartifacts1,true);
                     }
-                    if(timer.seconds()> 2){
-                        currentState = State.DRIVE_TO_LAUNCH_POSITION2;
+                    if(timer.seconds()> 1.5){
+                        currentState = Auto6BlueSide.State.DRIVE_TO_LAUNCH_POSITION2;
                     }
                     break;
                 case DRIVE_TO_LAUNCH_POSITION2:
                     if(onStateStart()){
-                        follower.followPath(paths.launchartifacts2, true);
+                        follower.followPath(paths.launchartifacts2);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS2;
+                        currentState = Auto6BlueSide.State.ADJUST2;
 
                     }
                     break;
+
+                case ADJUST2:
+                    if (onStateStart()){
+                        timer.reset();
+                    }
+                    robot.drivetrain.adjustblue();
+                    if(timer.seconds() > 1) {
+                        currentState = Auto6BlueSide.State.LAUNCH_ARTIFACTS2;
+                        robot.drivetrain.stop();
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS2:
                     if(onStateStart()){
                         timer.reset();
@@ -161,8 +197,8 @@ public class Auto6BlueSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >1.5){
-                        currentState = State.COLLECT_ARTIFACTS2;
+                    if(timer.seconds() > 0.75){
+                        currentState = Auto6BlueSide.State.COLLECT_ARTIFACTS2;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
@@ -173,20 +209,32 @@ public class Auto6BlueSide extends LinearOpMode {
                         follower.followPath(paths.intakeartifacts2, true);
                     }
                     if(!follower.isBusy() ||timer.seconds() >2){
-                        currentState = State.DRIVE_TO_LAUNCH_POSITION3;
+                        currentState = Auto6BlueSide.State.DRIVE_TO_LAUNCH_POSITION3;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
                 case DRIVE_TO_LAUNCH_POSITION3:
                     if(onStateStart()){
                         timer.reset();
-                        follower.followPath(paths.launchartifacts3, true);
+                        follower.followPath(paths.launchartifacts3);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS3;
+                        currentState = Auto6BlueSide.State.ADJUST3;
 
                     }
                     break;
+
+                case ADJUST3:
+                    if (onStateStart()){
+                        timer.reset();
+                    }
+                    robot.drivetrain.adjustblue();
+                    if(timer.seconds() > 1) {
+                        currentState = Auto6BlueSide.State.LAUNCH_ARTIFACTS3;
+                        robot.drivetrain.stop();
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS3:
                     if(onStateStart()){
                         timer.reset();
@@ -194,8 +242,8 @@ public class Auto6BlueSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >1.5){
-                        currentState = State.COLLECT_ARTIFACTS3;
+                    if(timer.seconds() > 0.75){
+                        currentState = Auto6BlueSide.State.COLLECT_ARTIFACTS3;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
@@ -205,7 +253,7 @@ public class Auto6BlueSide extends LinearOpMode {
                         follower.followPath(paths.intakeartifacts3, true);
                     }
                     if(!follower.isBusy() ||timer.seconds() >1.5){
-                        currentState = State.DRIVE_TO_LAUNCH_POSITION4;
+                        currentState = Auto6BlueSide.State.DRIVE_TO_LAUNCH_POSITION4;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
@@ -213,13 +261,25 @@ public class Auto6BlueSide extends LinearOpMode {
                 case DRIVE_TO_LAUNCH_POSITION4:
                     if(onStateStart()){
                         timer.reset();
-                        follower.followPath(paths.launchartifacts4, true);
+                        follower.followPath(paths.launchartifacts4);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS4;
+                        currentState = Auto6BlueSide.State.ADJUST4;
 
                     }
                     break;
+
+                case ADJUST4:
+                    if (onStateStart()){
+                        timer.reset();
+                    }
+                    robot.drivetrain.adjustblue();
+                    if(timer.seconds() > 1) {
+                        currentState = Auto6BlueSide.State.LAUNCH_ARTIFACTS4;
+                        robot.drivetrain.stop();
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS4:
                     if(onStateStart()){
                         timer.reset();
@@ -227,8 +287,8 @@ public class Auto6BlueSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >1.5){
-                        currentState = State.COLLECT_ARTIFACTS4;
+                    if(timer.seconds() > 0.75){
+                        currentState = Auto6BlueSide.State.COLLECT_ARTIFACTS4;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
@@ -237,21 +297,33 @@ public class Auto6BlueSide extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.intakeartifacts4, true);
                     }
-                    if(!follower.isBusy() ||timer.seconds() >1.5|| robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom){
-                        currentState = State.DRIVE_TO_LAUNCH_POSITION5;
+                    if(!follower.isBusy() ||timer.seconds() >1.5 || robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom){
+                        currentState = Auto6BlueSide.State.DRIVE_TO_LAUNCH_POSITION5;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
                 case DRIVE_TO_LAUNCH_POSITION5:
                     if(onStateStart()){
                         timer.reset();
-                        follower.followPath(paths.launchartifacts5, true);
+                        follower.followPath(paths.launchartifacts5);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS5;
+                        currentState = Auto6BlueSide.State.ADJUST5;
 
                     }
                     break;
+
+                case ADJUST5:
+                    if (onStateStart()){
+                        timer.reset();
+                    }
+                    robot.drivetrain.adjustblue();
+                    if(timer.seconds() > 1) {
+                        currentState = Auto6BlueSide.State.LAUNCH_ARTIFACTS5;
+                        robot.drivetrain.stop();
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS5:
                     if(onStateStart()){
                         timer.reset();
@@ -259,8 +331,8 @@ public class Auto6BlueSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >1.5){
-                        currentState = State.COLLECT_ARTIFACTS5;
+                    if(timer.seconds() > 0.5){
+                        currentState = Auto6BlueSide.State.COLLECT_ARTIFACTS5;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
@@ -269,21 +341,33 @@ public class Auto6BlueSide extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.intakeartifacts5, true);
                     }
-                    if(!follower.isBusy() ||timer.seconds() >1.5|| robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom){
-                        currentState = State.DRIVE_TO_LAUNCH_POSITION6;
+                    if(!follower.isBusy() ||timer.seconds() >1.5 || robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom){
+                        currentState = Auto6BlueSide.State.DRIVE_TO_LAUNCH_POSITION6;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
                 case DRIVE_TO_LAUNCH_POSITION6:
                     if(onStateStart()){
                         timer.reset();
-                        follower.followPath(paths.launchartifacts6, true);
+                        follower.followPath(paths.launchartifacts6);
                     }
                     if(!follower.isBusy()){
-                        currentState = State.LAUNCH_ARTIFACTS6;
+                        currentState = Auto6BlueSide.State.ADJUST6;
 
                     }
                     break;
+
+                case ADJUST6:
+                    if (onStateStart()){
+                        timer.reset();
+                    }
+                    robot.drivetrain.adjustblue();
+                    if(timer.seconds() > 1) {
+                        currentState = Auto6BlueSide.State.LAUNCH_ARTIFACTS6;
+                        robot.drivetrain.stop();
+                    }
+                    break;
+
                 case LAUNCH_ARTIFACTS6:
                     if(onStateStart()){
                         timer.reset();
@@ -291,8 +375,8 @@ public class Auto6BlueSide extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if(timer.seconds() >1.5){
-                        currentState = State.END;
+                    if(timer.seconds() > 0.75){
+                        currentState = Auto6BlueSide.State.END;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
                     break;
@@ -300,13 +384,13 @@ public class Auto6BlueSide extends LinearOpMode {
                     if(onStateStart()){
                         timer.reset();
                         follower.followPath(paths.end, true);
-                        robot.intake.intakeMode = Intake.IntakeMode.OFF;
-                        robot.shooter.shootMode = Shooter.ShootMode.OFF;
                     }
                     if(!follower.isBusy()) {
-                        currentState = State.IDLE;
+                        currentState = Auto6BlueSide.State.IDLE;
                     }
                     break;
+
+
                 case IDLE:
                     blackboard.put(X_POS_KEY, follower.getPose().getX());
                     blackboard.put(Y_POS_KEY, follower.getPose().getY());
@@ -318,9 +402,13 @@ public class Auto6BlueSide extends LinearOpMode {
 
             // Log values to Panels and Driver Station
             panelsTelemetry.debug("Current State", currentState);
+            panelsTelemetry.debug("turn", robot.drivetrain.turn);
+            panelsTelemetry.debug("offset", robot.drivetrain.offset);
+            panelsTelemetry.debug("Tx", robot.limelight.tx);
             panelsTelemetry.debug("X", follower.getPose().getX());
             panelsTelemetry.debug("Y", follower.getPose().getY());
             panelsTelemetry.debug("Heading", follower.getPose().getHeading());
+
             panelsTelemetry.update(telemetry);
 
             //telemetry.addData("state", currentState);

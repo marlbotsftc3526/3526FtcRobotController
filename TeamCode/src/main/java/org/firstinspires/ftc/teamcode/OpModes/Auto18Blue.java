@@ -352,6 +352,7 @@ public class Auto18Blue extends LinearOpMode {
 
     //TODO Define All Paths. Use the Visualizer auto generated code from https://visualizer.pedropathing.com/
 
+
     public static class Paths {
         public PathChain launchzone1;
         public PathChain intakeballs1;
@@ -373,15 +374,15 @@ public class Auto18Blue extends LinearOpMode {
                             new BezierLine(
                                     new Pose(31.868, 132.754),
 
-                                    new Pose(51.284, 97.361)
+                                    new Pose(52.153, 86.342)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(309))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-46))
 
                     .build();
 
             intakeballs1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(51.284, 97.361),
+                                    new Pose(52.153, 86.342),
                                     new Pose(61.122, 58.515),
                                     new Pose(13.618, 57.400)
                             )
@@ -395,7 +396,7 @@ public class Auto18Blue extends LinearOpMode {
                                     new Pose(60.837, 58.557),
                                     new Pose(52.153, 86.342)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-46))
 
                     .build();
 
@@ -425,7 +426,7 @@ public class Auto18Blue extends LinearOpMode {
                                     new Pose(61.126, 58.695),
                                     new Pose(52.153, 86.342)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
+                    ).setLinearHeadingInterpolation(Math.toRadians(147), Math.toRadians(-46))
 
                     .build();
 
@@ -455,7 +456,7 @@ public class Auto18Blue extends LinearOpMode {
                                     new Pose(61.126, 58.687),
                                     new Pose(52.176, 86.203)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
+                    ).setLinearHeadingInterpolation(Math.toRadians(147), Math.toRadians(-46))
 
                     .build();
 
@@ -475,7 +476,7 @@ public class Auto18Blue extends LinearOpMode {
 
                                     new Pose(52.170, 86.868)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-46))
 
                     .build();
 
@@ -495,7 +496,7 @@ public class Auto18Blue extends LinearOpMode {
                                     new Pose(37.000, 62.845),
                                     new Pose(52.176, 86.203)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-46))
 
                     .build();
 
@@ -505,11 +506,13 @@ public class Auto18Blue extends LinearOpMode {
 
                                     new Pose(45.705, 63.050)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(-45.5))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-46))
 
                     .build();
         }
     }
+
+
 
     private boolean onStateStart() {
         if (currentState != lastState) {
