@@ -75,7 +75,7 @@ public class Shooter {
     public static final double TICKS_PER_REVOLUTION = 28;
     public static int BANG_BANG_THRESHOLD = 10;
     public static final double TRANSFER_SPEED = -1;
-    public static final double GATE_OPEN = 0.475;
+    public static final double GATE_OPEN = 0.465;
     public static final double GATE_CLOSE=0.25;
     public static final double HOOD_CLOSE=0.625; //0.625
     public static double HOOD_FAR_TESTING = 1;

@@ -450,7 +450,7 @@ public class Auto6BlueSide extends LinearOpMode {
 
                                     new Pose(56.722, 18.379)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(289))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(291))
 
                     .build();
 

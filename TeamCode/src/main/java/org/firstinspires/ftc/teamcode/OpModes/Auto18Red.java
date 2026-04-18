@@ -140,7 +140,7 @@ public class Auto18Red extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
                     //state transition
-                    if (timer.seconds() > .45 ) {
+                    if (timer.seconds() > .55) {
                         currentState = State.COLLECT_ARTIFACTS;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -168,7 +168,7 @@ public class Auto18Red extends LinearOpMode {
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
 
-                    if (timer.seconds() > .45 ) {
+                    if (timer.seconds() > .55) {
                         currentState = State.COLLECT_ARTIFACTSFROMGATE;
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                     }
@@ -196,7 +196,7 @@ public class Auto18Red extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    if (timer.seconds() > .45 ) {
+                    if (timer.seconds() > .55) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTSFROMGATE2;
                     }
@@ -207,7 +207,7 @@ public class Auto18Red extends LinearOpMode {
                         timer.reset();
                         follower.followPath(paths.opengate2, true);
                     }
-                    if (timer.seconds() > 4 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
+                    if (timer.seconds() > 3.5 || (robot.intake.detectedTop && robot.intake.detectedMiddle && robot.intake.detectedBottom)) {
                         currentState = State.DRIVE_TO_LAUNCH_POSITION4;
                     }
                     break;
@@ -225,7 +225,7 @@ public class Auto18Red extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    if (timer.seconds() > .45 ) {
+                    if (timer.seconds() > .55) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTS3;
                     }
@@ -254,7 +254,7 @@ public class Auto18Red extends LinearOpMode {
                         robot.intake.intakeMode = Intake.IntakeMode.LAUNCH;
                     }
                     robot.shooter.transferMode = Shooter.TransferMode.ON;
-                    if (timer.seconds() > .45 ) {
+                    if (timer.seconds() > .55) {
                         robot.shooter.transferMode = Shooter.TransferMode.OFF;
                         currentState = State.COLLECT_ARTIFACTS4;
                     }
@@ -353,7 +353,7 @@ public class Auto18Red extends LinearOpMode {
 
                                     new Pose(92.716, 97.361)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-129))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-131))
 
                     .build();
 
@@ -453,7 +453,7 @@ public class Auto18Red extends LinearOpMode {
 
                                     new Pose(91.830, 86.868)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(231))
+                    ).setConstantHeadingInterpolation(Math.toRadians(228))
 
                     .build();
 
@@ -473,7 +473,7 @@ public class Auto18Red extends LinearOpMode {
                                     new Pose(107.115, 62.845),
                                     new Pose(91.824, 86.203)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(231))
+                    ).setConstantHeadingInterpolation(Math.toRadians(219))
 
                     .build();
 

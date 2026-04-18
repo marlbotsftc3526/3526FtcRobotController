@@ -262,6 +262,7 @@ public class Auto18Blue extends LinearOpMode {
                     break;
                 case DRIVE_TO_LAUNCH_POSITION5:
                     if (onStateStart()) {
+                        timer.reset();
                         follower.followPath(paths.launchzone5, true);
                     }
                     if (!follower.isBusy()) {
@@ -376,7 +377,7 @@ public class Auto18Blue extends LinearOpMode {
 
                                     new Pose(52.153, 86.342)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-46))
+                    ).setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-50))
 
                     .build();
 
@@ -396,7 +397,7 @@ public class Auto18Blue extends LinearOpMode {
                                     new Pose(60.837, 58.557),
                                     new Pose(52.153, 86.342)
                             )
-                    ).setConstantHeadingInterpolation(Math.toRadians(-46))
+                    ).setConstantHeadingInterpolation(Math.toRadians(-48))
 
                     .build();
 
@@ -414,7 +415,7 @@ public class Auto18Blue extends LinearOpMode {
                             new BezierLine(
                                     new Pose(21.198, 58.000),
 
-                                    new Pose(12.000, 60.000)
+                                    new Pose(12.000, 60) //60 = y
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(147))
 
@@ -422,7 +423,7 @@ public class Auto18Blue extends LinearOpMode {
 
             launchzone3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(12.000, 60.000),
+                                    new Pose(12.000, 60), //60 = y
                                     new Pose(61.126, 58.695),
                                     new Pose(52.153, 86.342)
                             )
@@ -444,7 +445,7 @@ public class Auto18Blue extends LinearOpMode {
                             new BezierLine(
                                     new Pose(21.198, 58.000),
 
-                                    new Pose(12.000, 60.000)
+                                    new Pose(12.000, 60) //60
                             )
                     ).setConstantHeadingInterpolation(Math.toRadians(147))
 
@@ -452,7 +453,7 @@ public class Auto18Blue extends LinearOpMode {
 
             launchzone4 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(12.000, 60.000),
+                                    new Pose(12.000, 60),
                                     new Pose(61.126, 58.687),
                                     new Pose(52.176, 86.203)
                             )
