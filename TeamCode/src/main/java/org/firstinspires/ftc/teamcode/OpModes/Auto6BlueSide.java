@@ -74,6 +74,7 @@ public class Auto6BlueSide extends LinearOpMode {
         robot = new RobotHardware(this);
         robot.init();
         robot.drivetrain.side = Drivetrain.SideMode.BLUE;
+        robot.limelight.limelight.pipelineSwitch(1);
 
         follower = Constants.createFollower(hardwareMap);
         //TODO Set starting pose from path generation
