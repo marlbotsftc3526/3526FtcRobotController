@@ -492,7 +492,7 @@ public class Auto9BlueLimelight extends LinearOpMode {
         public PathChain intakeartifacts5;
         public PathChain launchartifacts6;
         public PathChain end;
-
+        public Paths(Follower follower) {
                launchartifacts0 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(55.62977867203219, 8.692),

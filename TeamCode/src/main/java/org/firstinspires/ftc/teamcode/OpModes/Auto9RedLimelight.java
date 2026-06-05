@@ -144,7 +144,7 @@ public class Auto9RedLimelight extends LinearOpMode {
                         timer.reset();
                     }
                     robot.drivetrain.adjustblue();
-                    if(timer.seconds() > 1) {
+                    if(timer.seconds() > 3.5) {
                         currentState = Auto9RedLimelight.State.LAUNCH_ARTIFACTS;
                         robot.drivetrain.stop();
                     }
