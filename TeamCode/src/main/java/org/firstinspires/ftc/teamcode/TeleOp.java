@@ -1,15 +1,8 @@
+package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.canvas.Canvas;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.List;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Teleop", group="Linear OpMode")
@@ -32,9 +25,9 @@ public class TeleOp extends LinearOpMode{
 
 
         /*if(myOpMode.gamepad2.left_bumper){
-            robot.drivetrain.side = Drivetrain.SideMode.BLUE;
+            robot.drivetrain.side = org.firstinspires.ftc.teamcode.Drivetrain.SideMode.BLUE;
         }else if(myOpMode.gamepad2.right_bumper){
-            robot.drivetrain.side = Drivetrain.SideMode.RED;
+            robot.drivetrain.side = org.firstinspires.ftc.teamcode.Drivetrain.SideMode.RED;
         }*/
 
         waitForStart();

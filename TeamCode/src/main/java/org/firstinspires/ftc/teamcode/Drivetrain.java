@@ -1,30 +1,12 @@
+package org.firstinspires.ftc.teamcode;
 
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.pedropathing.control.PIDFController;
-import com.qualcomm.hardware.limelightvision.LLFieldMap;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 //import org.firstinspires.ftc.teamcode.OpModes.GobildaPinPoint;
 //import org.firstinspires.ftc.teamcode.PinpointLocalizer;
-//import org.firstinspires.ftc.teamcode.utility.PIDController;
+//import org.firstinspires.ftc.teamcode.utility.org.firstinspires.ftc.teamcode.PIDController;
 
-
-import java.util.List;
-import java.util.Locale;
 public class Drivetrain {
     ElapsedTime time = new ElapsedTime();
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
