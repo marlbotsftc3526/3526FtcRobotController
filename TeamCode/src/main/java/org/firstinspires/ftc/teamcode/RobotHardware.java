@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class RobotHardware {
@@ -8,7 +10,7 @@ public class RobotHardware {
     public Drivetrain drivetrain;
     public LimeLight limelight;
     public Intake intake;
-    public Lift lift;
+    public Launcher launcher;
 
     public RobotHardware(OpMode opmode) {
         myOpMode = opmode;
@@ -18,12 +20,12 @@ public class RobotHardware {
         limelight = new LimeLight(myOpMode);
         drivetrain = new Drivetrain(myOpMode, limelight);
         intake = new Intake(myOpMode);
-        lift = new Lift(myOpMode);
+        launcher = new Launcher(myOpMode);
 
         limelight.init();
         drivetrain.init();
         intake.init();
-        lift.init();
+        launcher.init();
 
         myOpMode.telemetry.addData(">", "Hardware Initialized");
     }
@@ -32,7 +34,7 @@ public class RobotHardware {
         limelight.teleOp();
         drivetrain.teleOp();
         intake.teleOp();
-        lift.teleOp();
+        launcher.teleOp();
 
         if(myOpMode.gamepad1.a){
             drivetrain.drivetrainMode = Drivetrain.DrivetrainMode.LIMELIGHT;
@@ -40,6 +42,7 @@ public class RobotHardware {
             drivetrain.drivetrainMode = Drivetrain.DrivetrainMode.MANUAL;
         }
     }
+
 
     public void stop(){
         drivetrain.stop();

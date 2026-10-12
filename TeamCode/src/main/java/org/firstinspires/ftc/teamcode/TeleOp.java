@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,6 +52,19 @@ public class TeleOp extends LinearOpMode{
             telemetry.addData("loop time", loopTimer.milliseconds());
             loopTimer.reset();
             robot.teleOp();
+
+            if(gamepad1.x){
+                robot.launcher.launcherMode = Launcher.LauncherMode.ON;
+                robot.launcher.revolutions_per_minute += 200;
+                sleep(500);
+            } else if (gamepad1.y){
+                robot.launcher.launcherMode = Launcher.LauncherMode.ON;
+                robot.launcher.revolutions_per_minute -= 200;
+                sleep(500);
+            } else if (gamepad1.b){
+                robot.launcher.launcherMode = Launcher.LauncherMode.OFF;
+            }
+
             telemetry.update();
             /*
             // 2. **Create a new TelemetryPacket**
