@@ -2,14 +2,9 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.teamcode.Subsystems.PIDController;
+import org.firstinspires.ftc.teamcode.utility.PIDController;
 public class Turret {
     private OpMode myOpMode = null;
     public CRServo turretRight = null;
@@ -46,7 +41,7 @@ public class Turret {
     public void update(){
         if(turretMode == TurretMode.MANUAL){
             turretRight.setPower(-myOpMode.gamepad2.right_stick_x);
-        }else if (turretMode == TurretMode.MANUAL){
+        }else if (turretMode == TurretMode.AUTO){
 
         }else if (turretMode == TurretMode.FIXED){
             turretLeft.setPower(0);

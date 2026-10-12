@@ -21,6 +21,7 @@ public class Transfer {
     public DcMotor transfer = null;
     public static final double transferUp = 2000;
     public static final double transferDown = -2000;
+    public static final double transferLaunch = 20;
     public enum TransferMode{
         UP,
         DOWN,
@@ -37,8 +38,10 @@ public class Transfer {
     public void update(){
         if (transferMode == TransferMode.UP){
             transfer.setPower(transferUp);
-        }else if (transferMode == TransferMode.DOWN){
+        }else if (transferMode == TransferMode.DOWN) {
             transfer.setPower(transferDown);
+        }else if(transferMode == TransferMode.LAUNCH){
+            transfer.setPower(transferLaunch);
         }else if (transferMode == TransferMode.OFF){
             transfer.setPower(0);
         }

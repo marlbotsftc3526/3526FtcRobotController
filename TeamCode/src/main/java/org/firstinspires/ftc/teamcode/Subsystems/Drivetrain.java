@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
-import com.pedropathing.control.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.utility.PIDController;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 //import org.firstinspires.ftc.teamcode.OpModes.GobildaPinPoint;
 //import org.firstinspires.ftc.teamcode.PinpointLocalizer;
 //import org.firstinspires.ftc.teamcode.utility.org.firstinspires.ftc.teamcode.PIDController;
@@ -11,6 +14,7 @@ public class Drivetrain {
     ElapsedTime time = new ElapsedTime();
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
     private LimeLight limelight;
+    public GoBildaPinpointDriver pinpoint;
 
     public DcMotor rightFrontDrive = null;
     public DcMotor leftFrontDrive = null;
@@ -30,7 +34,11 @@ public class Drivetrain {
     public static double roboLocationX;
     public static double roboLocationY;
 
+    PIDController headingController;
+    public PIDController limelightTurnController;
+
     public PIDController limelightController;
+
     public enum DrivetrainMode{
         MANUAL,
         LIMELIGHT
@@ -45,8 +53,10 @@ public class Drivetrain {
     }
     public boolean targetReached = false;
 
+
     public void init(){
         limelightController = new PIDController(LIMELIGHT_KP,LIMELIGHT_KI,LIMELIGHT_KD,MAX_OUT);
+        headingController = new PIDController(HEADING_KP, HEADING_KI, HEADING_KD, MAX_OUT);
 
         leftFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "leftFrontDrive");
         rightFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightFrontDrive");
@@ -62,8 +72,19 @@ public class Drivetrain {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        pinpoint = myOpMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+        pinpoint.setOffsets(80.0, -160.0, DistanceUnit.MM); //these are tuned for 3110-0002-0001 Product Insight #1
+
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
+                GoBildaPinpointDriver.EncoderDirection.REVERSED);
+
+        pinpoint.recalibrateIMU();
     }
-    public void teleOp(){
+    public void update(){
+        pinpoint.update();
         double max;
 
         double leftFrontPower;
