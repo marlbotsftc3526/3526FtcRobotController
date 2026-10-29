@@ -17,9 +17,14 @@ public class Transfer {
     private OpMode myOpMode = null;
 
     public DcMotor transfer = null;
-    public static final double transferUp = 2000;
-    public static final double transferDown = -2000;
-    public static final double transferLaunch = 20;
+    public Servo gate = null;
+
+    public static final double GATEOPEN = 0;
+    public static final double GATECLOSE = 0.5;
+    public double gatePosition = GATECLOSE;
+    public static final double TRANSFERUP = 1;
+    public static final double TRANSFERDOWN = -1;
+    public static final double TRANSFERLAUNCH = 20;
     public enum TransferMode{
         UP,
         DOWN,
@@ -28,20 +33,25 @@ public class Transfer {
     }
 
     public TransferMode transferMode = TransferMode.OFF;
+    public Transfer(OpMode opmode) {
+        myOpMode = opmode;
+    }
 
     public void init() {
         transfer = myOpMode.hardwareMap.get(DcMotor.class, "transfer");
+        gate = myOpMode.hardwareMap.get(Servo.class, "gate");
     }
 
     public void update(){
         if (transferMode == TransferMode.UP){
-            transfer.setPower(transferUp);
+            transfer.setPower(TRANSFERUP);
         }else if (transferMode == TransferMode.DOWN) {
-            transfer.setPower(transferDown);
+            transfer.setPower(TRANSFERDOWN);
         }else if(transferMode == TransferMode.LAUNCH){
-            transfer.setPower(transferLaunch);
+            transfer.setPower(TRANSFERLAUNCH);
         }else if (transferMode == TransferMode.OFF){
             transfer.setPower(0);
         }
+        gate.setPosition(gatePosition);
     }
 }

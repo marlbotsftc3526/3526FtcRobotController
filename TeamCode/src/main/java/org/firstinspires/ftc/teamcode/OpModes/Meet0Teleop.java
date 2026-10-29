@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.pedropathing.drivetrain.DrivePowers;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.ManualDrive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import java.util.List;
 
@@ -13,31 +17,31 @@ import java.util.List;
     public class Meet0Teleop extends LinearOpMode{
         RobotHardware robot;
         ElapsedTime loopTimer;
+        private boolean BLUE;
+
+    private Follower follower;
 
         @Override
         public void runOpMode() {
             //calling constructor
             robot = new RobotHardware(this);
+            follower = Constants.create(hardwareMap);
             loopTimer = new ElapsedTime();
             //calling init function
             robot.init();
             robot.drivetrain.pinpoint.recalibrateIMU();
             // Wait for the game to start (driver presses START)
             telemetry.addData("Status", "Waiting for Start");
-            telemetry.update();
 
-
-
-        /*if(myOpMode.gamepad2.left_bumper){
-            robot.drivetrain.side = Drivetrain.SideMode.BLUE;
-        }else if(myOpMode.gamepad2.right_bumper){
-            robot.drivetrain.side = Drivetrain.SideMode.RED;
-        }*/
+        if(gamepad1.left_bumper){
+            BLUE = false;
+        }else if(gamepad1.right_bumper){
+            BLUE = true;
+        }
+        telemetry.addData("blue", BLUE);
+        telemetry.update();
 
             waitForStart();
-
-            robot.cameraThread.start();
-
 
 
             loopTimer.reset();
@@ -47,46 +51,35 @@ import java.util.List;
             while (opModeIsActive()) {
                 telemetry.addData("loop time", loopTimer.milliseconds());
                 loopTimer.reset();
+                DrivePowers powers;
+                if(BLUE==false) {
+                    powers = ManualDrive.fieldCentric(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x,
+                            follower.pose().heading()
+                    );
+                }
+                else{
+                    powers = ManualDrive.fieldCentric(
+                            gamepad1.left_stick_y,
+                            gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x,
+                            follower.pose().heading()
+                    );
+                }
+
+                if(gamepad1.dpad_up){
+                    BLUE = false;
+                }else if(gamepad1.dpad_down){
+                    BLUE = true;
+                }
+                follower.manual(powers);
+                follower.update();
                 robot.teleOp();
                 telemetry.update();
-            /*
-            // 2. **Create a new TelemetryPacket**
-            // The argument 'true' ensures the default field image is drawn.
-            TelemetryPacket packet = new TelemetryPacket(true);
 
-            // 3. **Get the Field Overlay Canvas**
-            Canvas fieldOverlay = packet.fieldOverlay();
-
-            // 4. **Set Drawing Styles (Optional but recommended)**
-            fieldOverlay.setStroke("red"); // The color for lines/borders
-            fieldOverlay.setStrokeWidth(2); // Line thickness in pixels/units
-
-            // 5. **Draw the Robot Position (Circle)**
-            // drawCircle(x, y, radius) - all in inches
-            double robotX = robot.drivetrain.localizer.getPosX(DistanceUnit.INCH);
-            double robotY = robot.drivetrain.localizer.getPosY(DistanceUnit.INCH);
-            double robotHeading = robot.drivetrain.localizer.getHeading(AngleUnit.RADIANS);
-            fieldOverlay.strokeCircle(robotX, robotY, 9);
-
-            // 6. **Draw the Robot Heading (Line)**
-            double x2 = robotX + 9 * Math.cos(robotHeading);
-            double y2 = robotY + 9 * Math.sin(robotHeading);
-
-            // drawLine(x1, y1, x2, y2)
-            fieldOverlay.setStroke("blue"); // Change color for the line
-            fieldOverlay.strokeLine(robotX, robotY, x2, y2);
-
-
-            // 7. **Add Traditional Telemetry Data (Optional)**
-            packet.put("Robot X (in)", String.format("%.2f", robotX));
-            packet.put("Robot Y (in)", String.format("%.2f", robotY));
-
-            // 8. **Send the Packet to the Dashboard**
-            dashboard.sendTelemetryPacket(packet);
-
-             */
             }
            // robot.limelight.stop();
-            robot.cameraThread.interrupt();
         }
 }

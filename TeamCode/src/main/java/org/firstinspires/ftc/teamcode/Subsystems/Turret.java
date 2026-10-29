@@ -20,9 +20,14 @@ public class Turret {
     public enum TurretMode{
         MANUAL,
         AUTO,
-        FIXED
+        FIXED,
+        CLOCKWISE,
+        COUNTERCLOCKWISE
     }
     public TurretMode turretMode = TurretMode.FIXED;
+    public Turret(OpMode opmode) {
+        myOpMode = opmode;
+    }
 
     public void init(){
         turretLeft = myOpMode.hardwareMap.get(CRServo.class, "turretLeft");
@@ -45,7 +50,14 @@ public class Turret {
 
         }else if (turretMode == TurretMode.FIXED){
             turretLeft.setPower(0);
+        }else if (turretMode == TurretMode.CLOCKWISE){
+            turretRight.setPower(0.25);
+            turretLeft.setPower(0.25);
+        }else if(turretMode == TurretMode.COUNTERCLOCKWISE){
+            turretRight.setPower(-0.25);
+            turretLeft.setPower(-0.25);
         }
+
     }
 
 }

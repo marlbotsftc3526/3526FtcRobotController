@@ -16,6 +16,7 @@ public class Intake {
     private OpMode myOpMode = null;   // gain access to methods in the calling OpMode.
 
     public DcMotor intake = null;
+    public Servo flower = null;
     private DigitalChannel distOne;
     private DigitalChannel distTwo;
 
@@ -25,6 +26,9 @@ public class Intake {
     public boolean detectedOne;
     public boolean detectedTwo;
 
+    public static double FLOWERUP = 0.5;
+    public static double FLOWERDOWN = 0;
+    public double flowerServoPosition = FLOWERUP;
 
     //TODO Adjust based on desired states
     public enum IntakeMode {
@@ -69,6 +73,8 @@ public class Intake {
 
         myOpMode.telemetry.addData(">", "Intake Initialized");
 
+        flower = myOpMode.hardwareMap.get(Servo.class, "intakeBar");
+
     }
 
     public void update() {
@@ -86,6 +92,8 @@ public class Intake {
         // Read the sensor state (true = HIGH, false = LOW)
         detectedOne = distOne.getState();
         detectedTwo = distTwo.getState();
+
+        flower.setPosition(flowerServoPosition);
     }
 
     public void teleOp(){
