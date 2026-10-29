@@ -63,7 +63,6 @@ public class RobotHardware {
         //Intake controls
         if(myOpMode.gamepad1.right_trigger > 0.1){
             intake.intakeMode = Intake.IntakeMode.OUT;
-            transfer.transferMode = Transfer.TransferMode.DOWN;
         }else if(myOpMode.gamepad1.left_trigger > 0.1) {
             intake.intakeMode = Intake.IntakeMode.IN;
             transfer.transferMode = Transfer.TransferMode.UP;
@@ -73,10 +72,10 @@ public class RobotHardware {
         }
 
         //Flower controls
-        if(myOpMode.gamepad1.x){
+        if(myOpMode.gamepad1.a){
             intake.flowerServoPosition = Intake.FLOWERDOWN;
         }
-        else if(myOpMode.gamepad1.y){
+        else if(myOpMode.gamepad1.b){
             intake.flowerServoPosition = Intake.FLOWERUP;
         }
 
@@ -89,9 +88,9 @@ public class RobotHardware {
         }
 
         //Shooter controls
-        if(myOpMode.gamepad1.a){
+        if(myOpMode.gamepad1.x){
             shooter.shooterMode = Shooter.ShooterMode.FIXED;
-        }else if(myOpMode.gamepad1.b){
+        }else if(myOpMode.gamepad1.y){
             shooter.shooterMode = Shooter.ShooterMode.OFF;
         }
 
@@ -115,11 +114,11 @@ public class RobotHardware {
     public void update(){
         intake.update();
         shooter.update();
-        drivetrain.update();
+        //drivetrain.update();
         transfer.update();
     }
 
     public void stop(){
-        drivetrain.stop();
+        //drivetrain.stop();
     }
 }

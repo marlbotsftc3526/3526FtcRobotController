@@ -19,11 +19,11 @@ public class Transfer {
     public DcMotor transfer = null;
     public Servo gate = null;
 
-    public static final double GATEOPEN = 0;
-    public static final double GATECLOSE = 0.5;
+    public static final double GATEOPEN = 0.7;
+    public static final double GATECLOSE = 0.4;
     public double gatePosition = GATECLOSE;
-    public static final double TRANSFERUP = 1;
-    public static final double TRANSFERDOWN = -1;
+    public static final double TRANSFERUP = -1;
+    public static final double TRANSFERDOWN = 1;
     public static final double TRANSFERLAUNCH = 20;
     public enum TransferMode{
         UP,

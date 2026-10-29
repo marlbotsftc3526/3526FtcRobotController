@@ -26,8 +26,8 @@ public class Intake {
     public boolean detectedOne;
     public boolean detectedTwo;
 
-    public static double FLOWERUP = 0.5;
-    public static double FLOWERDOWN = 0;
+    public static double FLOWERUP = 0.07;
+    public static double FLOWERDOWN = 0.54;
     public double flowerServoPosition = FLOWERUP;
 
     //TODO Adjust based on desired states

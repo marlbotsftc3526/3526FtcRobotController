@@ -17,8 +17,8 @@ public class Shooter{
     public DcMotorEx rightShooter = null;
     public DcMotorEx leftShooter = null;
 
-    public double revolutions_per_minute = 1000;
-    static final double TICKS_PER_REVOLUTION = 28;
+    public double revolutions_per_minute = 1200;
+    static final double TICKS_PER_REVOLUTION = 103.8;
     double ticks_per_second;
 
     public enum ShooterMode {
@@ -49,8 +49,8 @@ public class Shooter{
     public void update() {
         if(shooterMode == shooterMode.FIXED){
             ticks_per_second = revolutions_per_minute / 60 * TICKS_PER_REVOLUTION;
-            rightShooter.setVelocity(ticks_per_second);
-            leftShooter.setVelocity(ticks_per_second);
+            rightShooter.setVelocity(-ticks_per_second);
+            leftShooter.setVelocity(-ticks_per_second);
         }else if(shooterMode == shooterMode.OFF){
             rightShooter.setVelocity(0);
             leftShooter.setVelocity(0);
