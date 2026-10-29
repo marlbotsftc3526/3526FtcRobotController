@@ -50,6 +50,7 @@ public class Turret {
 
         }else if (turretMode == TurretMode.FIXED){
             turretLeft.setPower(0);
+            turretRight.setPower(0);
         }else if (turretMode == TurretMode.CLOCKWISE){
             turretRight.setPower(0.25);
             turretLeft.setPower(0.25);

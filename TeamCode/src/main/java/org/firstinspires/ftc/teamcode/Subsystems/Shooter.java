@@ -17,7 +17,7 @@ public class Shooter{
     public DcMotorEx rightShooter = null;
     public DcMotorEx leftShooter = null;
 
-    static double revolutions_per_minute = 1000;
+    public double revolutions_per_minute = 1000;
     static final double TICKS_PER_REVOLUTION = 28;
     double ticks_per_second;
 

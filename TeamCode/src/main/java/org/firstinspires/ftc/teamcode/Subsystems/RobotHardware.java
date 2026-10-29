@@ -64,7 +64,7 @@ public class RobotHardware {
         if(myOpMode.gamepad1.right_trigger > 0.1){
             intake.intakeMode = Intake.IntakeMode.OUT;
             transfer.transferMode = Transfer.TransferMode.DOWN;
-        }else if(myOpMode.gamepad1.right_trigger < 0.1) {
+        }else if(myOpMode.gamepad1.left_trigger > 0.1) {
             intake.intakeMode = Intake.IntakeMode.IN;
             transfer.transferMode = Transfer.TransferMode.UP;
         }else{
@@ -95,11 +95,20 @@ public class RobotHardware {
             shooter.shooterMode = Shooter.ShooterMode.OFF;
         }
 
+        //Shooter Velocity Tuning
+        if(myOpMode.gamepad2.dpad_left){
+            shooter.revolutions_per_minute-=50;
+        }else if(myOpMode.gamepad2.dpad_right){
+            shooter.revolutions_per_minute+=50;
+        }
+
         //Turret controls
         if(myOpMode.gamepad1.dpad_left){
             turret.turretMode = Turret.TurretMode.COUNTERCLOCKWISE;
         }else if (myOpMode.gamepad1.dpad_right){
             turret.turretMode = Turret.TurretMode.CLOCKWISE;
+        }else{
+            turret.turretMode = Turret.TurretMode.FIXED;
         }
     }
 
