@@ -44,6 +44,7 @@ public class Meet0AutoRed extends LinearOpMode {
     Shooter shootshoot;
     Paths paths;
 
+
     public Path shootPreloads() {
         return Paths.line(start, shootPreloads).linear(start, shootPreloads);
     }
@@ -78,7 +79,7 @@ public class Meet0AutoRed extends LinearOpMode {
 
         Command transferoff = instant(() -> robot.transfer.transferMode = Transfer.TransferMode.OFF);
 
-        Command opengate = instant(() -> robot.transfer.gate.setPosition(Transfer.GATEOPEN));
+        Command gateOpen = instant(() -> robot.transfer.gatePosition = Transfer.GATEOPEN);
 
         Command gotoshoot = follow(follower, shootPreloads());
         Command gotopark = follow(follower, park());
@@ -87,7 +88,7 @@ public class Meet0AutoRed extends LinearOpMode {
                 turnonshooter,
                 waitMs(1500),
                 transferon,
-                opengate,
+                gateOpen,
                 waitMs(3000),
                 gotopark));
 

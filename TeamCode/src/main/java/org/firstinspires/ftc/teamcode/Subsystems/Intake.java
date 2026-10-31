@@ -74,6 +74,7 @@ public class Intake {
         myOpMode.telemetry.addData(">", "Intake Initialized");
 
         flower = myOpMode.hardwareMap.get(Servo.class, "intakeBar");
+        flower.setPosition(flowerServoPosition);
 
     }
 

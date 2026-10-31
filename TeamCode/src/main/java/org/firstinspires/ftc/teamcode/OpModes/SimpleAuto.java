@@ -15,6 +15,7 @@ import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
 import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystems.Transfer;
@@ -27,16 +28,20 @@ public class SimpleAuto extends LinearOpMode {
     private Follower follower;
     RobotHardware robot;
 
+
     //Declare commands (these could be moved to robot hardware or subsystems)
     Command shooterOn = instant(() -> robot.shooter.shooterMode = Shooter.ShooterMode.FIXED);
     Command shooterOff = instant(() -> robot.shooter.shooterMode = Shooter.ShooterMode.OFF);
     Command transferOn = instant(() -> robot.transfer.transferMode = Transfer.TransferMode.UP);
     Command transferOff = instant(() -> robot.transfer.transferMode = Transfer.TransferMode.OFF);
     Command gateOpen = instant(() -> robot.transfer.gatePosition = Transfer.GATEOPEN);
+    Command flowerUp = instant(() -> robot.intake.flowerServoPosition = Intake.FLOWERUP);
+
 
     // Build Autonomous routine using sequential or parallel commands
     public Command autoRoutine() {
         return sequential(
+                flowerUp,
                 shooterOn,
                 follow(follower, driveToLaunch()),
                 gateOpen,
