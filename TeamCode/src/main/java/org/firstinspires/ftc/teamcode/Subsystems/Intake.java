@@ -42,7 +42,7 @@ public class Intake {
     //COME BACK WRONG VALUES PROBABLY
     public static double INTAKE_SPEED = 1;
     public static double INTAKE_LAUNCHER_SPEED = 0.7;
-    public static double OUTTAKE_SPEED = -.5;
+    public static double OUTTAKE_SPEED = -.7;
 
     public Intake.IntakeMode intakeMode = Intake.IntakeMode.OFF;
 

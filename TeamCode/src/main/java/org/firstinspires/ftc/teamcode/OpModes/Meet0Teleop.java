@@ -30,6 +30,9 @@ import java.util.List;
             //calling init function
             robot.init();
             robot.drivetrain.pinpoint.recalibrateIMU();
+
+            follower.setPose(OpModeStorage.autonomousEndPose);
+
             // Wait for the game to start (driver presses START)
             telemetry.addData("Status", "Waiting for Start");
 
@@ -59,6 +62,8 @@ import java.util.List;
                             -gamepad1.right_stick_x,
                             follower.pose().heading()
                     );
+                    follower.manual(powers);
+                    follower.update();
                 }
                 else{
                     powers = ManualDrive.fieldCentric(
@@ -67,6 +72,8 @@ import java.util.List;
                             -gamepad1.right_stick_x,
                             follower.pose().heading()
                     );
+                    follower.manual(powers);
+                    follower.update();
                 }
 
                 if(gamepad1.dpad_up){

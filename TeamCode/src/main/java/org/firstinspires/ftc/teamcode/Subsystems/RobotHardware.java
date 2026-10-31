@@ -63,6 +63,7 @@ public class RobotHardware {
         //Intake controls
         if(myOpMode.gamepad1.right_trigger > 0.1){
             intake.intakeMode = Intake.IntakeMode.OUT;
+            transfer.transferMode = Transfer.TransferMode.DOWN;
         }else if(myOpMode.gamepad1.left_trigger > 0.1) {
             intake.intakeMode = Intake.IntakeMode.IN;
             transfer.transferMode = Transfer.TransferMode.UP;

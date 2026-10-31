@@ -1,33 +1,116 @@
-//package org.firstinspires.ftc.teamcode.OpModes;
-//
-//import com.bylazar.telemetry.PanelsTelemetry;
-//import com.bylazar.telemetry.TelemetryManager;
-//import com.pedropathing.follower.Follower;
-//import com.pedropathing.geometry.BezierCurve;
-//import com.pedropathing.geometry.BezierLine;
-//import com.pedropathing.geometry.Pose;
-//import com.pedropathing.paths.PathChain;
-//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.util.ElapsedTime;
-//import org.firstinspires.ftc.robotcore.external.Telemetry;
-//
-//import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
-//import org.firstinspires.ftc.teamcode.Subsystems.Intake;
-//import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
-//import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
-//import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-//
-//
-//import static com.pedropathing.ivy.Scheduler.schedule;
-//import static com.pedropathing.ivy.commands.Commands.*;
-//import static com.pedropathing.ivy.groups.Groups.sequential;
-//import static org.firstinspires.ftc.teamcode.math.PoseMirror.mirror;
-//
-//
-//@Autonomous(name = "Meet0AutoRed", group = "AutoTemplates")
-//public class Meet0AutoRed extends LinearOpMode{
+package org.firstinspires.ftc.teamcode.OpModes;
+
+import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.Scheduler;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.groups.Groups.sequential;
+import static com.pedropathing.ivy.pedro.PedroCommands.follow;
+
+import org.firstinspires.ftc.teamcode.OpModes.OpModeStorage;
+import org.firstinspires.ftc.teamcode.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystems.Transfer;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
+import com.pedropathing.follower.Follower;
+
+import com.pedropathing.api.PoseFactory;
+import com.pedropathing.math.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.Subsystems.RobotHardware;
+import static com.pedropathing.ivy.commands.Commands.*;
+import java.util.List;
+
+import static com.pedropathing.api.Paths.*;
+import com.pedropathing.api.Paths;
+
+import com.pedropathing.api.PoseFactory;
+import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
+
+@Autonomous(name = "Meet0AutoRed", group = "AutoTemplates")
+public class Meet0AutoRed extends LinearOpMode {
+    RobotHardware robot;
+    private Follower follower;
+    private final PoseFactory p = PoseFactory.degrees(); // add this
+    private final Pose startPose = p.of(56, 8, 90);
+    Shooter shootshoot;
+    Paths paths;
+
+    public void runOpMode (){
+        Scheduler.reset();
+        robot = new RobotHardware(this);
+        robot.init();
+
+        Scheduler.reset();
+        follower = Constants.create(hardwareMap);
+        follower.setPose(startPose);
+        follower.update();
+
+        paths = new Paths();
+
+        Command turnonshooter = Command.build()
+                .setStart(() -> robot.shooter.shooterMode = Shooter.ShooterMode.FIXED)
+                .setDone(() -> true)
+                .requiring(robot.shooter);
+
+        Command turnshooteroff = instant(() -> robot.shooter.shooterMode = Shooter.ShooterMode.OFF);
+        //motor on
+        //done is true
+
+        Command transferon = Command.build()
+                .setStart(() -> robot.transfer.transferMode = Transfer.TransferMode.UP)
+                .setDone(() -> true)
+                .requiring(robot.transfer);
+
+        Command transferoff = instant(() -> robot.transfer.transferMode = Transfer.TransferMode.OFF);
+
+        Command opengate = instant(() -> robot.transfer.gate.setPosition(robot.transfer.GATEOPEN));
+
+        Command gotoshoot = follow(follower, paths.shootPreloads);
+        Command gotopark = follow(follower, paths.park);
+
+        Command sequence = sequential(
+                gotoshoot,
+                turnonshooter,
+                transferon,
+                opengate,
+                gotopark
+        );
+
+        waitForStart();
+
+        while(opModeIsActive()) {
+            robot.update();
+            Scheduler.execute();
+        }
+
+    }
+
+
+    public static class Paths {
+
+        private final PoseFactory poseFactory = PoseFactory.degrees();
+
+        private final Pose start = poseFactory.of(56, 8, 90);
+        private final Pose shootPreloads = poseFactory.of(56.1958, 19.3529, 90);
+        private final Pose park = poseFactory.of(7.5236, 108.2357, 90);
+        private final Pose parkControl1 = poseFactory.of(14.5355, 51.3644, 0);
+
+        public Path shootPreloads() {
+            return Paths.line(start, shootPreloads).linear(start, shootPreloads);
+        }
+
+        public Path park() {
+            return Paths.curve(shootPreloads, parkControl1, park).constant(park);
+        }
+    }
+
+    //call robot.update
+
+
+
 //        RobotHardware robot;
 //        private Follower follower;
 //        private Paths paths;
@@ -134,4 +217,4 @@
 //                return Paths.line(shootflower2, park).constant(park);
 //            }
 //        }
-//}
+}
