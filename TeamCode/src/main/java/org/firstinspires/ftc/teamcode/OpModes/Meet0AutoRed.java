@@ -33,22 +33,33 @@ import com.pedropathing.paths.Path;
 public class Meet0AutoRed extends LinearOpMode {
     RobotHardware robot;
     private Follower follower;
-    private final PoseFactory p = PoseFactory.degrees(); // add this
-    private final Pose startPose = p.of(56, 8, 90);
+    private final PoseFactory poseFactory = PoseFactory.degrees();
+    private final Pose start = poseFactory.of(56, 8, 90);
+
+    private final Pose shootPreloads = poseFactory.of(56.1958, 19.3529, 90);
+    private final Pose park = poseFactory.of(7.5236, 108.2357, 90);
+    private final Pose parkControl1 = poseFactory.of(14.5355, 51.3644, 0);
+
     Shooter shootshoot;
     Paths paths;
+
+    public Path shootPreloads() {
+        return Paths.line(start, shootPreloads).linear(start, shootPreloads);
+    }
+
+    public Path park() {
+        return Paths.curve(shootPreloads, parkControl1, park).constant(park);
+    }
 
     public void runOpMode (){
         Scheduler.reset();
         robot = new RobotHardware(this);
         robot.init();
 
-        Scheduler.reset();
         follower = Constants.create(hardwareMap);
-        follower.setPose(startPose);
+        follower.setPose(start);
         follower.update();
-
-        paths = new Paths();
+        //paths = new Paths();
 
         Command turnonshooter = Command.build()
                 .setStart(() -> robot.shooter.shooterMode = Shooter.ShooterMode.FIXED)
@@ -66,46 +77,29 @@ public class Meet0AutoRed extends LinearOpMode {
 
         Command transferoff = instant(() -> robot.transfer.transferMode = Transfer.TransferMode.OFF);
 
-        Command opengate = instant(() -> robot.transfer.gate.setPosition(robot.transfer.GATEOPEN));
+        Command opengate = instant(() -> robot.transfer.gate.setPosition(Transfer.GATEOPEN));
 
-        Command gotoshoot = follow(follower, paths.shootPreloads);
-        Command gotopark = follow(follower, paths.park);
+        Command gotoshoot = follow(follower, shootPreloads());
+        Command gotopark = follow(follower, park());
 
-        Command sequence = sequential(
-                gotoshoot,
+        schedule(sequential(gotoshoot,
                 turnonshooter,
+                waitMs(1500),
                 transferon,
                 opengate,
-                gotopark
-        );
+                waitMs(3000),
+                gotopark));
 
         waitForStart();
 
         while(opModeIsActive()) {
             robot.update();
+            follower.update();
             Scheduler.execute();
         }
 
     }
 
-
-    public static class Paths {
-
-        private final PoseFactory poseFactory = PoseFactory.degrees();
-
-        private final Pose start = poseFactory.of(56, 8, 90);
-        private final Pose shootPreloads = poseFactory.of(56.1958, 19.3529, 90);
-        private final Pose park = poseFactory.of(7.5236, 108.2357, 90);
-        private final Pose parkControl1 = poseFactory.of(14.5355, 51.3644, 0);
-
-        public Path shootPreloads() {
-            return Paths.line(start, shootPreloads).linear(start, shootPreloads);
-        }
-
-        public Path park() {
-            return Paths.curve(shootPreloads, parkControl1, park).constant(park);
-        }
-    }
 
     //call robot.update
 
