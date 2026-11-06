@@ -89,7 +89,7 @@ public class SimpleAuto extends LinearOpMode {
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
     private final Pose start = poseFactory.of(56, 8, 90);
-    private final Pose driveToLaunch = poseFactory.of(55.9768, 19.8366, 90);
+    private final Pose driveToLaunch = poseFactory.of(55.781, 17.8781, 90);
     private final Pose driveToPark = poseFactory.of(11.4929, 94.2904, 90);
     private final Pose driveToParkControl1 = poseFactory.of(17.0979, 25.9381, 0);
 

@@ -58,6 +58,7 @@ public class Turret {
             turretRight.setPower(-0.25);
             turretLeft.setPower(-0.25);
         }
+        myOpMode.telemetry.addData("turret encoder", turretEncoder.getVoltage());
 
     }
 

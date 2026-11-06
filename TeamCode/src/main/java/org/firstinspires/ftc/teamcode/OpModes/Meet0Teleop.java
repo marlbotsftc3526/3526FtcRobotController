@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.ManualDrive;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -74,6 +75,11 @@ import java.util.List;
                     );
                     follower.manual(powers);
                     follower.update();
+                }
+
+                if(gamepad2.b){
+                    Pose reset = new Pose(0,0,0);
+                    follower.setPose(reset);
                 }
 
                 if(gamepad1.dpad_up){
