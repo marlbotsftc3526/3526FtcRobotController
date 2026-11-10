@@ -115,8 +115,8 @@ public class RobotHardware {
     public void update(){
         intake.update();
         shooter.update();
-        //drivetrain.update();
         transfer.update();
+        turret.update();
     }
 
     public void stop(){

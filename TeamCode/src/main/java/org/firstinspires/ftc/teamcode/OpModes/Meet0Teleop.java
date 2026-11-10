@@ -19,6 +19,11 @@ import java.util.List;
         RobotHardware robot;
         ElapsedTime loopTimer;
         private boolean BLUE;
+        private double targetAngle = 0; //angle from the robot to the hive
+        private double turretTargetAngle = 0; //angle from the robot to the turret
+        private double targetX = 57;
+        private double targetY = 54;
+
 
     private Follower follower;
 
@@ -55,6 +60,13 @@ import java.util.List;
             while (opModeIsActive()) {
                 telemetry.addData("loop time", loopTimer.milliseconds());
                 loopTimer.reset();
+
+                targetAngle = Math.atan((targetY - follower.pose().y()) / (targetX - follower.pose().x()));
+                turretTargetAngle = follower.pose().heading() - targetAngle;
+                telemetry.addData("target angle", Math.toDegrees(targetAngle));
+                telemetry.addData("turret target angle", Math.toDegrees(turretTargetAngle));
+                telemetry.addData("pose", follower.pose());
+
                 DrivePowers powers;
                 if(BLUE==false) {
                     powers = ManualDrive.fieldCentric(

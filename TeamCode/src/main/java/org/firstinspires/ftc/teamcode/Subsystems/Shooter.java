@@ -61,7 +61,6 @@ public class Shooter{
         myOpMode.telemetry.addData("Set RPM", revolutions_per_minute);
         myOpMode.telemetry.addData("leftMeasured RPM", leftMeasuredRPM);
         myOpMode.telemetry.addData("rightMeasured RPM", rightMeasuredRPM);
-        myOpMode.telemetry.update();
 
 
     }
